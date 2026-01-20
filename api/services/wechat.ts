@@ -15,8 +15,7 @@ export const getWxPay = () => {
     const keyPath = path.join(process.cwd(), 'cert', 'apiclient_key.pem')
 
     if (!fs.existsSync(certPath) || !fs.existsSync(keyPath) || !process.env.WECHAT_MCH_ID) {
-      console.warn('WeChat Pay certificates or env vars missing. Using Mock Mode.')
-      return null
+      throw new Error('WeChat Pay certificates or env vars missing.')
     }
 
     const privateKey = fs.readFileSync(keyPath)

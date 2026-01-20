@@ -1,7 +1,8 @@
 
-import { useState } from 'react';
-import { Loader2, Lock, Heart, ArrowRight, Share2, AlertCircle, RefreshCcw } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Loader2, Lock, Heart, ArrowRight, Share2, AlertCircle, RefreshCcw, X } from 'lucide-react';
 import MBTIQuiz from '@/components/MBTIQuiz';
+import { QRCodeSVG } from 'qrcode.react';
 
 type RelationshipStage = 'single' | 'dating' | 'relationship' | 'breakup_recovery';
 type Goal = 'improve_attraction' | 'stabilize_relationship' | 'improve_communication' | 'move_on' | 'other';
@@ -59,6 +60,12 @@ export default function LoveReport() {
   const [report, setReport] = useState<ReportData | null>(null);
   const [error, setError] = useState('');
   
+  // Payment State
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<'wechat' | 'alipay'>('wechat');
+  const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
+  const [isPollingPayment, setIsPollingPayment] = useState(false);
+  
   const [showQuiz, setShowQuiz] = useState(false);
 
   const [formData, setFormData] = useState<FormData>({
@@ -67,6 +74,9 @@ export default function LoveReport() {
     relationship_stage: 'single',
     goal: 'improve_attraction',
   });
+
+  // Check if mobile
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
   const fetchReport = async (status: PayStatus) => {
     if (!formData.mbti) {
@@ -105,6 +115,14 @@ export default function LoveReport() {
       const data = await response.json();
       setReport(data);
       setStep('result');
+      
+      // If we just fetched a paid report, clear the payment state
+      if (status === 'paid') {
+        setPayStatus('paid');
+        setQrCodeUrl(null);
+        setIsPollingPayment(false);
+        setShowPaymentModal(false);
+      }
     } catch (err: any) {
       setError(err.message || 'Something went wrong');
     } finally {
@@ -112,13 +130,74 @@ export default function LoveReport() {
     }
   };
 
-  const handleUnlock = async () => {
-    // TODO: Implement real payment logic here (e.g., call WeChat/Alipay API)
-    // For now, we will just alert the user.
-    alert('支付功能正在接入中，敬请期待！');
+  const handleUnlockClick = () => {
+    setShowPaymentModal(true);
   };
 
-  if (loading && !report) { // Initial loading for result
+  const initiatePayment = async (method: 'wechat' | 'alipay') => {
+    try {
+      setLoading(true);
+      setError('');
+      
+      const res = await fetch('/api/payment/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          method,
+          platform: isMobile ? 'mobile' : 'desktop'
+        })
+      });
+      const data = await res.json();
+      
+      if (!data.success) throw new Error(data.error || '创建订单失败');
+      
+      const { orderId, payUrl } = data;
+      
+      if (method === 'alipay') {
+        // Alipay: Redirect to Gateway
+        window.location.href = payUrl;
+      } else {
+        // WeChat: Show QR Code
+        setQrCodeUrl(payUrl); // This is weixin://...
+        setIsPollingPayment(true);
+        pollPaymentStatus(orderId);
+      }
+      
+    } catch (e: any) {
+      alert(e.message || '支付启动失败，请重试');
+      setIsPollingPayment(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const pollPaymentStatus = async (orderId: string) => {
+    const poll = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/payment/status/${orderId}`);
+        const data = await res.json();
+        
+        if (data.success && data.status === 'paid') {
+          clearInterval(poll);
+          setIsPollingPayment(false);
+          setShowPaymentModal(false);
+          setQrCodeUrl(null);
+          // Payment Success -> Fetch Full Report
+          await fetchReport('paid');
+        }
+      } catch (e) {
+        console.error('Polling error', e);
+      }
+    }, 2000); // Poll every 2 seconds
+
+    // Stop polling after 5 minutes (timeout)
+    setTimeout(() => {
+      clearInterval(poll);
+      setIsPollingPayment(false);
+    }, 300000);
+  };
+
+  if (loading && !report && !qrCodeUrl) { // Initial loading for result
      return (
        <div className="flex flex-col items-center justify-center min-h-screen bg-pink-50 text-pink-800">
          <Loader2 className="w-12 h-12 animate-spin mb-4" />
@@ -273,9 +352,95 @@ export default function LoveReport() {
   // Result View
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
-      {/* Loading Overlay for Payment */}
-      {loading && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center text-white">
+      {/* Payment Selection Modal */}
+      {showPaymentModal && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl scale-100 animate-in zoom-in-95 duration-200">
+            <div className="p-4 border-b flex justify-between items-center bg-gray-50">
+              <h3 className="font-bold text-gray-800">选择支付方式</h3>
+              <button onClick={() => setShowPaymentModal(false)} className="text-gray-400 hover:text-gray-600">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="p-6 space-y-4">
+              <div className="text-center mb-6">
+                <div className="text-3xl font-bold text-gray-900 mb-1">¥ 9.90</div>
+                <div className="text-sm text-gray-500">解锁完整深度报告 + 2026 运势</div>
+              </div>
+              
+              <button 
+                onClick={() => initiatePayment('wechat')}
+                className="w-full py-4 border rounded-xl flex items-center px-4 hover:bg-green-50 hover:border-green-200 transition-all group"
+              >
+                <div className="w-10 h-10 bg-[#07C160] rounded-full flex items-center justify-center text-white mr-4 group-hover:scale-110 transition-transform">
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M8.5,14.5c0.5,0,1,0.2,1.4,0.6c0.4-0.4,0.9-0.6,1.4-0.6c1.1,0,2,0.9,2,2c0,1.1-0.9,2-2,2c-0.5,0-1-0.2-1.4-0.6 c-0.4,0.4-0.9,0.6-1.4,0.6c-1.1,0-2-0.9-2-2C6.5,15.4,7.4,14.5,8.5,14.5z M16.5,14.5c0.5,0,1,0.2,1.4,0.6c0.4-0.4,0.9-0.6,1.4-0.6 c1.1,0,2,0.9,2,2c0,1.1-0.9,2-2,2c-0.5,0-1-0.2-1.4-0.6c-0.4,0.4-0.9,0.6-1.4,0.6c-1.1,0-2-0.9-2-2C14.5,15.4,15.4,14.5,16.5,14.5z M12,2C6.48,2,2,5.92,2,10.75c0,2.83,1.52,5.34,3.88,6.96c-0.22,1.3-0.88,2.83-2.18,3.95c1.88,0.23,4.01-0.34,5.49-1.5 c0.9,0.18,1.84,0.28,2.81,0.28c5.52,0,10-3.92,10-8.75S17.52,2,12,2z"/></svg>
+                </div>
+                <div className="text-left flex-1">
+                  <div className="font-bold text-gray-800">微信支付</div>
+                  <div className="text-xs text-gray-500">WeChat Pay</div>
+                </div>
+                <div className="w-5 h-5 rounded-full border-2 border-gray-200 group-hover:border-[#07C160]"></div>
+              </button>
+
+              <button 
+                onClick={() => initiatePayment('alipay')}
+                className="w-full py-4 border rounded-xl flex items-center px-4 hover:bg-blue-50 hover:border-blue-200 transition-all group"
+              >
+                <div className="w-10 h-10 bg-[#1677FF] rounded-full flex items-center justify-center text-white mr-4 group-hover:scale-110 transition-transform">
+                  <span className="font-bold text-lg">支</span>
+                </div>
+                <div className="text-left flex-1">
+                  <div className="font-bold text-gray-800">支付宝</div>
+                  <div className="text-xs text-gray-500">Alipay</div>
+                </div>
+                <div className="w-5 h-5 rounded-full border-2 border-gray-200 group-hover:border-[#1677FF]"></div>
+              </button>
+            </div>
+            <div className="bg-gray-50 p-4 text-center text-xs text-gray-400">
+              支付过程由微信/支付宝官方保障
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* QR Code Overlay (WeChat) */}
+      {qrCodeUrl && (
+        <div className="fixed inset-0 bg-black/80 z-50 flex flex-col items-center justify-center backdrop-blur-md animate-in fade-in duration-300">
+           <div className="bg-white p-6 rounded-2xl shadow-2xl max-w-xs w-full text-center relative animate-in zoom-in-95 duration-300">
+              <button 
+                onClick={() => {
+                  setQrCodeUrl(null);
+                  setIsPollingPayment(false);
+                  setLoading(false);
+                }}
+                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              
+              <div className="flex items-center justify-center gap-2 mb-4 text-[#07C160]">
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M8.5,14.5c0.5,0,1,0.2,1.4,0.6c0.4-0.4,0.9-0.6,1.4-0.6c1.1,0,2,0.9,2,2c0,1.1-0.9,2-2,2c-0.5,0-1-0.2-1.4-0.6 c-0.4,0.4-0.9,0.6-1.4,0.6c-1.1,0-2-0.9-2-2C6.5,15.4,7.4,14.5,8.5,14.5z M16.5,14.5c0.5,0,1,0.2,1.4,0.6c0.4-0.4,0.9-0.6,1.4-0.6 c1.1,0,2,0.9,2,2c0,1.1-0.9,2-2,2c-0.5,0-1-0.2-1.4-0.6c-0.4,0.4-0.9,0.6-1.4,0.6c-1.1,0-2-0.9-2-2C14.5,15.4,15.4,14.5,16.5,14.5z M12,2C6.48,2,2,5.92,2,10.75c0,2.83,1.52,5.34,3.88,6.96c-0.22,1.3-0.88,2.83-2.18,3.95c1.88,0.23,4.01-0.34,5.49-1.5 c0.9,0.18,1.84,0.28,2.81,0.28c5.52,0,10-3.92,10-8.75S17.52,2,12,2z"/></svg>
+                <span className="font-bold">微信扫码支付</span>
+              </div>
+              
+              <div className="bg-white p-2 rounded-lg border-2 border-[#07C160]/20 inline-block mb-4">
+                <QRCodeSVG value={qrCodeUrl} size={180} />
+              </div>
+              
+              <div className="text-2xl font-bold text-gray-900 mb-2">¥ 9.90</div>
+              <p className="text-gray-500 text-sm mb-4">请使用微信“扫一扫”完成支付</p>
+              
+              <div className="flex items-center justify-center gap-2 text-xs text-gray-400">
+                <Loader2 className="w-3 h-3 animate-spin" />
+                正在检测支付结果...
+              </div>
+           </div>
+        </div>
+      )}
+
+      {/* Loading Overlay (General) */}
+      {loading && !qrCodeUrl && !showPaymentModal && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center text-white backdrop-blur-sm">
           <Loader2 className="w-10 h-10 animate-spin" />
         </div>
       )}
@@ -382,7 +547,7 @@ export default function LoveReport() {
             </div>
 
             <button 
-              onClick={handleUnlock}
+              onClick={handleUnlockClick}
               className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-300 hover:to-orange-400 text-gray-900 font-bold py-4 px-8 rounded-full text-lg shadow-lg transform transition hover:scale-105 w-full max-w-xs"
             >
               {report.paywall.cta.text}
