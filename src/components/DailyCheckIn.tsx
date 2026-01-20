@@ -207,18 +207,30 @@ export default function DailyCheckIn() {
               </div>
 
               {/* The Task */}
-              <div className="bg-white border-2 border-dashed border-indigo-200 rounded-2xl p-6 flex items-start gap-5 hover:border-indigo-400 hover:bg-indigo-50/30 transition-all cursor-pointer group">
-                <div className="w-12 h-12 rounded-2xl bg-indigo-100 flex items-center justify-center flex-shrink-0 text-indigo-600 group-hover:scale-110 transition-transform">
-                  <Zap className="w-6 h-6 fill-current" />
+              <div className="bg-white border-2 border-dashed border-indigo-200 rounded-2xl p-5 md:p-6 flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-5 hover:border-indigo-400 hover:bg-indigo-50/30 transition-all cursor-pointer group">
+                <div className="flex items-center gap-4 w-full md:w-auto">
+                   <div className="w-12 h-12 rounded-2xl bg-indigo-100 flex items-center justify-center flex-shrink-0 text-indigo-600 group-hover:scale-110 transition-transform">
+                     <Zap className="w-6 h-6 fill-current" />
+                   </div>
+                   {/* Mobile Title Layout */}
+                   <div className="md:hidden flex-1">
+                      <h4 className="font-black text-gray-900 flex items-center gap-2 text-lg">
+                       3分钟桃花任务
+                       <span className="bg-indigo-600 text-white text-[10px] px-2 py-0.5 rounded-full font-bold whitespace-nowrap">进行中</span>
+                     </h4>
+                   </div>
                 </div>
-                <div className="flex-1 pt-1">
-                  <h4 className="font-black text-gray-900 mb-2 flex items-center gap-2 text-lg">
+
+                <div className="flex-1 pt-0 md:pt-1 w-full">
+                  {/* Desktop Title Layout */}
+                  <h4 className="hidden md:flex font-black text-gray-900 mb-2 items-center gap-2 text-lg">
                     3分钟桃花任务
                     <span className="bg-indigo-600 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">进行中</span>
                   </h4>
-                  <p className="text-gray-600 font-medium">{todaySign?.task}</p>
+                  <p className="text-gray-600 font-medium leading-relaxed">{todaySign?.task}</p>
                 </div>
-                <button className="text-indigo-600 hover:text-indigo-800 font-bold flex items-center gap-1 self-center whitespace-nowrap bg-indigo-50 px-4 py-2 rounded-xl group-hover:bg-white transition-colors">
+                
+                <button className="w-full md:w-auto text-indigo-600 hover:text-indigo-800 font-bold flex items-center justify-center gap-1 self-start md:self-center whitespace-nowrap bg-indigo-50 px-4 py-3 md:py-2 rounded-xl group-hover:bg-white transition-colors mt-2 md:mt-0">
                   去完成 <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
