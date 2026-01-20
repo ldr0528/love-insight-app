@@ -60,22 +60,33 @@ router.post('/generate', async (req: Request, res: Response): Promise<void> => {
       - score: 综合评分（80-100之间）` : ''}
       `
     } else {
-      const { industry, customIndustry, tone, audience, language, keywords, description } = params
+      const { industry, customIndustry, tone, audience, language, keywords, description, count, detailed } = params
       const industryStr = industry === 'other' ? customIndustry : industry
+      const nameCount = count || 3
       
-      prompt = `请为一家${industryStr || '科技'}行业的公司/品牌起3个名字。
+      prompt = `请为一家${industryStr || '科技'}行业的公司/品牌起${nameCount}个名字。
       品牌调性：${tone || '不限'}
       目标受众：${audience || '不限'}
       语言偏好：${language || '中文'}
       ${keywords ? `关键词：${keywords}` : ''}
       ${description ? `描述：${description}` : ''}
 
-      请返回3个推荐名字，格式必须为严格的JSON数组，每个对象包含以下字段：
+      严格要求：
+      1) 必须是公司/品牌名；
+      2) 名称需易读、易传播，避免“XX科技有限公司”等通用后缀；
+      3) 突出品牌定位与差异化；
+      4) 每次生成内容需不同，避免重复模板；
+
+      输出格式：严格的JSON数组，每个对象包含：
       - name: 品牌名称
-      - enName: 英文名称（如果是中文名，请创造对应的英文名）
+      - enName: 英文名称（若为中文名，请给出合理英文对应）
       - slogans: 3个简短Slogan（数组）
       - tags: 2个标签（数组）
-      - explanation: 释义（50字以内）
+      - explanation: 释义（50-80字，说明命名逻辑与语义来源）
+      ${detailed ? `- rationale: 命名理由（30-60字，定位/场景/差异化）
+      - phonetics: 读音特点（是否上口、押韵点）
+      - positioning: 品牌定位关键词（3-5个）
+      - don'ts: 需避免的近似词或大众化词（2-3个）` : ''}
       `
     }
 

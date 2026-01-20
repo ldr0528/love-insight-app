@@ -130,7 +130,7 @@ export default function NamingMaster() {
     try {
       const params = namingType === 'baby' 
         ? { type: 'baby', ...babyForm, _t: Date.now(), count: isVip ? 10 : 3, detailed: isVip } 
-        : { type: 'company', ...companyForm, _t: Date.now() };
+        : { type: 'company', ...companyForm, _t: Date.now(), count: isVip ? 10 : 3, detailed: isVip };
         
       const data = await generateName(params);
       setResult(data);
@@ -160,7 +160,9 @@ export default function NamingMaster() {
                 <Crown className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-lg sm:text-xl font-bold text-gray-800">解锁大师尊享版</h3>
-              <p className="text-amber-700 text-xs sm:text-sm mt-1">开启全方位命理分析，定制专属好名</p>
+              <p className="text-amber-700 text-xs sm:text-sm mt-1">
+                {namingType === 'baby' ? '开启全方位命理分析，定制专属好名' : '开启品牌向深度生成，定制中英文名与Slogan'}
+              </p>
             </div>
 
             {/* Modal Content */}
@@ -181,8 +183,12 @@ export default function NamingMaster() {
                     <Check className="w-3 h-3" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-gray-800 text-sm">三才五格与生肖深度解析</h4>
-                    <p className="text-xs text-gray-500">结合传统命理，分析吉凶宜忌</p>
+                    <h4 className="font-bold text-gray-800 text-sm">
+                      {namingType === 'baby' ? '三才五格与生肖深度解析' : '英文名、Slogan 与品牌标签增强'}
+                    </h4>
+                    <p className="text-xs text-gray-500">
+                      {namingType === 'baby' ? '结合传统命理，分析吉凶宜忌' : '统一品牌调性，强化传播与定位'}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -190,8 +196,12 @@ export default function NamingMaster() {
                     <Check className="w-3 h-3" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-gray-800 text-sm">诗词出处与文化内涵</h4>
-                    <p className="text-xs text-gray-500">引经据典，赋予名字深厚寓意</p>
+                    <h4 className="font-bold text-gray-800 text-sm">
+                      {namingType === 'baby' ? '诗词出处与文化内涵' : '命名理由与读音特点说明'}
+                    </h4>
+                    <p className="text-xs text-gray-500">
+                      {namingType === 'baby' ? '引经据典，赋予名字深厚寓意' : '解释语义来源，保证上口易记'}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -754,14 +764,42 @@ export default function NamingMaster() {
                             <span className="text-amber-700 font-medium shrink-0">五行属性：</span>
                             <span className="text-gray-700 font-bold">{item.wuxing}</span>
                           </div>
-                          <div className="flex gap-2 text-sm">
-                            <span className="text-amber-700 font-medium shrink-0">五行分析：</span>
-                            <span className="text-gray-600 leading-relaxed">{item.wuxingAnalysis}</span>
-                          </div>
-                          <div className="flex gap-2 text-sm">
-                            <span className="text-amber-700 font-medium shrink-0">运势简评：</span>
-                            <span className="text-gray-600 leading-relaxed">{item.luck}</span>
-                          </div>
+                          {item.wuxingAnalysis && (
+                            <div className="flex gap-2 text-sm">
+                              <span className="text-amber-700 font-medium shrink-0">五行分析：</span>
+                              <span className="text-gray-600 leading-relaxed">{item.wuxingAnalysis}</span>
+                            </div>
+                          )}
+                          {item.luck && (
+                            <div className="flex gap-2 text-sm">
+                              <span className="text-amber-700 font-medium shrink-0">运势简评：</span>
+                              <span className="text-gray-600 leading-relaxed">{item.luck}</span>
+                            </div>
+                          )}
+                          {item.sancai && (
+                            <div className="flex gap-2 text-sm">
+                              <span className="text-amber-700 font-medium shrink-0">三才五格：</span>
+                              <span className="text-gray-700">{item.sancai}</span>
+                            </div>
+                          )}
+                          {item.zodiac && (
+                            <div className="flex gap-2 text-sm">
+                              <span className="text-amber-700 font-medium shrink-0">生肖喜忌：</span>
+                              <span className="text-gray-700">{item.zodiac}</span>
+                            </div>
+                          )}
+                          {item.poem && (
+                            <div className="flex gap-2 text-sm">
+                              <span className="text-amber-700 font-medium shrink-0">诗词出处：</span>
+                              <span className="text-gray-700 italic">“{item.poem}”</span>
+                            </div>
+                          )}
+                          {item.score && (
+                            <div className="flex gap-2 text-sm">
+                              <span className="text-amber-700 font-medium shrink-0">综合评分：</span>
+                              <span className="text-gray-700 font-bold">{item.score}</span>
+                            </div>
+                          )}
                         </div>
                       </div>
                     )}
@@ -806,6 +844,35 @@ export default function NamingMaster() {
                       <span className="font-bold text-gray-800">释义：</span>
                       {item.explanation}
                     </p>
+                    
+                    {(item.rationale || item.phonetics || item.positioning || item["don'ts"]) && (
+                      <div className="grid sm:grid-cols-2 gap-3 mt-4">
+                        {item.rationale && (
+                          <div className="bg-indigo-50 p-3 rounded-xl">
+                            <div className="text-xs font-bold text-indigo-600 mb-1">命名理由</div>
+                            <div className="text-sm text-gray-700">{item.rationale}</div>
+                          </div>
+                        )}
+                        {item.phonetics && (
+                          <div className="bg-indigo-50 p-3 rounded-xl">
+                            <div className="text-xs font-bold text-indigo-600 mb-1">读音特点</div>
+                            <div className="text-sm text-gray-700">{item.phonetics}</div>
+                          </div>
+                        )}
+                        {item.positioning && (
+                          <div className="bg-indigo-50 p-3 rounded-xl">
+                            <div className="text-xs font-bold text-indigo-600 mb-1">品牌定位关键词</div>
+                            <div className="text-sm text-gray-700">{Array.isArray(item.positioning) ? item.positioning.join('、') : item.positioning}</div>
+                          </div>
+                        )}
+                        {item["don'ts"] && (
+                          <div className="bg-indigo-50 p-3 rounded-xl">
+                            <div className="text-xs font-bold text-indigo-600 mb-1">避免词</div>
+                            <div className="text-sm text-gray-700">{Array.isArray(item["don'ts"]) ? item["don'ts"].join('、') : item["don'ts"]}</div>
+                          </div>
+                        )}
+                      </div>
+                    )}
                     
                     <div className="flex justify-end gap-3 mt-4 pt-4 border-t border-gray-100">
                        <button className="text-gray-400 hover:text-red-500 transition-colors">
