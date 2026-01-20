@@ -15,6 +15,7 @@ export const getWxPay = () => {
     const keyPath = path.join(process.cwd(), 'cert', 'apiclient_key.pem')
 
     if (!fs.existsSync(certPath) || !fs.existsSync(keyPath) || !process.env.WECHAT_MCH_ID) {
+      console.error(`Missing certs or MCH_ID. Cert: ${fs.existsSync(certPath)}, Key: ${fs.existsSync(keyPath)}, ID: ${!!process.env.WECHAT_MCH_ID}`)
       throw new Error('WeChat Pay certificates or env vars missing.')
     }
 
@@ -29,8 +30,12 @@ export const getWxPay = () => {
     })
 
     return wxPay
-  } catch (error) {
-    console.error('Failed to initialize WeChat Pay:', error)
+  } catch (error: any) {
+    console.error('Failed to initialize WeChat Pay:', error.message)
+    // Don't swallow the error during debugging, so we can see it in logs
+    if (process.env.NODE_ENV === 'development') {
+        console.error(error)
+    }
     return null
   }
 }
