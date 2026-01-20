@@ -195,9 +195,6 @@ export default function DailyCheckIn() {
                   </div>
                   
                   <div className="text-center md:text-left flex-1">
-                    <div className="inline-block px-3 py-1 rounded-full bg-pink-100 text-pink-600 text-xs font-bold mb-3">
-                       #{todaySign?.theme}
-                    </div>
                     <p className="text-xl text-gray-800 font-bold leading-relaxed italic mb-4">
                       "{todaySign?.quote}"
                     </p>
