@@ -30,7 +30,7 @@ router.post('/generate', async (req: Request, res: Response): Promise<void> => {
       
       prompt = `请为姓氏“${lastName || '李'}”的${gender === 'boy' ? '男孩' : '女孩'}起${nameCount}个名字。
       出生信息：${birthYear || '不详'}年${birthMonth || ''}月${birthDay || ''}日 ${birthTime || ''}
-      名字字数：${nameLength || 2}个字（不含姓）
+      名字字数：严格限制为${nameLength || 2}个字（仅计算名，不含姓氏）
       风格偏好：${styleStr}
       寓意偏好：${meaningStr}
       ${avoidChars ? `避讳字：${avoidChars}` : ''}
@@ -39,7 +39,8 @@ router.post('/generate', async (req: Request, res: Response): Promise<void> => {
       请返回${nameCount}个推荐名字，要求：
       1. 必须富有创意，避免常见重名。
       2. 每次生成必须不同，根据当前时间微调灵感。
-      3. 格式必须为严格的JSON数组，每个对象包含以下字段：
+      3. 名字字数必须严格符合要求，${nameLength || 2}字名就只给${nameLength || 2}个字。
+      4. 格式必须为严格的JSON数组，每个对象包含以下字段：
       - name: 完整名字（含姓）
       - pinyin: 拼音（带声调，如 Hào Yǔ）
       - meaning: 名字寓意（50字以内）
