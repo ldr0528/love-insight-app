@@ -199,16 +199,16 @@ export default function NamingMaster() {
                 </div>
                 <div className="flex justify-between items-end">
                   <div>
-                    <div className="text-sm text-gray-500 line-through">原价 ¥99.00</div>
+                    <div className="text-sm text-gray-500 line-through">原价 ¥66.00</div>
                     <div className="flex items-baseline gap-1">
                        <span className="text-sm font-bold text-red-500">¥</span>
-                       <span className="text-3xl font-extrabold text-red-500">9.9</span>
+                       <span className="text-3xl font-extrabold text-red-500">16.6</span>
                        <span className="text-xs text-gray-500 font-medium">/ 永久解锁</span>
                     </div>
                   </div>
                   <div className="text-right">
                     <div className="text-xs text-amber-700 font-bold bg-amber-100 px-2 py-1 rounded-lg">
-                      今日已售 1,208 份
+                      已售1000+
                     </div>
                   </div>
                 </div>

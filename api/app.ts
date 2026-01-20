@@ -37,6 +37,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/report', reportRoutes)
 app.use('/api/analyze', analyzeRoutes)
 app.use('/api/payment', paymentRoutes)
+app.use('/api/naming', namingRoutes)
 
 /**
  * health

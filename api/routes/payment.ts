@@ -29,7 +29,7 @@ router.post('/create', async (req: Request, res: Response): Promise<void> => {
     // Save order status
     orders[orderId] = {
       id: orderId,
-      amount: 9.90,
+      amount: 16.60,
       status: 'pending',
       method,
       createdAt: Date.now()
@@ -46,7 +46,7 @@ router.post('/create', async (req: Request, res: Response): Promise<void> => {
         out_trade_no: orderId,
         notify_url: notifyUrl,
         amount: {
-          total: 990, // 9.90 CNY in cents
+          total: 1660, // 16.60 CNY in cents
           currency: 'CNY'
         }
       })
@@ -56,7 +56,7 @@ router.post('/create', async (req: Request, res: Response): Promise<void> => {
       
       payUrl = await createAlipayOrder({
         outTradeNo: orderId,
-        totalAmount: '9.90',
+        totalAmount: '16.60',
         subject: 'Love Insight Report',
         notifyUrl,
         returnUrl,
@@ -69,7 +69,7 @@ router.post('/create', async (req: Request, res: Response): Promise<void> => {
       success: true,
       orderId,
       payUrl,
-      amount: 9.90
+      amount: 16.60
     })
   } catch (error: any) {
     console.error('Payment creation error:', error)
