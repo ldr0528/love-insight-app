@@ -1,6 +1,6 @@
 
 import { Link } from 'react-router-dom';
-import { Compass, ArrowRight, Brain, Hand, Heart, Target } from 'lucide-react';
+import { Compass, ArrowRight, Brain, Hand, Heart, Target, PenTool } from 'lucide-react';
 import DailyCheckIn from '@/components/DailyCheckIn';
 
 export default function Home() {
@@ -99,6 +99,25 @@ export default function Home() {
               </p>
               <span className="inline-flex items-center text-rose-600 font-bold group-hover:gap-2 transition-all">
                 获取恋爱攻略 <ArrowRight className="w-4 h-4 ml-1" />
+              </span>
+            </div>
+          </Link>
+
+          {/* AI Naming Master */}
+          <Link to="/naming" className="group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-purple-50 overflow-hidden flex flex-col h-full md:col-span-2">
+            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+              <PenTool className="w-24 h-24 text-purple-500" />
+            </div>
+            <div className="relative z-10 flex flex-col h-full justify-center items-center text-center">
+              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center text-purple-600 mb-4">
+                <PenTool className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">AI 起名大师</h3>
+              <p className="text-gray-500 text-sm mb-6 max-w-lg">
+                结合传统生辰八字与现代美学，为宝宝、公司或品牌定制寓意深远、朗朗上口的好名字。
+              </p>
+              <span className="inline-flex items-center text-purple-600 font-bold group-hover:gap-2 transition-all">
+                立即开始起名 <ArrowRight className="w-4 h-4 ml-1" />
               </span>
             </div>
           </Link>
