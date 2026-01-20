@@ -57,7 +57,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">MBTI 人格测试</h3>
               <p className="text-gray-500 text-sm mb-6 flex-grow">
-                只需 1分钟，快速测出你的 16 型人格代码，解析你的社交与思维模式。
+                只需 5 分钟，快速测出你的 16 型人格代码，解析你的社交与思维模式。
               </p>
               <span className="inline-flex items-center text-indigo-600 font-bold group-hover:gap-2 transition-all">
                 单独测试 MBTI <ArrowRight className="w-4 h-4 ml-1" />

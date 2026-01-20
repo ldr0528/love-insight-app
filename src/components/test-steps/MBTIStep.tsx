@@ -46,7 +46,7 @@ export default function MBTIStep() {
             {mbti ? '重新测试' : '开始 50 题深度测试'}
           </button>
           
-          <p className="text-xs text-gray-400 mt-2">大约需要 3 分钟</p>
+          <p className="text-xs text-gray-400 mt-2">大约需要 5 分钟</p>
         </div>
 
         <div className="relative my-8">

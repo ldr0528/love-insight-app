@@ -154,24 +154,8 @@ export default function LoveReport() {
       const { orderId, payUrl } = data;
       
       if (method === 'alipay') {
-        // Alipay: Redirect to Gateway or Render Form
-        
-        // Start polling for payment status immediately for Alipay too
-        // This ensures that after user pays on new tab/window and closes it,
-        // the original page will auto-refresh to show paid status.
-        setIsPollingPayment(true);
-        pollPaymentStatus(orderId);
-
-        // If payUrl is HTML form
-        if (payUrl.trim().startsWith('<form')) {
-           const div = document.createElement('div');
-           div.innerHTML = payUrl;
-           document.body.appendChild(div);
-           const form = div.querySelector('form');
-           if (form) form.submit();
-        } else {
-           window.location.href = payUrl;
-        }
+        // Alipay: Redirect to Gateway
+        window.location.href = payUrl;
       } else {
         // WeChat: Show QR Code
         setQrCodeUrl(payUrl); // This is weixin://...

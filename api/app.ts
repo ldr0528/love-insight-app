@@ -17,8 +17,6 @@ import analyzeRoutes from './routes/analyze.js'
 import paymentRoutes from './routes/payment.js'
 import namingRoutes from './routes/naming.js'
 
-console.log('Naming Routes loaded:', namingRoutes); // Debug Log
-
 // for esm mode
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -39,7 +37,6 @@ app.use('/api/auth', authRoutes)
 app.use('/api/report', reportRoutes)
 app.use('/api/analyze', analyzeRoutes)
 app.use('/api/payment', paymentRoutes)
-app.use('/api/naming', namingRoutes)
 
 /**
  * health
