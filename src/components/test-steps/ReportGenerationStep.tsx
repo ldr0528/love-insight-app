@@ -167,8 +167,8 @@ function PaymentModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
                 <span>请使用{method === 'wechat' ? '微信' : '支付宝'}扫码支付</span>
               </div>
               
-              {/* Debug/Dev Link */}
-              {order && (
+              {/* Debug/Dev Link - Removed for Production */}
+              {/* {order && (
                 <a 
                   href={order.payUrl} 
                   target="_blank" 
@@ -178,7 +178,7 @@ function PaymentModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
                   <ExternalLink className="w-3 h-3" />
                   (开发模式) 点击此处模拟支付成功
                 </a>
-              )}
+              )} */}
             </>
           )}
         </div>
