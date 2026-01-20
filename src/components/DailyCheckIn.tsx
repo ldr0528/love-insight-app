@@ -51,6 +51,7 @@ export default function DailyCheckIn() {
   const [streak, setStreak] = useState(0);
   const [todaySign, setTodaySign] = useState<any>(null);
   const [showAnimation, setShowAnimation] = useState(false);
+  const [isRevealed, setIsRevealed] = useState(false);
 
   useEffect(() => {
     // Load state from local storage
@@ -96,6 +97,7 @@ export default function DailyCheckIn() {
       setStreak(newStreak);
       setTodaySign(randomSign);
       setShowAnimation(false);
+      setIsRevealed(false); // Reset reveal state on new check-in
     }, 1500);
   };
 
@@ -206,33 +208,51 @@ export default function DailyCheckIn() {
                 </div>
               </div>
 
-              {/* The Task */}
-              <div className="bg-white border-2 border-dashed border-indigo-200 rounded-2xl p-5 md:p-6 flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-5 hover:border-indigo-400 hover:bg-indigo-50/30 transition-all cursor-pointer group">
-                <div className="flex items-center gap-4 w-full md:w-auto">
-                   <div className="w-12 h-12 rounded-2xl bg-indigo-100 flex items-center justify-center flex-shrink-0 text-indigo-600 group-hover:scale-110 transition-transform">
-                     <Zap className="w-6 h-6 fill-current" />
-                   </div>
-                   {/* Mobile Title Layout */}
-                   <div className="md:hidden flex-1">
-                      <h4 className="font-black text-gray-900 flex items-center gap-2 text-lg">
-                       3分钟桃花任务
-                       <span className="bg-indigo-600 text-white text-[10px] px-2 py-0.5 rounded-full font-bold whitespace-nowrap">进行中</span>
-                     </h4>
-                   </div>
-                </div>
-
-                <div className="flex-1 pt-0 md:pt-1 w-full">
-                  {/* Desktop Title Layout */}
-                  <h4 className="hidden md:flex font-black text-gray-900 mb-2 items-center gap-2 text-lg">
-                    3分钟桃花任务
-                    <span className="bg-indigo-600 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">进行中</span>
-                  </h4>
-                  <p className="text-gray-600 font-medium leading-relaxed">{todaySign?.task}</p>
-                </div>
-                
-                <button className="w-full md:w-auto text-indigo-600 hover:text-indigo-800 font-bold flex items-center justify-center gap-1 self-start md:self-center whitespace-nowrap bg-indigo-50 px-4 py-3 md:py-2 rounded-xl group-hover:bg-white transition-colors mt-2 md:mt-0">
-                  去完成 <ArrowRight className="w-4 h-4" />
-                </button>
+              {/* Energy Keyword Card */}
+              <div 
+                onClick={() => !isRevealed && setIsRevealed(true)}
+                className={`relative overflow-hidden rounded-2xl p-6 transition-all duration-500 cursor-pointer group ${
+                  isRevealed 
+                  ? 'bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-100' 
+                  : 'bg-gradient-to-r from-violet-600 to-indigo-600 shadow-lg shadow-indigo-200 hover:scale-[1.02]'
+                }`}
+              >
+                {!isRevealed ? (
+                  <div className="flex items-center justify-between text-white">
+                    <div className="flex items-center gap-4">
+                       <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center animate-pulse">
+                         <Sparkles className="w-6 h-6 text-yellow-300" />
+                       </div>
+                       <div>
+                         <h4 className="font-bold text-lg">点击接收今日能量</h4>
+                         <p className="text-indigo-100 text-sm opacity-90">宇宙为你准备了一个关键词</p>
+                       </div>
+                    </div>
+                    <ArrowRight className="w-5 h-5 opacity-70 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                ) : (
+                  <div className="animate-in fade-in zoom-in duration-500">
+                    <div className="flex flex-col md:flex-row items-center gap-6">
+                       <div className="text-center md:text-left min-w-[120px]">
+                          <div className="text-xs font-bold text-indigo-400 uppercase tracking-wider mb-1">ENERGY WORD</div>
+                          <div className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+                            {todaySign?.theme}
+                          </div>
+                       </div>
+                       
+                       <div className="w-px h-12 bg-indigo-100 hidden md:block"></div>
+                       <div className="h-px w-full bg-indigo-100 md:hidden"></div>
+                       
+                       <div className="flex-1 text-center md:text-left">
+                          <h4 className="font-bold text-gray-800 mb-1 flex items-center justify-center md:justify-start gap-2">
+                            <Zap className="w-4 h-4 text-yellow-500 fill-current" /> 
+                            行动指引
+                          </h4>
+                          <p className="text-gray-600 leading-relaxed text-sm">{todaySign?.task}</p>
+                       </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Streak Progress */}
