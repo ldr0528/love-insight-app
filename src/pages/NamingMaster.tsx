@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ArrowLeft, PenTool, Sparkles, User, Briefcase, Wand2, ChevronDown, ChevronUp, Copy, RefreshCcw, Heart, Info, X, Crown, Lock, Check, Loader2, Smartphone, ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { generateName } from '@/services/aiNaming';
+import { QRCodeSVG } from 'qrcode.react';
 
 type NamingType = 'baby' | 'company' | 'brand';
 
@@ -23,7 +24,15 @@ export default function NamingMaster() {
   const [showTimeInput, setShowTimeInput] = useState(false);
   const [isVip, setIsVip] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [isPaying, setIsPaying] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<'wechat' | 'alipay'>('wechat');
+  const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
+  const [isPollingPayment, setIsPollingPayment] = useState(false);
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+  useEffect(() => {
+    const unlocked = localStorage.getItem('vip_unlocked') === 'true';
+    if (unlocked) setIsVip(true);
+  }, []);
 
   // Baby Form States
   const [babyForm, setBabyForm] = useState({
@@ -63,14 +72,50 @@ export default function NamingMaster() {
     return [...list, item];
   };
 
-  const handlePayment = async () => {
-    setIsPaying(true);
-    // Simulate payment API call
-    setTimeout(() => {
-      setIsPaying(false);
-      setShowPaymentModal(false);
-      setIsVip(true);
+  const initiatePayment = async (method: 'wechat' | 'alipay') => {
+    try {
+      const res = await fetch('/api/payment/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ method, platform: isMobile ? 'mobile' : 'desktop' })
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error || '创建订单失败');
+      const { orderId, payUrl } = data;
+      if (method === 'alipay' || (method === 'wechat' && isMobile)) {
+        window.location.href = payUrl;
+      } else {
+        setQrCodeUrl(payUrl);
+        setIsPollingPayment(true);
+        pollPaymentStatus(orderId);
+      }
+    } catch (e: any) {
+      alert(e.message || '支付启动失败，请重试');
+      setIsPollingPayment(false);
+    }
+  };
+
+  const pollPaymentStatus = async (orderId: string) => {
+    const poll = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/payment/status/${orderId}`);
+        const data = await res.json();
+        if (data.success && data.status === 'paid') {
+          clearInterval(poll);
+          setIsPollingPayment(false);
+          setShowPaymentModal(false);
+          setQrCodeUrl(null);
+          setIsVip(true);
+          localStorage.setItem('vip_unlocked', 'true');
+        }
+      } catch (e) {
+        console.error('Polling error', e);
+      }
     }, 2000);
+    setTimeout(() => {
+      clearInterval(poll);
+      setIsPollingPayment(false);
+    }, 300000);
   };
 
   const handleGenerate = async () => {
@@ -98,24 +143,24 @@ export default function NamingMaster() {
       {/* Payment Modal */}
       {showPaymentModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl animate-scale-in">
+          <div className="bg-white rounded-2xl w-full max-w-sm sm:max-w-md overflow-hidden shadow-2xl animate-scale-in">
             {/* Modal Header */}
-            <div className="bg-gradient-to-r from-amber-100 to-yellow-50 p-6 text-center relative">
+            <div className="bg-gradient-to-r from-amber-100 to-yellow-50 p-4 sm:p-6 text-center relative">
               <button 
                 onClick={() => setShowPaymentModal(false)}
                 className="absolute right-4 top-4 text-gray-400 hover:text-gray-600 transition-colors"
               >
                 <X className="w-6 h-6" />
               </button>
-              <div className="w-16 h-16 bg-gradient-to-br from-amber-400 to-yellow-600 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-amber-400 to-yellow-600 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
                 <Crown className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-gray-800">解锁大师尊享版</h3>
-              <p className="text-amber-700 text-sm mt-1">开启全方位命理分析，定制专属好名</p>
+              <h3 className="text-lg sm:text-xl font-bold text-gray-800">解锁大师尊享版</h3>
+              <p className="text-amber-700 text-xs sm:text-sm mt-1">开启全方位命理分析，定制专属好名</p>
             </div>
 
             {/* Modal Content */}
-            <div className="p-6">
+            <div className="p-4 sm:p-6">
               {/* Features List */}
               <div className="space-y-3 mb-6">
                 <div className="flex items-start gap-3">
@@ -148,7 +193,7 @@ export default function NamingMaster() {
               </div>
 
               {/* Price Card */}
-              <div className="bg-gray-50 rounded-xl p-4 mb-6 border-2 border-amber-200 relative overflow-hidden">
+              <div className="bg-gray-50 rounded-xl p-4 mb-4 sm:mb-6 border-2 border-amber-200 relative overflow-hidden">
                 <div className="absolute top-0 right-0 bg-red-500 text-white text-[10px] px-2 py-1 rounded-bl-lg font-bold">
                   限时特惠
                 </div>
@@ -169,22 +214,44 @@ export default function NamingMaster() {
                 </div>
               </div>
 
-              {/* Pay Buttons */}
+              {/* Pay Methods */}
+              <div className="grid grid-cols-2 gap-2 mb-3">
+                <button 
+                  onClick={() => setPaymentMethod('wechat')}
+                  className={`w-full py-3 rounded-xl text-sm font-bold border ${paymentMethod === 'wechat' ? 'border-green-500 bg-green-50 text-green-700' : 'border-gray-200 text-gray-600'}`}
+                >
+                  微信支付
+                </button>
+                <button 
+                  onClick={() => setPaymentMethod('alipay')}
+                  className={`w-full py-3 rounded-xl text-sm font-bold border ${paymentMethod === 'alipay' ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 text-gray-600'}`}
+                >
+                  支付宝
+                </button>
+              </div>
+
+              {/* Action */}
               <button 
-                onClick={handlePayment}
-                disabled={isPaying}
-                className="w-full bg-[#07C160] text-white py-3.5 rounded-xl font-bold text-lg hover:bg-[#06ad56] active:scale-[0.98] transition-all flex items-center justify-center gap-2 mb-3"
+                onClick={() => initiatePayment(paymentMethod)}
+                className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-3.5 rounded-xl font-bold text-base hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 mb-3"
               >
-                {isPaying ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" /> 正在支付...
-                  </>
-                ) : (
-                  <>
-                    <Smartphone className="w-5 h-5" /> 微信支付
-                  </>
-                )}
+                <Smartphone className="w-5 h-5" /> 发起支付
               </button>
+
+              {/* QR Code for Desktop WeChat */}
+              {qrCodeUrl && paymentMethod === 'wechat' && !isMobile && (
+                <div className="flex flex-col items-center gap-2 mb-3">
+                  <div className="bg-white p-3 rounded-xl border">
+                    <QRCodeSVG value={qrCodeUrl} size={180} />
+                  </div>
+                  <span className="text-xs text-gray-500">使用微信扫码完成支付</span>
+                  {isPollingPayment && (
+                    <span className="text-xs text-green-600 flex items-center gap-1">
+                      <Loader2 className="w-3 h-3 animate-spin" /> 正在确认支付状态...
+                    </span>
+                  )}
+                </div>
+              )}
               
               <div className="text-center">
                  <span className="text-xs text-gray-400 flex items-center justify-center gap-1">
@@ -533,7 +600,7 @@ export default function NamingMaster() {
 
           <div className="mb-4">
             {!isVip ? (
-              <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 rounded-xl p-4 flex items-center justify-between cursor-pointer hover:shadow-md transition-all" onClick={() => setIsVip(true)}>
+              <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 rounded-xl p-4 flex items-center justify-between cursor-pointer hover:shadow-md transition-all" onClick={() => setShowPaymentModal(true)}>
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-amber-100 rounded-full text-amber-600">
                     <Crown className="w-6 h-6" />
@@ -746,22 +813,22 @@ export default function NamingMaster() {
             ))}
             {/* Unlock Banner */}
             {!isVip && (
-              <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden group cursor-pointer" onClick={() => setIsVip(true)}>
+              <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-4 sm:p-6 text-white shadow-xl relative overflow-hidden group cursor-pointer" onClick={() => setShowPaymentModal(true)}>
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-white/20 transition-all"></div>
                 <div className="relative z-10 flex items-center justify-between">
                    <div>
-                     <h3 className="text-xl font-bold flex items-center gap-2 mb-2">
+                     <h3 className="text-lg sm:text-xl font-bold flex items-center gap-2 mb-2">
                        <Lock className="w-5 h-5 text-amber-400" />
                        解锁更多好名与深度解析
                      </h3>
-                     <p className="text-gray-300 text-sm">
+                     <p className="text-gray-300 text-xs sm:text-sm">
                        当前仅显示 3 个基础结果。升级后可获取：
                        <br />• 单次生成 10 个精选候选
                        <br />• 五行缺补深度分析
                        <br />• 八字运势详细解读
                      </p>
                    </div>
-                   <button className="bg-gradient-to-r from-amber-400 to-amber-600 text-gray-900 px-6 py-3 rounded-xl font-bold hover:shadow-lg hover:scale-105 transition-all flex items-center gap-2">
+                   <button className="bg-gradient-to-r from-amber-400 to-amber-600 text-gray-900 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold hover:shadow-lg hover:scale-105 transition-all flex items-center gap-2">
                      <Crown className="w-4 h-4" />
                      立即解锁
                    </button>
