@@ -59,7 +59,7 @@ export default function MBTIPage() {
             </div>
             <h2 className="text-4xl font-extrabold text-gray-900">探索你的真实人格</h2>
             <p className="text-xl text-gray-600 leading-relaxed">
-              基于荣格心理学理论，只需 30 道深度测试题，<br/>
+              基于荣格心理学理论，只需 50 道深度测试题，<br/>
               快速解析你的性格代码与潜能。
             </p>
             

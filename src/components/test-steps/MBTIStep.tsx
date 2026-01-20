@@ -43,10 +43,10 @@ export default function MBTIStep() {
             className="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full font-medium transition-colors shadow-md hover:shadow-lg"
           >
             <RefreshCcw className="w-4 h-4" />
-            {mbti ? '重新测试' : '开始 12 题快速测试'}
+            {mbti ? '重新测试' : '开始 50 题深度测试'}
           </button>
           
-          <p className="text-xs text-gray-400 mt-2">大约需要 1 分钟</p>
+          <p className="text-xs text-gray-400 mt-2">大约需要 3 分钟</p>
         </div>
 
         <div className="relative my-8">
