@@ -1,6 +1,6 @@
 
 // Call the backend API to generate names
-export async function generateName(params: any) {
+export async function generateName(params: Record<string, unknown>) {
   try {
     const response = await fetch('/api/naming/generate', {
       method: 'POST',

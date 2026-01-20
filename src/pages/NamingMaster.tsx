@@ -8,8 +8,6 @@ type NamingType = 'baby' | 'company' | 'brand';
 // Baby Naming Options
 const NAME_STYLES = ['古风', '现代', '文雅', '大气', '清爽', '独特'];
 const NAME_MEANINGS = ['品德', '智慧', '健康', '勇敢', '温柔', '自由'];
-const NAME_TONES = ['响亮', '柔和', '中性'];
-const NAME_COMMONALITY = ['常见', '适中', '小众'];
 
 // Company Naming Options
 const BRAND_TONES = ['专业', '年轻', '高端', '亲民', '科技', '国潮'];
@@ -457,6 +455,7 @@ export default function NamingMaster() {
                </div>
             </div>
 
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
             {result.map((item: any, index: number) => (
               <div key={index} className="bg-white rounded-2xl shadow-md border border-purple-50 overflow-hidden group hover:shadow-lg transition-all">
                 {namingType === 'baby' ? (
