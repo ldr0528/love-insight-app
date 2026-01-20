@@ -124,27 +124,27 @@ export default function DailyCheckIn() {
         </div>
 
         <div className="p-6 md:p-10 relative z-10">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
             <div className="flex items-center gap-4">
                {/* Mascot Avatar */}
-               <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center border-4 border-white shadow-lg relative overflow-hidden">
-                 <Cat className="w-10 h-10 text-pink-500 absolute -bottom-1" />
+               <div className="w-14 h-14 md:w-16 md:h-16 bg-pink-100 rounded-full flex items-center justify-center border-4 border-white shadow-lg relative overflow-hidden flex-shrink-0">
+                 <Cat className="w-8 h-8 md:w-10 md:h-10 text-pink-500 absolute -bottom-1" />
                </div>
                <div>
-                <h2 className="text-2xl font-black text-gray-800 flex items-center gap-2">
+                <h2 className="text-xl md:text-2xl font-black text-gray-800 flex items-center gap-2">
                   每日灵犀签
                 </h2>
-                <p className="text-sm text-gray-400 font-medium">坚持打卡，积攒桃花能量</p>
+                <p className="text-xs md:text-sm text-gray-400 font-medium">坚持打卡，积攒桃花能量</p>
               </div>
             </div>
             
-            <div className="flex items-center gap-3 bg-gradient-to-r from-orange-50 to-amber-50 pl-2 pr-5 py-2 rounded-full border border-orange-100 shadow-sm">
-              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-xl shadow-sm">
+            <div className="self-end md:self-auto flex items-center gap-3 bg-gradient-to-r from-orange-50 to-amber-50 pl-2 pr-5 py-2 rounded-full border border-orange-100 shadow-sm">
+              <div className="w-8 h-8 md:w-10 md:h-10 bg-white rounded-full flex items-center justify-center text-lg md:text-xl shadow-sm">
                 {currentTitle.icon}
               </div>
               <div className="text-right">
-                <div className="text-[10px] text-orange-400 font-bold uppercase tracking-wider">当前称号</div>
-                <div className="text-sm font-black text-orange-700">{currentTitle.name}</div>
+                <div className="text-[10px] text-orange-400 font-bold uppercase tracking-wider whitespace-nowrap">当前称号</div>
+                <div className="text-sm font-black text-orange-700 whitespace-nowrap">{currentTitle.name}</div>
               </div>
             </div>
           </div>
