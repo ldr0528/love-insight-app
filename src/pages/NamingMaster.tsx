@@ -610,10 +610,14 @@ export default function NamingMaster() {
                       解锁大师版
                       <span className="bg-amber-100 text-amber-700 text-xs px-2 py-0.5 rounded-full">限时特惠</span>
                     </h3>
-                    <p className="text-sm text-gray-600">单次生成 10 个精选好名 + 五行/八字深度解析</p>
+                    <p className="text-sm text-gray-600">
+                      {namingType === 'baby' 
+                        ? '单次生成 10 个精选好名 + 五行/八字深度解析'
+                        : '单次生成 10 个精选候选 + 英文名/Slogan/品牌标签'}
+                    </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-1 text-amber-600 font-bold">
+                <div className="flex items-center gap-1 text-amber-600 font-bold whitespace-nowrap shrink-0">
                   <span>去解锁</span>
                   <ChevronDown className="w-4 h-4 -rotate-90" />
                 </div>
@@ -823,9 +827,20 @@ export default function NamingMaster() {
                      </h3>
                      <p className="text-gray-300 text-xs sm:text-sm">
                        当前仅显示 3 个基础结果。升级后可获取：
-                       <br />• 单次生成 10 个精选候选
-                       <br />• 五行缺补深度分析
-                       <br />• 八字运势详细解读
+                       {namingType === 'baby' ? (
+                         <>
+                           <br />• 单次生成 10 个精选候选
+                           <br />• 五行缺补深度分析
+                           <br />• 八字运势详细解读
+                         </>
+                       ) : (
+                         <>
+                           <br />• 单次生成 10 个精选候选
+                           <br />• 英文名建议与拼写
+                           <br />• 3 条精炼 Slogan
+                           <br />• 标签与释义强化
+                         </>
+                       )}
                      </p>
                    </div>
                    <button className="bg-gradient-to-r from-amber-400 to-amber-600 text-gray-900 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold hover:shadow-lg hover:scale-105 transition-all flex items-center gap-2">
