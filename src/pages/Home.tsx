@@ -10,10 +10,11 @@ export default function Home() {
         {/* Hero Section */}
         <div className="text-center space-y-6">
           <h1 className="text-5xl font-extrabold text-gray-900 tracking-tight flex items-center justify-center gap-4">
+            灵犀
             <div className="inline-block p-3 bg-pink-100 rounded-full">
               <Compass className="w-10 h-10 text-pink-500 animate-[spin_15s_linear_infinite]" />
             </div>
-            灵犀指引
+            指引
           </h1>
           
           <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
