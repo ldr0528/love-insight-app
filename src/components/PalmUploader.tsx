@@ -36,7 +36,8 @@ export default function PalmUploader({ onAnalysisComplete }: PalmUploaderProps) 
     setAnalyzing(true);
     setError('');
     try {
-      const response = await fetch('http://localhost:3001/api/analyze/palm', {
+      // Use relative path for production compatibility
+      const response = await fetch('/api/analyze/palm', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ image: base64Image }),
