@@ -11,6 +11,9 @@ type PayStatus = 'free' | 'paid';
 interface FormData {
   mbti: string;
   birthday: string;
+  birthTime?: string;
+  uncertainTime?: boolean;
+  timeBranch?: string; // 子/丑/寅/...
   relationship_stage: RelationshipStage;
   goal: Goal;
 }
@@ -71,6 +74,9 @@ export default function LoveReport() {
   const [formData, setFormData] = useState<FormData>({
     mbti: '',
     birthday: '2000-01-01',
+    birthTime: '',
+    uncertainTime: false,
+    timeBranch: '',
     relationship_stage: 'single',
     goal: 'improve_attraction',
   });
@@ -87,7 +93,7 @@ export default function LoveReport() {
     setError('');
     try {
       // Use relative path for production compatibility
-      const response = await fetch('/api/report', {
+          const response = await fetch('/api/report', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -99,7 +105,13 @@ export default function LoveReport() {
           },
           signals: {
             mbti: { type: formData.mbti, confidence: 0.8 },
-            birthday: { date: formData.birthday, tags: [], confidence: 0.6 },
+                birthday: { 
+                  date: formData.birthday, 
+                  time: formData.uncertainTime ? null : (formData.birthTime || null),
+                  branch: formData.uncertainTime ? (formData.timeBranch || null) : null,
+                  tags: formData.uncertainTime ? ['uncertain_time'] : [], 
+                  confidence: 0.6 
+                },
           },
           entitlements: {
             pay_status: status,
@@ -278,6 +290,40 @@ export default function LoveReport() {
                   onChange={(e) => setFormData({...formData, birthday: e.target.value})}
                   className="w-full bg-gray-50 border-0 rounded-xl py-3 px-4 text-gray-800 font-medium focus:ring-2 focus:ring-pink-500 transition-all"
                 />
+              </div>
+              
+              <div className="mt-3 grid sm:grid-cols-2 gap-3">
+                <div className="relative">
+                  <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-1">出生时间</label>
+                  <input 
+                    type="time"
+                    disabled={!!formData.uncertainTime}
+                    value={formData.birthTime || ''}
+                    onChange={(e) => setFormData({...formData, birthTime: e.target.value})}
+                    className={`w-full bg-gray-50 border-0 rounded-xl py-3 px-4 text-gray-800 font-medium focus:ring-2 focus:ring-pink-500 transition-all ${formData.uncertainTime ? 'opacity-60 cursor-not-allowed' : ''}`}
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-1">具体时间不确定，用时辰代替</label>
+                  <div className="flex items-center gap-2">
+                    <input 
+                      type="checkbox" 
+                      checked={!!formData.uncertainTime}
+                      onChange={(e) => setFormData({...formData, uncertainTime: e.target.checked, birthTime: e.target.checked ? '' : formData.birthTime})}
+                    />
+                    <select 
+                      disabled={!formData.uncertainTime}
+                      value={formData.timeBranch || ''}
+                      onChange={(e) => setFormData({...formData, timeBranch: e.target.value})}
+                      className={`flex-1 appearance-none bg-gray-50 border-0 rounded-xl py-3 px-4 text-gray-800 font-medium focus:ring-2 focus:ring-pink-500 transition-all ${!formData.uncertainTime ? 'opacity-60 cursor-not-allowed' : ''}`}
+                    >
+                      <option value="">选择时辰</option>
+                      {['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'].map(s => (
+                        <option key={s} value={s}>{s}时</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
               </div>
             </div>
 
