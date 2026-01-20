@@ -18,6 +18,7 @@ export default function NamingMaster() {
   const [namingType, setNamingType] = useState<NamingType>('baby');
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
   const [showPreferences, setShowPreferences] = useState(false);
   const [showTimeInput, setShowTimeInput] = useState(false);
 
@@ -62,13 +63,15 @@ export default function NamingMaster() {
   const handleGenerate = async () => {
     setIsLoading(true);
     setResult(null);
+    setError(null);
     
     try {
       const params = namingType === 'baby' ? { type: 'baby', ...babyForm } : { type: 'company', ...companyForm };
       const data = await generateName(params);
       setResult(data);
-    } catch (error) {
-      console.error("Naming generation failed:", error);
+    } catch (err: any) {
+      console.error("Naming generation failed:", err);
+      setError(err.message || '生成失败，请稍后重试');
     } finally {
       setIsLoading(false);
     }
