@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, PenTool, Sparkles, User, Briefcase, Wand2, ChevronDown, ChevronUp, Copy, RefreshCcw, Heart, Info, X, Crown, Lock } from 'lucide-react';
+import { ArrowLeft, PenTool, Sparkles, User, Briefcase, Wand2, ChevronDown, ChevronUp, Copy, RefreshCcw, Heart, Info, X, Crown, Lock, Check, Loader2, Smartphone, ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { generateName } from '@/services/aiNaming';
 
@@ -22,6 +22,8 @@ export default function NamingMaster() {
   const [showPreferences, setShowPreferences] = useState(false);
   const [showTimeInput, setShowTimeInput] = useState(false);
   const [isVip, setIsVip] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [isPaying, setIsPaying] = useState(false);
 
   // Baby Form States
   const [babyForm, setBabyForm] = useState({
@@ -61,6 +63,16 @@ export default function NamingMaster() {
     return [...list, item];
   };
 
+  const handlePayment = async () => {
+    setIsPaying(true);
+    // Simulate payment API call
+    setTimeout(() => {
+      setIsPaying(false);
+      setShowPaymentModal(false);
+      setIsVip(true);
+    }, 2000);
+  };
+
   const handleGenerate = async () => {
     setIsLoading(true);
     setResult(null);
@@ -83,6 +95,107 @@ export default function NamingMaster() {
 
   return (
     <div className="min-h-screen bg-purple-50 flex flex-col items-center p-4">
+      {/* Payment Modal */}
+      {showPaymentModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl animate-scale-in">
+            {/* Modal Header */}
+            <div className="bg-gradient-to-r from-amber-100 to-yellow-50 p-6 text-center relative">
+              <button 
+                onClick={() => setShowPaymentModal(false)}
+                className="absolute right-4 top-4 text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+              <div className="w-16 h-16 bg-gradient-to-br from-amber-400 to-yellow-600 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                <Crown className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-800">解锁大师尊享版</h3>
+              <p className="text-amber-700 text-sm mt-1">开启全方位命理分析，定制专属好名</p>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6">
+              {/* Features List */}
+              <div className="space-y-3 mb-6">
+                <div className="flex items-start gap-3">
+                  <div className="p-1 bg-green-100 rounded-full text-green-600 mt-0.5">
+                    <Check className="w-3 h-3" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-gray-800 text-sm">生成数量提升至 10 个</h4>
+                    <p className="text-xs text-gray-500">更多选择，总有一个合你心意</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="p-1 bg-green-100 rounded-full text-green-600 mt-0.5">
+                    <Check className="w-3 h-3" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-gray-800 text-sm">三才五格与生肖深度解析</h4>
+                    <p className="text-xs text-gray-500">结合传统命理，分析吉凶宜忌</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="p-1 bg-green-100 rounded-full text-green-600 mt-0.5">
+                    <Check className="w-3 h-3" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-gray-800 text-sm">诗词出处与文化内涵</h4>
+                    <p className="text-xs text-gray-500">引经据典，赋予名字深厚寓意</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Price Card */}
+              <div className="bg-gray-50 rounded-xl p-4 mb-6 border-2 border-amber-200 relative overflow-hidden">
+                <div className="absolute top-0 right-0 bg-red-500 text-white text-[10px] px-2 py-1 rounded-bl-lg font-bold">
+                  限时特惠
+                </div>
+                <div className="flex justify-between items-end">
+                  <div>
+                    <div className="text-sm text-gray-500 line-through">原价 ¥99.00</div>
+                    <div className="flex items-baseline gap-1">
+                       <span className="text-sm font-bold text-red-500">¥</span>
+                       <span className="text-3xl font-extrabold text-red-500">9.9</span>
+                       <span className="text-xs text-gray-500 font-medium">/ 永久解锁</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-xs text-amber-700 font-bold bg-amber-100 px-2 py-1 rounded-lg">
+                      今日已售 1,208 份
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Pay Buttons */}
+              <button 
+                onClick={handlePayment}
+                disabled={isPaying}
+                className="w-full bg-[#07C160] text-white py-3.5 rounded-xl font-bold text-lg hover:bg-[#06ad56] active:scale-[0.98] transition-all flex items-center justify-center gap-2 mb-3"
+              >
+                {isPaying ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" /> 正在支付...
+                  </>
+                ) : (
+                  <>
+                    <Smartphone className="w-5 h-5" /> 微信支付
+                  </>
+                )}
+              </button>
+              
+              <div className="text-center">
+                 <span className="text-xs text-gray-400 flex items-center justify-center gap-1">
+                   <ShieldCheck className="w-3 h-3" /> 支付安全保障 · 无效退款
+                 </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="w-full max-w-2xl flex items-center justify-between mb-8 pt-4">
         <Link to="/" className="p-2 rounded-full bg-white shadow-sm hover:bg-gray-50 transition-colors">
