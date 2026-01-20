@@ -16,8 +16,6 @@ const BRAND_TONES = ['专业', '年轻', '高端', '亲民', '科技', '国潮']
 const TARGET_AUDIENCES = ['B端', '大众', '女性向', '男性向', '亲子'];
 const BRAND_LANGUAGES = ['中文', '中英混合', '英文'];
 
-import { generateName } from '@/services/aiNaming';
-
 export default function NamingMaster() {
   const [namingType, setNamingType] = useState<NamingType>('baby');
   const [isLoading, setIsLoading] = useState(false);
