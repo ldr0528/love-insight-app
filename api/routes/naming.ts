@@ -23,7 +23,7 @@ router.post('/generate', async (req: Request, res: Response): Promise<void> => {
     const systemPrompt = 'You are a professional naming expert. Return only valid JSON array. Do not include any explanation or markdown formatting.'
 
     if (type === 'baby') {
-      const { lastName, gender, birthYear, birthMonth, birthDay, birthTime, styles, meanings, nameLength, avoidChars, fixedChar, count, detailed } = params
+      const { lastName, gender, birthYear, birthMonth, birthDay, birthTime, uncertainTime, timeBranch, styles, meanings, nameLength, avoidChars, fixedChar, count, detailed } = params
       const styleStr = styles?.length ? styles.join('、') : '不限'
       const meaningStr = meanings?.length ? meanings.join('、') : '不限'
       const nameCount = count || 3
@@ -31,14 +31,16 @@ router.post('/generate', async (req: Request, res: Response): Promise<void> => {
       const ln = (lastName || '李')
       const lnLen = ln.length
       const givenLen = Math.max(totalLen - lnLen, 1)
+      const birthTimeNote = uncertainTime && timeBranch ? `约在${timeBranch}时` : (birthTime || '')
       
       prompt = `请为姓氏“${ln}”的${gender === 'boy' ? '男孩' : '女孩'}起${nameCount}个名字。
-      出生信息：${birthYear || '不详'}年${birthMonth || ''}月${birthDay || ''}日 ${birthTime || ''}
+      出生信息：${birthYear || '不详'}年${birthMonth || ''}月${birthDay || ''}日 ${birthTimeNote}
       名字总字数：严格限制为${totalLen}个字（包含姓氏）。例如：姓李，总字数2，则全名为“李X”；总字数3，则“李XX”。
       风格偏好：${styleStr}
       寓意偏好：${meaningStr}
       ${avoidChars ? `避讳字：${avoidChars}` : ''}
       ${fixedChar ? `固定字：${fixedChar}` : ''}
+      ${uncertainTime ? `注：出生具体时间不确定，按“${timeBranch}时”估算。分析时请保持稳健，尽量给出跨时辰仍成立的建议。` : ''}
       
       请返回${nameCount}个推荐名字，要求：
       1. 必须富有创意，避免常见重名。
@@ -60,7 +62,7 @@ router.post('/generate', async (req: Request, res: Response): Promise<void> => {
       - score: 综合评分（80-100之间）` : ''}
       `
     } else {
-      const { industry, customIndustry, tone, audience, language, keywords, description, count, detailed } = params
+      const { industry, customIndustry, tone, audience, language, includeKeywords, avoidKeywords, description, count, detailed } = params
       const industryStr = industry === 'other' ? customIndustry : industry
       const nameCount = count || 3
       
@@ -68,7 +70,8 @@ router.post('/generate', async (req: Request, res: Response): Promise<void> => {
       品牌调性：${tone || '不限'}
       目标受众：${audience || '不限'}
       语言偏好：${language || '中文'}
-      ${keywords ? `关键词：${keywords}` : ''}
+      ${includeKeywords ? `必须包含关键词：${includeKeywords}` : ''}
+      ${avoidKeywords ? `需要避免关键词：${avoidKeywords}` : ''}
       ${description ? `描述：${description}` : ''}
 
       严格要求：

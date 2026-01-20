@@ -46,6 +46,8 @@ export default function NamingMaster() {
     birthMonth: '',
     birthDay: '',
     birthTime: '', // HH:mm
+    uncertainTime: false,
+    timeBranch: '', // 子/丑/寅/...
     gender: 'boy',
     nameLength: '2', // '2' or '3'
     styles: [] as string[],
@@ -63,7 +65,8 @@ export default function NamingMaster() {
     tone: '',
     audience: '',
     language: '中文',
-    keywords: '',
+    includeKeywords: '',
+    avoidKeywords: '',
     description: '',
     city: '',
   });
@@ -397,7 +400,7 @@ export default function NamingMaster() {
                    </div>
                 </div>
                 
-                {showTimeInput && (
+                {showTimeInput && !babyForm.uncertainTime && (
                   <div className="relative w-full">
                     <input
                       type="time"
@@ -407,6 +410,30 @@ export default function NamingMaster() {
                     />
                   </div>
                 )}
+                <div className="mt-2 flex flex-col sm:flex-row sm:items-center gap-3">
+                  <label className="flex items-center gap-2 text-sm text-gray-700">
+                    <input
+                      type="checkbox"
+                      checked={babyForm.uncertainTime}
+                      onChange={(e) => setBabyForm({...babyForm, uncertainTime: e.target.checked, birthTime: e.target.checked ? '' : babyForm.birthTime})}
+                    />
+                    具体时间不确定，用时辰代替
+                  </label>
+                  <div className="relative">
+                    <select
+                      disabled={!babyForm.uncertainTime}
+                      value={babyForm.timeBranch}
+                      onChange={(e) => setBabyForm({...babyForm, timeBranch: e.target.value})}
+                      className={`p-3.5 border rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none text-sm appearance-none ${babyForm.uncertainTime ? 'border-gray-200 bg-white' : 'border-gray-100 bg-gray-50 text-gray-400'}`}
+                    >
+                      <option value="">选择时辰</option>
+                      {['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'].map(s => (
+                        <option key={s} value={s}>{s}时</option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-3 top-4 w-4 h-4 text-gray-400 pointer-events-none" />
+                  </div>
+                </div>
               </div>
 
               {/* Preferences Toggle */}
@@ -588,15 +615,27 @@ export default function NamingMaster() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">必须包含/避免的关键词 (可选)</label>
-                <input
-                  type="text"
-                  value={companyForm.keywords}
-                  onChange={(e) => setCompanyForm({...companyForm, keywords: e.target.value})}
-                  placeholder="例如：包含“智”，避免“通”"
-                  className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
-                />
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">必须包含关键词 (可选)</label>
+                  <input
+                    type="text"
+                    value={companyForm.includeKeywords}
+                    onChange={(e) => setCompanyForm({...companyForm, includeKeywords: e.target.value})}
+                    placeholder="例如：包含“智、创、光”等"
+                    className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">需要避免的关键词 (可选)</label>
+                  <input
+                    type="text"
+                    value={companyForm.avoidKeywords}
+                    onChange={(e) => setCompanyForm({...companyForm, avoidKeywords: e.target.value})}
+                    placeholder="例如：避免“通、达、联”等"
+                    className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  />
+                </div>
               </div>
 
               <div>
