@@ -83,7 +83,8 @@ export default function LoveCoach() {
     
     setStep('loading');
     try {
-      const response = await fetch('http://localhost:3001/api/report', {
+      // Use relative path for production compatibility
+      const response = await fetch('/api/report', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

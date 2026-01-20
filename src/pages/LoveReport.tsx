@@ -76,7 +76,8 @@ export default function LoveReport() {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch('http://localhost:3001/api/report', {
+      // Use relative path for production compatibility
+      const response = await fetch('/api/report', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -117,7 +118,7 @@ export default function LoveReport() {
     alert('支付功能正在接入中，敬请期待！');
   };
 
-  if (loading && !report && step === 'result') { // Initial loading for result
+  if (loading && !report) { // Initial loading for result
      return (
        <div className="flex flex-col items-center justify-center min-h-screen bg-pink-50 text-pink-800">
          <Loader2 className="w-12 h-12 animate-spin mb-4" />
