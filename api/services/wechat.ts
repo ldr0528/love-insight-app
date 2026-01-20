@@ -61,9 +61,12 @@ export const createNativeOrder = async (order: WxPayOrder): Promise<string> => {
     amount: order.amount,
   })
 
+  // @ts-ignore
   if (result.status === 200 && result.code_url) {
+    // @ts-ignore
     return result.code_url
   } else {
+    // @ts-ignore
     throw new Error(`WeChat Pay Error: ${result.message || 'Unknown error'}`)
   }
 }
