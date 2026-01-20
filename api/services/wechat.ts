@@ -10,51 +10,68 @@ export const getWxPay = () => {
   if (wxPay) return wxPay
 
   try {
-    // Vercel environment: try to find certificates in various locations
-    const possibleCertPaths = [
-      path.join(process.cwd(), 'cert', 'apiclient_cert.pem'), // Local dev
-      path.join(process.cwd(), 'api', 'cert', 'apiclient_cert.pem'), // Vercel function structure
-      path.resolve(__dirname, '..', '..', 'cert', 'apiclient_cert.pem'), // Relative to compiled file
-      '/var/task/cert/apiclient_cert.pem' // Absolute path in AWS Lambda
-    ];
+    // Priority 1: Check Environment Variables for Content
+    // This bypasses file system issues entirely on Vercel
+    let privateKey: Buffer | undefined;
+    let publicKey: Buffer | undefined;
 
-    const possibleKeyPaths = [
-      path.join(process.cwd(), 'cert', 'apiclient_key.pem'),
-      path.join(process.cwd(), 'api', 'cert', 'apiclient_key.pem'),
-      path.resolve(__dirname, '..', '..', 'cert', 'apiclient_key.pem'),
-      '/var/task/cert/apiclient_key.pem'
-    ];
+    if (process.env.WECHAT_KEY_CONTENT && process.env.WECHAT_CERT_CONTENT) {
+       console.log('[WeChat] Using certificates from Environment Variables');
+       // Handle newlines if they were escaped
+       const keyContent = process.env.WECHAT_KEY_CONTENT.replace(/\\n/g, '\n');
+       const certContent = process.env.WECHAT_CERT_CONTENT.replace(/\\n/g, '\n');
+       privateKey = Buffer.from(keyContent);
+       publicKey = Buffer.from(certContent);
+    }
 
-    let certPath = '';
-    let keyPath = '';
+    // Priority 2: Check File System (Fallback)
+    if (!privateKey || !publicKey) {
+      // Vercel environment: try to find certificates in various locations
+      const possibleCertPaths = [
+        path.join(process.cwd(), 'cert', 'apiclient_cert.pem'), // Local dev
+        path.join(process.cwd(), 'api', 'cert', 'apiclient_cert.pem'), // Vercel function structure
+        path.resolve(__dirname, '..', '..', 'cert', 'apiclient_cert.pem'), // Relative to compiled file
+        '/var/task/cert/apiclient_cert.pem' // Absolute path in AWS Lambda
+      ];
 
-    for (const p of possibleCertPaths) {
-      if (fs.existsSync(p)) {
-        certPath = p;
-        break;
+      const possibleKeyPaths = [
+        path.join(process.cwd(), 'cert', 'apiclient_key.pem'),
+        path.join(process.cwd(), 'api', 'cert', 'apiclient_key.pem'),
+        path.resolve(__dirname, '..', '..', 'cert', 'apiclient_key.pem'),
+        '/var/task/cert/apiclient_key.pem'
+      ];
+
+      let certPath = '';
+      let keyPath = '';
+
+      for (const p of possibleCertPaths) {
+        if (fs.existsSync(p)) {
+          certPath = p;
+          break;
+        }
       }
-    }
 
-    for (const p of possibleKeyPaths) {
-      if (fs.existsSync(p)) {
-        keyPath = p;
-        break;
+      for (const p of possibleKeyPaths) {
+        if (fs.existsSync(p)) {
+          keyPath = p;
+          break;
+        }
       }
+
+      console.log('[WeChat] Looking for certs in:', possibleCertPaths);
+      console.log('[WeChat] Found Cert:', certPath);
+      console.log('[WeChat] Found Key:', keyPath);
+      console.log('[WeChat] MCH_ID exists:', !!process.env.WECHAT_MCH_ID);
+      console.log('[WeChat] APP_ID exists:', !!process.env.WECHAT_APP_ID);
+
+      if (!certPath || !keyPath || !process.env.WECHAT_MCH_ID) {
+        console.error(`Missing certs or MCH_ID. CertFound: ${!!certPath}, KeyFound: ${!!keyPath}, ID: ${!!process.env.WECHAT_MCH_ID}`)
+        throw new Error('WeChat Pay certificates or env vars missing.')
+      }
+      
+      privateKey = fs.readFileSync(keyPath)
+      publicKey = fs.readFileSync(certPath)
     }
-
-    console.log('[WeChat] Looking for certs in:', possibleCertPaths);
-    console.log('[WeChat] Found Cert:', certPath);
-    console.log('[WeChat] Found Key:', keyPath);
-    console.log('[WeChat] MCH_ID exists:', !!process.env.WECHAT_MCH_ID);
-    console.log('[WeChat] APP_ID exists:', !!process.env.WECHAT_APP_ID);
-
-    if (!certPath || !keyPath || !process.env.WECHAT_MCH_ID) {
-      console.error(`Missing certs or MCH_ID. CertFound: ${!!certPath}, KeyFound: ${!!keyPath}, ID: ${!!process.env.WECHAT_MCH_ID}`)
-      throw new Error('WeChat Pay certificates or env vars missing.')
-    }
-
-    const privateKey = fs.readFileSync(keyPath)
-    const publicKey = fs.readFileSync(certPath)
 
     wxPay = new WxPay({
       appid: process.env.WECHAT_APP_ID || '',
