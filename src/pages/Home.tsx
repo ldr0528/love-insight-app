@@ -112,7 +112,7 @@ export default function Home() {
               <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center text-purple-600 mb-4">
                 <PenTool className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">AI 起名大师</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">缘名堂</h3>
               <p className="text-gray-500 text-sm mb-6 max-w-lg">
                 结合传统生辰八字与现代美学，为宝宝、公司或品牌定制寓意深远、朗朗上口的好名字。
               </p>

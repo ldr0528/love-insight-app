@@ -50,7 +50,7 @@ export default function NamingMaster() {
         </Link>
         <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
           <PenTool className="w-6 h-6 text-purple-600" />
-          AI 起名大师
+          缘名堂
         </h1>
         <div className="w-10"></div>
       </div>
@@ -91,7 +91,7 @@ export default function NamingMaster() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">出生日期 (阳历)</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">出生时间 (阳历)</label>
                 <input
                   type="datetime-local"
                   value={birthDate}
@@ -143,6 +143,14 @@ export default function NamingMaster() {
                   className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
                 />
               </div>
+              <div>
+                 <label className="block text-sm font-medium text-gray-700 mb-2">城市/地区（可选）</label>
+                 <input
+                   type="text"
+                   placeholder="例如：深圳、北京"
+                   className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                 />
+               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">品牌描述/愿景</label>
                 <textarea
