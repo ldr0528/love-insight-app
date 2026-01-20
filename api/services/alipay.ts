@@ -58,9 +58,10 @@ export const createAlipayOrder = async (order: AlipayOrder, platform: 'mobile' |
   const method = platform === 'mobile' ? 'alipay.trade.wap.pay' : 'alipay.trade.page.pay';
   const productCode = platform === 'mobile' ? 'QUICK_WAP_WAY' : 'FAST_INSTANT_TRADE_PAY';
 
-  // alipay-sdk exec returns the URL string if formData is not used, or form html
-  // We want the URL to redirect the user.
-  const result = await sdk.exec(method, {
+  // alipay-sdk 4.x: exec method is for calling OpenAPI
+  // For generating payment page URL or Form, we should use `pageExec`
+  // pageExec returns string (URL or Form HTML)
+  const result = sdk.pageExec(method, {
     bizContent: {
       out_trade_no: order.outTradeNo,
       total_amount: order.totalAmount,
@@ -71,7 +72,5 @@ export const createAlipayOrder = async (order: AlipayOrder, platform: 'mobile' |
     notifyUrl: order.notifyUrl,
   });
 
-  // If result is a form (starts with <form), we return it as is.
-  // If result is a URL (starts with https), we return it.
-  return result as string; 
+  return result; 
 }
