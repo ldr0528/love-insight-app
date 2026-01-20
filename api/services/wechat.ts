@@ -45,6 +45,8 @@ export const getWxPay = () => {
     console.log('[WeChat] Looking for certs in:', possibleCertPaths);
     console.log('[WeChat] Found Cert:', certPath);
     console.log('[WeChat] Found Key:', keyPath);
+    console.log('[WeChat] MCH_ID exists:', !!process.env.WECHAT_MCH_ID);
+    console.log('[WeChat] APP_ID exists:', !!process.env.WECHAT_APP_ID);
 
     if (!certPath || !keyPath || !process.env.WECHAT_MCH_ID) {
       console.error(`Missing certs or MCH_ID. CertFound: ${!!certPath}, KeyFound: ${!!keyPath}, ID: ${!!process.env.WECHAT_MCH_ID}`)
