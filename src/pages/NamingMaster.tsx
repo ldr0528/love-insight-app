@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft, PenTool, Sparkles, User, Briefcase, Wand2, ChevronDown, ChevronUp, Copy, RefreshCcw, Heart, Info, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { generateName } from '@/services/aiNaming';
 
 type NamingType = 'baby' | 'company' | 'brand';
 
@@ -435,6 +436,13 @@ export default function NamingMaster() {
              ? '注：仅用于生成风格与五行倾向建议；不保存或可随时删除' 
              : '注：生成结果不保证商标与域名可用，建议自行检索'}
           </p>
+
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm flex items-center gap-2 animate-fade-in">
+              <X className="w-4 h-4" />
+              {error}
+            </div>
+          )}
         </div>
 
         {/* Results */}
