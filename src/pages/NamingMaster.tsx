@@ -26,6 +26,9 @@ export default function NamingMaster() {
   const [babyForm, setBabyForm] = useState({
     lastName: '',
     birthDate: '', // YYYY-MM-DD
+    birthYear: '',
+    birthMonth: '',
+    birthDay: '',
     birthTime: '', // HH:mm
     gender: 'boy',
     nameLength: '2', // '2' or '3'
@@ -201,26 +204,58 @@ export default function NamingMaster() {
                     {showTimeInput ? '隐藏时间' : '+ 添加出生时间'}
                   </button>
                 </div>
-                <div className="flex gap-3">
-                  <div className="relative flex-grow">
+                <div className="flex gap-2 mb-2">
+                   <div className="flex-1 relative">
+                     <select
+                       value={babyForm.birthYear}
+                       onChange={(e) => setBabyForm({...babyForm, birthYear: e.target.value})}
+                       className="w-full p-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none text-base appearance-none bg-white"
+                     >
+                       <option value="">年份</option>
+                       {Array.from({length: 100}, (_, i) => new Date().getFullYear() - i).map(year => (
+                         <option key={year} value={year}>{year}年</option>
+                       ))}
+                     </select>
+                     <ChevronDown className="absolute right-3 top-4 w-4 h-4 text-gray-400 pointer-events-none" />
+                   </div>
+                   <div className="flex-1 relative">
+                     <select
+                       value={babyForm.birthMonth}
+                       onChange={(e) => setBabyForm({...babyForm, birthMonth: e.target.value})}
+                       className="w-full p-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none text-base appearance-none bg-white"
+                     >
+                       <option value="">月份</option>
+                       {Array.from({length: 12}, (_, i) => i + 1).map(month => (
+                         <option key={month} value={month}>{month}月</option>
+                       ))}
+                     </select>
+                     <ChevronDown className="absolute right-3 top-4 w-4 h-4 text-gray-400 pointer-events-none" />
+                   </div>
+                   <div className="flex-1 relative">
+                     <select
+                       value={babyForm.birthDay}
+                       onChange={(e) => setBabyForm({...babyForm, birthDay: e.target.value})}
+                       className="w-full p-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none text-base appearance-none bg-white"
+                     >
+                       <option value="">日期</option>
+                       {Array.from({length: 31}, (_, i) => i + 1).map(day => (
+                         <option key={day} value={day}>{day}日</option>
+                       ))}
+                     </select>
+                     <ChevronDown className="absolute right-3 top-4 w-4 h-4 text-gray-400 pointer-events-none" />
+                   </div>
+                </div>
+                
+                {showTimeInput && (
+                  <div className="relative w-full">
                     <input
-                      type="date"
-                      value={babyForm.birthDate}
-                      onChange={(e) => setBabyForm({...babyForm, birthDate: e.target.value})}
+                      type="time"
+                      value={babyForm.birthTime}
+                      onChange={(e) => setBabyForm({...babyForm, birthTime: e.target.value})}
                       className="w-full p-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none text-base appearance-none"
                     />
                   </div>
-                  {showTimeInput && (
-                    <div className="relative w-36">
-                      <input
-                        type="time"
-                        value={babyForm.birthTime}
-                        onChange={(e) => setBabyForm({...babyForm, birthTime: e.target.value})}
-                        className="w-full p-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none text-base appearance-none"
-                      />
-                    </div>
-                  )}
-                </div>
+                )}
               </div>
 
               {/* Preferences Toggle */}
