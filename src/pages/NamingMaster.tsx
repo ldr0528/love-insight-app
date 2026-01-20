@@ -140,19 +140,19 @@ export default function NamingMaster() {
         <div className="bg-white rounded-2xl p-2 shadow-sm flex">
           <button
             onClick={() => { setNamingType('baby'); setResult(null); }}
-            className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+            className={`flex-1 py-3 rounded-xl text-base font-bold transition-all flex items-center justify-center gap-2 ${
               namingType === 'baby' ? 'bg-purple-100 text-purple-700' : 'text-gray-500 hover:bg-gray-50'
             }`}
           >
-            <User className="w-4 h-4" /> 宝宝起名
+            <User className="w-5 h-5" /> 宝宝起名
           </button>
           <button
             onClick={() => { setNamingType('company'); setResult(null); }}
-            className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+            className={`flex-1 py-3 rounded-xl text-base font-bold transition-all flex items-center justify-center gap-2 ${
               namingType === 'company' ? 'bg-purple-100 text-purple-700' : 'text-gray-500 hover:bg-gray-50'
             }`}
           >
-            <Briefcase className="w-4 h-4" /> 公司/品牌起名
+            <Briefcase className="w-5 h-5" /> 公司/品牌起名
           </button>
         </div>
 
@@ -163,27 +163,27 @@ export default function NamingMaster() {
               {/* Basic Info */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">宝宝姓氏</label>
+                  <label className="block text-base font-medium text-gray-700 mb-2">宝宝姓氏</label>
                   <input
                     type="text"
                     value={babyForm.lastName}
                     onChange={(e) => setBabyForm({...babyForm, lastName: e.target.value})}
                     placeholder="例如：李"
-                    className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                    className="w-full p-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none text-base"
                   />
                 </div>
                 <div>
-                   <label className="block text-sm font-medium text-gray-700 mb-2">性别</label>
-                   <div className="flex bg-gray-50 rounded-xl p-1">
+                   <label className="block text-base font-medium text-gray-700 mb-2">性别</label>
+                   <div className="flex bg-gray-50 rounded-xl p-1 h-[52px]">
                       <button 
                         onClick={() => setBabyForm({...babyForm, gender: 'boy'})}
-                        className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${babyForm.gender === 'boy' ? 'bg-blue-100 text-blue-700 shadow-sm' : 'text-gray-500'}`}
+                        className={`flex-1 rounded-lg text-base font-medium transition-all flex items-center justify-center gap-1 ${babyForm.gender === 'boy' ? 'bg-blue-100 text-blue-700 shadow-sm' : 'text-gray-500'}`}
                       >
                         👦 男孩
                       </button>
                       <button 
                         onClick={() => setBabyForm({...babyForm, gender: 'girl'})}
-                        className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${babyForm.gender === 'girl' ? 'bg-pink-100 text-pink-700 shadow-sm' : 'text-gray-500'}`}
+                        className={`flex-1 rounded-lg text-base font-medium transition-all flex items-center justify-center gap-1 ${babyForm.gender === 'girl' ? 'bg-pink-100 text-pink-700 shadow-sm' : 'text-gray-500'}`}
                       >
                         👧 女孩
                       </button>
@@ -193,28 +193,32 @@ export default function NamingMaster() {
 
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <label className="block text-sm font-medium text-gray-700">出生日期 (阳历)</label>
+                  <label className="block text-base font-medium text-gray-700">出生日期 (阳历)</label>
                   <button 
                     onClick={() => setShowTimeInput(!showTimeInput)}
-                    className="text-xs text-purple-600 font-medium hover:underline"
+                    className="text-sm text-purple-600 font-medium hover:underline flex items-center gap-1"
                   >
                     {showTimeInput ? '隐藏时间' : '+ 添加出生时间'}
                   </button>
                 </div>
-                <div className="flex gap-2">
-                  <input
-                    type="date"
-                    value={babyForm.birthDate}
-                    onChange={(e) => setBabyForm({...babyForm, birthDate: e.target.value})}
-                    className="flex-grow p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
-                  />
-                  {showTimeInput && (
+                <div className="flex gap-3">
+                  <div className="relative flex-grow">
                     <input
-                      type="time"
-                      value={babyForm.birthTime}
-                      onChange={(e) => setBabyForm({...babyForm, birthTime: e.target.value})}
-                      className="w-32 p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                      type="date"
+                      value={babyForm.birthDate}
+                      onChange={(e) => setBabyForm({...babyForm, birthDate: e.target.value})}
+                      className="w-full p-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none text-base appearance-none"
                     />
+                  </div>
+                  {showTimeInput && (
+                    <div className="relative w-36">
+                      <input
+                        type="time"
+                        value={babyForm.birthTime}
+                        onChange={(e) => setBabyForm({...babyForm, birthTime: e.target.value})}
+                        className="w-full p-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none text-base appearance-none"
+                      />
+                    </div>
                   )}
                 </div>
               </div>
@@ -223,28 +227,28 @@ export default function NamingMaster() {
               <div>
                 <button 
                   onClick={() => setShowPreferences(!showPreferences)}
-                  className="w-full flex items-center justify-between p-3 bg-purple-50 rounded-xl text-purple-700 font-medium hover:bg-purple-100 transition-colors"
+                  className="w-full flex items-center justify-between p-4 bg-purple-50 rounded-xl text-purple-700 font-medium hover:bg-purple-100 transition-colors"
                 >
-                  <span className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4" /> 偏好设置 (选填)
+                  <span className="flex items-center gap-2 text-base">
+                    <Sparkles className="w-5 h-5" /> 偏好设置 (选填)
                   </span>
-                  {showPreferences ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                  {showPreferences ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                 </button>
 
                 {showPreferences && (
-                  <div className="mt-4 space-y-4 animate-fade-in p-2">
+                  <div className="mt-4 space-y-5 animate-fade-in p-2">
                      {/* Name Length */}
                      <div>
-                        <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">名字字数</label>
+                        <label className="block text-sm font-bold text-gray-500 mb-3 uppercase tracking-wider">名字字数</label>
                         <div className="flex gap-3">
                           {['2', '3'].map((len) => (
                             <button
                               key={len}
                               onClick={() => setBabyForm({...babyForm, nameLength: len})}
-                              className={`px-4 py-2 rounded-lg text-sm border transition-all ${
+                              className={`px-5 py-2.5 rounded-xl text-sm font-medium border transition-all ${
                                 babyForm.nameLength === len 
-                                ? 'border-purple-500 bg-purple-50 text-purple-700 font-bold' 
-                                : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                                ? 'border-purple-500 bg-purple-50 text-purple-700' 
+                                : 'border-gray-200 text-gray-600 hover:border-gray-300 bg-white'
                               }`}
                             >
                               {len}字
@@ -255,16 +259,16 @@ export default function NamingMaster() {
 
                      {/* Style */}
                      <div>
-                        <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">风格 (多选)</label>
-                        <div className="flex flex-wrap gap-2">
+                        <label className="block text-sm font-bold text-gray-500 mb-3 uppercase tracking-wider">风格 (多选)</label>
+                        <div className="flex flex-wrap gap-2.5">
                           {NAME_STYLES.map((style) => (
                             <button
                               key={style}
                               onClick={() => setBabyForm({...babyForm, styles: toggleSelection(babyForm.styles, style)})}
-                              className={`px-3 py-1.5 rounded-full text-xs border transition-all ${
+                              className={`px-4 py-2 rounded-full text-sm border transition-all ${
                                 babyForm.styles.includes(style)
                                 ? 'border-purple-500 bg-purple-50 text-purple-700 font-bold' 
-                                : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                                : 'border-gray-200 text-gray-600 hover:border-gray-300 bg-white'
                               }`}
                             >
                               {style}
@@ -275,16 +279,16 @@ export default function NamingMaster() {
 
                      {/* Meaning */}
                      <div>
-                        <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">寓意方向 (多选)</label>
-                        <div className="flex flex-wrap gap-2">
+                        <label className="block text-sm font-bold text-gray-500 mb-3 uppercase tracking-wider">寓意方向 (多选)</label>
+                        <div className="flex flex-wrap gap-2.5">
                           {NAME_MEANINGS.map((m) => (
                             <button
                               key={m}
                               onClick={() => setBabyForm({...babyForm, meanings: toggleSelection(babyForm.meanings, m)})}
-                              className={`px-3 py-1.5 rounded-full text-xs border transition-all ${
+                              className={`px-4 py-2 rounded-full text-sm border transition-all ${
                                 babyForm.meanings.includes(m)
                                 ? 'border-purple-500 bg-purple-50 text-purple-700 font-bold' 
-                                : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                                : 'border-gray-200 text-gray-600 hover:border-gray-300 bg-white'
                               }`}
                             >
                               {m}
@@ -296,23 +300,23 @@ export default function NamingMaster() {
                      {/* Advanced Inputs */}
                      <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">避讳/禁用字</label>
+                          <label className="block text-sm font-bold text-gray-500 mb-2 uppercase tracking-wider">避讳/禁用字</label>
                           <input 
                             type="text" 
                             placeholder="如：国、强"
                             value={babyForm.avoidChars}
                             onChange={(e) => setBabyForm({...babyForm, avoidChars: e.target.value})}
-                            className="w-full p-2 text-sm border border-gray-200 rounded-lg focus:ring-1 focus:ring-purple-500 outline-none"
+                            className="w-full p-3 text-base border border-gray-200 rounded-xl focus:ring-1 focus:ring-purple-500 outline-none"
                           />
                         </div>
                         <div>
-                          <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">辈分字/固定字</label>
+                          <label className="block text-sm font-bold text-gray-500 mb-2 uppercase tracking-wider">辈分字/固定字</label>
                           <input 
                             type="text" 
                             placeholder="如：梓"
                             value={babyForm.fixedChar}
                             onChange={(e) => setBabyForm({...babyForm, fixedChar: e.target.value})}
-                            className="w-full p-2 text-sm border border-gray-200 rounded-lg focus:ring-1 focus:ring-purple-500 outline-none"
+                            className="w-full p-3 text-base border border-gray-200 rounded-xl focus:ring-1 focus:ring-purple-500 outline-none"
                           />
                         </div>
                      </div>
