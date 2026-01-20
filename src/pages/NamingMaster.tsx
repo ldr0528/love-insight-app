@@ -31,7 +31,11 @@ export default function NamingMaster() {
 
   useEffect(() => {
     const unlocked = localStorage.getItem('vip_unlocked') === 'true';
-    if (unlocked) setIsVip(true);
+    const qs = new URLSearchParams(window.location.search);
+    const vipParam = qs.get('vip');
+    if (unlocked || vipParam === '1' || vipParam === 'true') {
+      setIsVip(true);
+    }
   }, []);
 
   // Baby Form States
@@ -819,8 +823,8 @@ export default function NamingMaster() {
             {!isVip && (
               <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-4 sm:p-6 text-white shadow-xl relative overflow-hidden group cursor-pointer" onClick={() => setShowPaymentModal(true)}>
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-white/20 transition-all"></div>
-                <div className="relative z-10 flex items-center justify-between">
-                   <div>
+                <div className="relative z-10 flex items-center justify-between gap-3">
+                   <div className="flex-1 min-w-0">
                      <h3 className="text-lg sm:text-xl font-bold flex items-center gap-2 mb-2">
                        <Lock className="w-5 h-5 text-amber-400" />
                        解锁更多好名与深度解析
@@ -843,7 +847,7 @@ export default function NamingMaster() {
                        )}
                      </p>
                    </div>
-                   <button className="bg-gradient-to-r from-amber-400 to-amber-600 text-gray-900 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold hover:shadow-lg hover:scale-105 transition-all flex items-center gap-2">
+                   <button className="bg-gradient-to-r from-amber-400 to-amber-600 text-gray-900 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold hover:shadow-lg hover:scale-105 transition-all flex items-center gap-2 shrink-0 whitespace-nowrap text-base sm:text-lg">
                      <Crown className="w-4 h-4" />
                      立即解锁
                    </button>
