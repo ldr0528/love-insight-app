@@ -66,7 +66,10 @@ export default function NamingMaster() {
     setError(null);
     
     try {
-      const params = namingType === 'baby' ? { type: 'baby', ...babyForm } : { type: 'company', ...companyForm };
+      const params = namingType === 'baby' 
+        ? { type: 'baby', ...babyForm, _t: Date.now() } 
+        : { type: 'company', ...companyForm, _t: Date.now() };
+        
       const data = await generateName(params);
       setResult(data);
     } catch (err: any) {

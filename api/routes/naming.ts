@@ -71,7 +71,7 @@ router.post('/generate', async (req: Request, res: Response): Promise<void> => {
         { role: 'system', content: systemPrompt },
         { role: 'user', content: prompt }
       ],
-      temperature: 0.8,
+      temperature: 1.1, // Increase randomness
     })
 
     let content = completion.choices[0].message.content || '[]'
