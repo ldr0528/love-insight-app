@@ -21,6 +21,7 @@ export default function NamingMaster() {
   const [error, setError] = useState<string | null>(null);
   const [showPreferences, setShowPreferences] = useState(false);
   const [showTimeInput, setShowTimeInput] = useState(false);
+  const [isVip, setIsVip] = useState(false);
 
   // Baby Form States
   const [babyForm, setBabyForm] = useState({
@@ -67,7 +68,7 @@ export default function NamingMaster() {
     
     try {
       const params = namingType === 'baby' 
-        ? { type: 'baby', ...babyForm, _t: Date.now() } 
+        ? { type: 'baby', ...babyForm, _t: Date.now(), count: isVip ? 10 : 3, detailed: isVip } 
         : { type: 'company', ...companyForm, _t: Date.now() };
         
       const data = await generateName(params);
