@@ -15,6 +15,8 @@ const BRAND_TONES = ['专业', '年轻', '高端', '亲民', '科技', '国潮']
 const TARGET_AUDIENCES = ['B端', '大众', '女性向', '男性向', '亲子'];
 const BRAND_LANGUAGES = ['中文', '中英混合', '英文'];
 
+import { generateName } from '@/services/aiNaming';
+
 export default function NamingMaster() {
   const [namingType, setNamingType] = useState<NamingType>('baby');
   const [isLoading, setIsLoading] = useState(false);
@@ -62,65 +64,16 @@ export default function NamingMaster() {
 
   const handleGenerate = async () => {
     setIsLoading(true);
-    // Simulate API call with different mock data based on type
-    setTimeout(() => {
+    setResult(null);
+    
+    try {
+      const params = namingType === 'baby' ? { type: 'baby', ...babyForm } : { type: 'company', ...companyForm };
+      const data = await generateName(params);
+      setResult(data);
+    } catch (error) {
+      console.error("Naming generation failed:", error);
+    } finally {
       setIsLoading(false);
-      setResult(generateMockResult(namingType));
-    }, 2000);
-  };
-
-  const generateMockResult = (type: NamingType) => {
-    if (type === 'baby') {
-      return [
-        { 
-          name: babyForm.lastName + (babyForm.gender === 'boy' ? '浩宇' : '梦瑶'), 
-          pinyin: babyForm.gender === 'boy' ? 'Hào Yǔ' : 'Mèng Yáo',
-          meaning: '浩瀚宇宙，心胸开阔，前程远大。寓意孩子未来拥有广阔的天地和无限的可能。',
-          tags: ['水土', '大气'],
-          ratings: { sound: 95, meaning: 98, unique: 88 },
-          reasons: ['“浩”字五行属水，弥补了八字缺水的遗憾。', '与姓氏读音搭配朗朗上口，平仄协调。']
-        },
-        { 
-          name: babyForm.lastName + (babyForm.gender === 'boy' ? '思淼' : '清婉'), 
-          pinyin: babyForm.gender === 'boy' ? 'Sī Miǎo' : 'Qīng Wǎn', 
-          meaning: '思绪如水，智慧深邃，灵动敏捷。象征着智慧与才情，如同流水般源远流长。',
-          tags: ['金水', '文雅'],
-          ratings: { sound: 92, meaning: 95, unique: 90 },
-          reasons: ['“淼”字三水相叠，财运亨通。', '符合“文雅”的风格偏好。']
-        },
-        { 
-          name: babyForm.lastName + (babyForm.gender === 'boy' ? '奕辰' : '芷若'), 
-          pinyin: babyForm.gender === 'boy' ? 'Yì Chén' : 'Zhǐ Ruò', 
-          meaning: '神采奕奕，如星辰般璀璨耀眼。代表着朝气蓬勃，如初升的太阳般充满希望。',
-          tags: ['木土', '现代'],
-          ratings: { sound: 96, meaning: 92, unique: 94 },
-          reasons: ['“奕”字寓意精神饱满，神采飞扬。', '避开了生僻字，书写美观。']
-        },
-      ];
-    } else {
-      return [
-        { 
-          name: '智创未来', 
-          enName: 'FutureMind', 
-          slogans: ['智慧创造未来', '引领行业创新', '智创，不止于想'],
-          tags: ['科技感', '大气'],
-          explanation: '“智”代表智慧、智能，“创”代表创新、创造。寓意公司以智慧引领创新，开创美好未来。'
-        },
-        { 
-          name: '云启科技', 
-          enName: 'CloudStart', 
-          slogans: ['云端开启，无限可能', '连接你我，启动未来', '云启，智慧之源'],
-          tags: ['专业', 'B端'],
-          explanation: '“云”象征云计算、高科技，“启”代表开启、启动。适合科技类公司，寓意在云端开启新的篇章。'
-        },
-        { 
-          name: '极客空间', 
-          enName: 'GeekSpace', 
-          slogans: ['追求极致，探索前沿', '极客精神，改变世界', '你的专属极客空间'],
-          tags: ['新潮', '年轻'],
-          explanation: '“极客”代表追求极致、热爱技术的精神，“空间”代表无限的想象力和发展空间。'
-        },
-      ];
     }
   };
 
