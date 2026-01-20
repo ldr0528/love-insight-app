@@ -10,20 +10,44 @@ export const getWxPay = () => {
   if (wxPay) return wxPay
 
   try {
-    // Check if certificates exist
-    const certPath = path.join(process.cwd(), 'cert', 'apiclient_cert.pem')
-    const keyPath = path.join(process.cwd(), 'cert', 'apiclient_key.pem')
+    // Vercel environment: try to find certificates in various locations
+    const possibleCertPaths = [
+      path.join(process.cwd(), 'cert', 'apiclient_cert.pem'), // Local dev
+      path.join(process.cwd(), 'api', 'cert', 'apiclient_cert.pem'), // Vercel function structure
+      path.resolve(__dirname, '..', '..', 'cert', 'apiclient_cert.pem'), // Relative to compiled file
+      '/var/task/cert/apiclient_cert.pem' // Absolute path in AWS Lambda
+    ];
 
-    if (!fs.existsSync(certPath) || !fs.existsSync(keyPath) || !process.env.WECHAT_MCH_ID) {
-      console.error(`Missing certs or MCH_ID. Cert: ${fs.existsSync(certPath)}, Key: ${fs.existsSync(keyPath)}, ID: ${!!process.env.WECHAT_MCH_ID}`)
-      // Vercel serverless functions might put files in a different location relative to process.cwd()
-      // Let's try to list the files in the current directory to debug
-      try {
-        console.log('Current directory:', process.cwd());
-        console.log('Cert directory contents:', fs.readdirSync(path.join(process.cwd(), 'cert')));
-      } catch (e) {
-        console.log('Error listing cert directory:', e);
+    const possibleKeyPaths = [
+      path.join(process.cwd(), 'cert', 'apiclient_key.pem'),
+      path.join(process.cwd(), 'api', 'cert', 'apiclient_key.pem'),
+      path.resolve(__dirname, '..', '..', 'cert', 'apiclient_key.pem'),
+      '/var/task/cert/apiclient_key.pem'
+    ];
+
+    let certPath = '';
+    let keyPath = '';
+
+    for (const p of possibleCertPaths) {
+      if (fs.existsSync(p)) {
+        certPath = p;
+        break;
       }
+    }
+
+    for (const p of possibleKeyPaths) {
+      if (fs.existsSync(p)) {
+        keyPath = p;
+        break;
+      }
+    }
+
+    console.log('[WeChat] Looking for certs in:', possibleCertPaths);
+    console.log('[WeChat] Found Cert:', certPath);
+    console.log('[WeChat] Found Key:', keyPath);
+
+    if (!certPath || !keyPath || !process.env.WECHAT_MCH_ID) {
+      console.error(`Missing certs or MCH_ID. CertFound: ${!!certPath}, KeyFound: ${!!keyPath}, ID: ${!!process.env.WECHAT_MCH_ID}`)
       throw new Error('WeChat Pay certificates or env vars missing.')
     }
 
