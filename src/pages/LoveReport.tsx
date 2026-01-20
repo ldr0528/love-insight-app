@@ -112,12 +112,9 @@ export default function LoveReport() {
   };
 
   const handleUnlock = async () => {
-    // Simulate payment process
-    setLoading(true);
-    setTimeout(async () => {
-      setPayStatus('paid');
-      await fetchReport('paid');
-    }, 1500);
+    // TODO: Implement real payment logic here (e.g., call WeChat/Alipay API)
+    // For now, we will just alert the user.
+    alert('支付功能正在接入中，敬请期待！');
   };
 
   if (loading && !report && step === 'result') { // Initial loading for result
