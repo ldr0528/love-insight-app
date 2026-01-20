@@ -16,6 +16,14 @@ export const getWxPay = () => {
 
     if (!fs.existsSync(certPath) || !fs.existsSync(keyPath) || !process.env.WECHAT_MCH_ID) {
       console.error(`Missing certs or MCH_ID. Cert: ${fs.existsSync(certPath)}, Key: ${fs.existsSync(keyPath)}, ID: ${!!process.env.WECHAT_MCH_ID}`)
+      // Vercel serverless functions might put files in a different location relative to process.cwd()
+      // Let's try to list the files in the current directory to debug
+      try {
+        console.log('Current directory:', process.cwd());
+        console.log('Cert directory contents:', fs.readdirSync(path.join(process.cwd(), 'cert')));
+      } catch (e) {
+        console.log('Error listing cert directory:', e);
+      }
       throw new Error('WeChat Pay certificates or env vars missing.')
     }
 
