@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, PenTool, Sparkles, User, Briefcase, Wand2, ChevronDown, ChevronUp, Copy, RefreshCcw, Heart, Info, X } from 'lucide-react';
+import { ArrowLeft, PenTool, Sparkles, User, Briefcase, Wand2, ChevronDown, ChevronUp, Copy, RefreshCcw, Heart, Info, X, Crown, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { generateName } from '@/services/aiNaming';
 
@@ -417,6 +417,41 @@ export default function NamingMaster() {
             </>
           )}
 
+          <div className="mb-4">
+            {!isVip ? (
+              <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 rounded-xl p-4 flex items-center justify-between cursor-pointer hover:shadow-md transition-all" onClick={() => setIsVip(true)}>
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-amber-100 rounded-full text-amber-600">
+                    <Crown className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-gray-800 flex items-center gap-2">
+                      解锁大师版
+                      <span className="bg-amber-100 text-amber-700 text-xs px-2 py-0.5 rounded-full">限时特惠</span>
+                    </h3>
+                    <p className="text-sm text-gray-600">单次生成 10 个精选好名 + 五行/八字深度解析</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1 text-amber-600 font-bold">
+                  <span>去解锁</span>
+                  <ChevronDown className="w-4 h-4 -rotate-90" />
+                </div>
+              </div>
+            ) : (
+              <div className="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-xl p-4 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-purple-100 rounded-full text-purple-600">
+                    <Crown className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-gray-800">尊贵大师版已激活</h3>
+                    <p className="text-sm text-gray-600">正在为您提供深度五行分析与更多候选结果</p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
           <button
             onClick={handleGenerate}
             disabled={isLoading}
@@ -517,9 +552,33 @@ export default function NamingMaster() {
                          ))}
                        </ul>
                     </div>
+
+                    {/* VIP Analysis */}
+                    {item.wuxing && (
+                      <div className="border-t border-amber-100 bg-amber-50/50 -mx-6 -mb-6 mt-4 p-6">
+                        <div className="flex items-center gap-2 mb-3">
+                          <Crown className="w-4 h-4 text-amber-600" />
+                          <span className="text-sm font-bold text-amber-800">大师深度解析</span>
+                        </div>
+                        <div className="space-y-3">
+                          <div className="flex gap-2 text-sm">
+                            <span className="text-amber-700 font-medium shrink-0">五行属性：</span>
+                            <span className="text-gray-700 font-bold">{item.wuxing}</span>
+                          </div>
+                          <div className="flex gap-2 text-sm">
+                            <span className="text-amber-700 font-medium shrink-0">五行分析：</span>
+                            <span className="text-gray-600 leading-relaxed">{item.wuxingAnalysis}</span>
+                          </div>
+                          <div className="flex gap-2 text-sm">
+                            <span className="text-amber-700 font-medium shrink-0">运势简评：</span>
+                            <span className="text-gray-600 leading-relaxed">{item.luck}</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                     
                     {/* Actions */}
-                    <div className="flex justify-end gap-3 mt-4 pt-4 border-t border-gray-100">
+                    <div className={`flex justify-end gap-3 pt-4 border-t border-gray-100 ${item.wuxing ? 'mt-0 bg-amber-50/50 px-6 pb-6 border-none' : 'mt-4'}`}>
                        <button className="text-gray-400 hover:text-red-500 transition-colors">
                          <Heart className="w-5 h-5" />
                        </button>
@@ -571,6 +630,30 @@ export default function NamingMaster() {
                 )}
               </div>
             ))}
+            {/* Unlock Banner */}
+            {!isVip && (
+              <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden group cursor-pointer" onClick={() => setIsVip(true)}>
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-white/20 transition-all"></div>
+                <div className="relative z-10 flex items-center justify-between">
+                   <div>
+                     <h3 className="text-xl font-bold flex items-center gap-2 mb-2">
+                       <Lock className="w-5 h-5 text-amber-400" />
+                       解锁更多好名与深度解析
+                     </h3>
+                     <p className="text-gray-300 text-sm">
+                       当前仅显示 3 个基础结果。升级后可获取：
+                       <br />• 单次生成 10 个精选候选
+                       <br />• 五行缺补深度分析
+                       <br />• 八字运势详细解读
+                     </p>
+                   </div>
+                   <button className="bg-gradient-to-r from-amber-400 to-amber-600 text-gray-900 px-6 py-3 rounded-xl font-bold hover:shadow-lg hover:scale-105 transition-all flex items-center gap-2">
+                     <Crown className="w-4 h-4" />
+                     立即解锁
+                   </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
