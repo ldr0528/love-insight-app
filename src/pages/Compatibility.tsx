@@ -104,7 +104,7 @@ export default function Compatibility() {
                  <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1 ml-1">对方的生日 (选填)</label>
                   <div className="relative">
-                    <div className={`w-full px-5 py-3 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-purple-200 outline-none transition-all flex items-center ${formData.partner_birth ? 'text-gray-900' : 'text-gray-400'}`}>
+                    <div className={`w-full px-5 py-3 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-purple-200 outline-none transition-all flex items-center pointer-events-none ${formData.partner_birth ? 'text-gray-900' : 'text-gray-400'}`}>
                       {formData.partner_birth ? formData.partner_birth.replace(/-/g, ' / ') : "请选择对方生日"}
                     </div>
                     <input 

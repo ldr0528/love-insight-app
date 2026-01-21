@@ -187,18 +187,16 @@ export default function FortuneTube() {
         <Canvas 
           camera={{ position: [0, 2, 5.5], fov: 35 }} 
           shadows
-          dpr={[1, 2]} // 适配移动端高清屏
-          gl={{ preserveDrawingBuffer: true, antialias: true, alpha: true }}
+          dpr={[1, 1.5]} // 降低 dpr 上限，避免高清屏性能压力
+          gl={{ 
+            preserveDrawingBuffer: true, 
+            antialias: true, 
+            alpha: true,
+            powerPreference: "high-performance" // 优先使用高性能 GPU
+          }}
           style={{ width: '100%', height: '100%' }}
         >
-          <Suspense fallback={
-             <Html center>
-               <div className="flex flex-col items-center text-gray-400">
-                 <Loader2 className="w-8 h-8 animate-spin mb-2" />
-                 <span className="text-xs">加载签筒中...</span>
-               </div>
-             </Html>
-          }>
+          {/* 移除 Suspense，直接渲染，如果模型简单不需要加载太久 */}
             <ambientLight intensity={0.7} />
             <spotLight position={[5, 8, 5]} angle={0.4} penumbra={0.5} intensity={1.2} castShadow />
             <pointLight position={[-3, 2, -3]} color="#ffecd2" intensity={0.5} />
@@ -207,7 +205,6 @@ export default function FortuneTube() {
             
             <Environment preset="studio" />
             <ContactShadows position={[0, -2.2, 0]} opacity={0.4} scale={8} blur={2.5} far={4} color="#000000" />
-          </Suspense>
         </Canvas>
       </div>
 
