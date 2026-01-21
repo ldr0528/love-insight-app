@@ -59,7 +59,7 @@ function TubeModel({ shaking, stickUp, onDraw }: { shaking: boolean, stickUp: bo
       const radius = Math.random() * 0.45; // 收紧半径，防止穿模
       const x = Math.cos(angle) * radius;
       const z = Math.sin(angle) * radius;
-      // 提高基础高度，让签露出来
+      // 提高基础高度，让签露出来更多 (因为筒变矮了，这个高度相对就更高了)
       const y = -0.2 + (Math.random() - 0.5) * 0.3; 
       const rotY = Math.random() * Math.PI;
       const rotZ = (Math.random() - 0.5) * 0.15; // 增加倾斜随机性
@@ -105,50 +105,25 @@ function TubeModel({ shaking, stickUp, onDraw }: { shaking: boolean, stickUp: bo
   return (
     // 整体缩放 0.8 倍，显得更小巧
     <group ref={group} onClick={(e) => { e.stopPropagation(); onDraw(); }} scale={[0.8, 0.8, 0.8]}>
-      {/* 筒身 - 稍微变细一点 */}
-      <Cylinder args={[0.85, 0.75, 2.8, 64, 1, true]} position={[0, -0.4, 0]} material={woodMaterial} />
+      {/* 筒身 - 变矮 */}
+      <Cylinder args={[0.85, 0.75, 2.0, 64, 1, true]} position={[0, -0.6, 0]} material={woodMaterial} />
       
       {/* 筒内壁 */}
-      <Cylinder args={[0.75, 0.75, 2.8, 64, 1, true]} position={[0, -0.4, 0]}>
+      <Cylinder args={[0.75, 0.75, 2.0, 64, 1, true]} position={[0, -0.6, 0]}>
          <meshStandardMaterial color="#3d2616" roughness={0.9} side={THREE.BackSide} />
       </Cylinder>
 
       {/* 筒底 */}
-      <Cylinder args={[0.75, 0.75, 0.1, 64]} position={[0, -1.75, 0]} material={woodMaterial} />
+      <Cylinder args={[0.75, 0.75, 0.1, 64]} position={[0, -1.55, 0]} material={woodMaterial} />
 
       {/* 顶部边缘 - 加一点倒角感 */}
-      <Cylinder args={[0.9, 0.85, 0.15, 64]} position={[0, 0.95, 0]} material={woodMaterial} />
+      <Cylinder args={[0.9, 0.85, 0.15, 64]} position={[0, 0.35, 0]} material={woodMaterial} />
 
       {/* 装饰环 (上) - 变细 */}
-      <Cylinder args={[0.88, 0.88, 0.15, 64]} position={[0, 0.3, 0]} material={bandMaterial} />
+      <Cylinder args={[0.88, 0.88, 0.15, 64]} position={[0, -0.1, 0]} material={bandMaterial} />
       
       {/* 装饰环 (下) - 变细 */}
-      <Cylinder args={[0.8, 0.8, 0.15, 64]} position={[0, -1.4, 0]} material={bandMaterial} />
-
-      {/* "签筒" 文字贴图 - 调整位置 */}
-      <Html
-        position={[0, 0.3, 0.9]} // 放在红色装饰环上
-        transform
-        occlude
-        style={{
-          width: '60px',
-          height: '30px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          userSelect: 'none',
-          pointerEvents: 'none', // 避免阻挡点击
-        }}
-      >
-        <div className="text-[#FFD700] text-lg font-bold whitespace-nowrap" 
-             style={{ 
-               fontFamily: '"Kaiti", "STKaiti", serif', // 楷体更像刻字
-               textShadow: '0 1px 2px rgba(0,0,0,0.5)',
-               filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.3))'
-             }}>
-          签筒
-        </div>
-      </Html>
+      <Cylinder args={[0.8, 0.8, 0.15, 64]} position={[0, -1.2, 0]} material={bandMaterial} />
 
       {/* 竹签集合 */}
       {sticks.map((props, i) => (
