@@ -157,7 +157,27 @@ export default function PalmPage() {
             </div>
             
             <div>
-              <h2 className="text-3xl font-extrabold text-gray-900 mb-4">男左手女右手</h2>
+              <div className="flex items-center justify-center gap-6 mb-8">
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-blue-200 rounded-2xl blur opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                  <div className="relative px-6 py-4 bg-white border-2 border-blue-100 rounded-2xl flex flex-col items-center shadow-sm hover:shadow-md transition-all hover:-translate-y-1">
+                    <span className="text-3xl mb-1">🙋‍♂️</span>
+                    <span className="text-xs text-blue-400 font-medium tracking-wider mb-1">男生</span>
+                    <span className="text-xl font-black text-blue-600">左手</span>
+                  </div>
+                </div>
+                
+                <div className="text-gray-300 font-serif italic text-xl">/</div>
+
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-pink-200 rounded-2xl blur opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                  <div className="relative px-6 py-4 bg-white border-2 border-pink-100 rounded-2xl flex flex-col items-center shadow-sm hover:shadow-md transition-all hover:-translate-y-1">
+                    <span className="text-3xl mb-1">🙋‍♀️</span>
+                    <span className="text-xs text-pink-400 font-medium tracking-wider mb-1">女生</span>
+                    <span className="text-xl font-black text-pink-600">右手</span>
+                  </div>
+                </div>
+              </div>
               <p className="text-lg text-gray-600 max-w-lg mx-auto">
                 利用最先进的计算机视觉模型，精准识别感情线、智慧线与生命线。<br/>
                 <span className="text-xs text-gray-400 block mt-2">*照片仅用于实时分析，不会被保存</span>
