@@ -1,9 +1,28 @@
-import { useEffect, useState, useRef, useMemo, Suspense } from 'react';
-import { Sparkles, X, Loader2 } from 'lucide-react';
+import React, { useEffect, useState, useRef, useMemo, Suspense } from 'react';
+import { Sparkles, X, Loader2, AlertCircle } from 'lucide-react';
 import DailyCheckIn from '@/components/DailyCheckIn';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Cylinder, Environment, ContactShadows, Html } from '@react-three/drei';
 import * as THREE from 'three';
+
+// 错误边界组件
+class ErrorBoundary extends React.Component<{ children: React.ReactNode, fallback: React.ReactNode }, { hasError: boolean }> {
+  constructor(props: any) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  componentDidCatch(error: any, errorInfo: any) {
+    console.error("ThreeJS Error:", error, errorInfo);
+  }
+  render() {
+    if (this.state.hasError) return this.props.fallback;
+    return this.props.children;
+  }
+}
+
 
 // 竹签组件
 function Stick({ position, rotation, isChosen, shaking }: { position: [number, number, number], rotation: [number, number, number], isChosen: boolean, shaking: boolean }) {
@@ -183,7 +202,14 @@ export default function FortuneTube() {
   return (
     <div className="flex flex-col items-center gap-4">
       {/* 3D 场景容器 */}
-      <div className="w-64 h-80 cursor-pointer relative touch-none" onClick={handleDraw}>
+      <div className="w-64 h-80 cursor-pointer relative touch-none bg-gradient-to-b from-gray-100 to-gray-200 rounded-3xl overflow-hidden shadow-inner" onClick={handleDraw}>
+        <ErrorBoundary fallback={
+          <div className="flex flex-col items-center justify-center h-full text-gray-500 gap-2">
+            <AlertCircle className="w-8 h-8 text-amber-500" />
+            <span className="text-xs">3D组件加载失败</span>
+            <button className="text-xs underline text-pink-500" onClick={() => window.location.reload()}>刷新重试</button>
+          </div>
+        }>
         <Canvas 
           camera={{ position: [0, 2, 5.5], fov: 35 }} 
           shadows
@@ -202,17 +228,20 @@ export default function FortuneTube() {
             }, false);
           }}
         >
-          <Suspense fallback={<Html center><div className="flex flex-col items-center"><Loader2 className="w-8 h-8 animate-spin text-pink-500" /><span className="text-xs text-pink-400 mt-2">加载中...</span></div></Html>}>
+          <Suspense fallback={<Html center><div className="flex flex-col items-center"><Loader2 className="w-8 h-8 animate-spin text-pink-500" /><span className="text-xs text-pink-400 mt-2">资源加载中...</span></div></Html>}>
             <ambientLight intensity={0.7} />
             <spotLight position={[5, 8, 5]} angle={0.4} penumbra={0.5} intensity={1.2} castShadow />
             <pointLight position={[-3, 2, -3]} color="#ffecd2" intensity={0.5} />
             
             <TubeModel shaking={shaking} stickUp={stickUp} onDraw={handleDraw} />
             
-            <Environment preset="studio" />
+            {/* 移除 Environment preset，改用更轻量的灯光方案或本地资源，避免 GitHub Raw 资源加载失败 */}
+            {/* <Environment preset="city" /> */}
+            
             <ContactShadows position={[0, -2.2, 0]} opacity={0.4} scale={8} blur={2.5} far={4} color="#000000" />
           </Suspense>
         </Canvas>
+        </ErrorBoundary>
       </div>
 
       <button
