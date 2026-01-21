@@ -81,7 +81,7 @@ app.use('/api/*', (req: Request, res: Response) => {
  * Serve static files in production
  */
 if (process.env.NODE_ENV === 'production') {
-  const distPath = path.join(__dirname, '../../dist')
+  const distPath = path.join(__dirname, '../dist')
   app.use(express.static(distPath))
 
   app.get('*', (req: Request, res: Response) => {
