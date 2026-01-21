@@ -202,7 +202,7 @@ export default function FortuneTube() {
   return (
     <div className="flex flex-col items-center gap-4">
       {/* 3D 场景容器 */}
-      <div className="w-64 h-80 cursor-pointer relative touch-none bg-gradient-to-b from-gray-100 to-gray-200 rounded-3xl overflow-hidden shadow-inner" onClick={handleDraw}>
+      <div className="w-64 h-80 cursor-pointer relative touch-none" onClick={handleDraw}>
         <ErrorBoundary fallback={
           <div className="flex flex-col items-center justify-center h-full text-gray-500 gap-2">
             <AlertCircle className="w-8 h-8 text-amber-500" />
