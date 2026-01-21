@@ -41,23 +41,35 @@ export default function AuthModal() {
     setShowCaptcha(true);
   };
 
-  const handleCaptchaVerify = (success: boolean) => {
+  const handleCaptchaVerify = async (success: boolean) => {
     if (success) {
       setShowCaptcha(false);
       setIsLoading(true);
       
-      // Simulate API call to send code
-      setTimeout(() => {
+      try {
+        const res = await fetch('/api/auth/send-code', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone })
+        });
+        
+        const data = await res.json();
+        
+        if (res.ok) {
+          setStep('code');
+          setCountdown(60);
+        } else {
+          alert(data.error || '发送验证码失败');
+        }
+      } catch (error) {
+        alert('网络错误，请稍后重试');
+      } finally {
         setIsLoading(false);
-        setStep('code');
-        setCountdown(60);
-        // In a real app, the code is sent to the phone.
-        console.log('Verification code sent to', phone);
-      }, 1000);
+      }
     }
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (code.length !== 6) {
       alert('请输入6位验证码');
@@ -65,16 +77,27 @@ export default function AuthModal() {
     }
     
     setIsLoading(true);
-    // Simulate login API
-    setTimeout(() => {
-      setIsLoading(false);
-      login({
-        id: '1',
-        phone: phone,
-        nickname: `用户${phone.slice(-4)}`
+    
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone, code })
       });
-      closeAuthModal();
-    }, 1000);
+      
+      const data = await res.json();
+      
+      if (res.ok && data.success) {
+        login(data.user);
+        closeAuthModal();
+      } else {
+        alert(data.error || '登录失败，请检查验证码');
+      }
+    } catch (error) {
+      alert('网络错误，请稍后重试');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -140,7 +163,7 @@ export default function AuthModal() {
                     type="text"
                     value={code}
                     onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                    placeholder="请输入6位数字验证码"
+                    placeholder="请输入6位数字验证码 (测试: 123456)"
                     className="w-full pl-12 pr-28 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-medium tracking-widest"
                     autoFocus
                   />

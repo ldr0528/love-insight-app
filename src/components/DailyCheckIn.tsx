@@ -248,6 +248,28 @@ export default function DailyCheckIn() {
                           <p className="text-gray-600 leading-relaxed text-sm">{todaySign?.task}</p>
                        </div>
                     </div>
+
+                    {/* Lucky Items */}
+                    <div className="mt-6 pt-6 border-t border-indigo-100 grid grid-cols-2 gap-4">
+                      <div className="bg-white/60 rounded-xl p-3 flex items-center gap-3 border border-indigo-50">
+                        <div className={`w-10 h-10 rounded-full ${todaySign?.luckyColor?.value || 'bg-pink-400'} flex items-center justify-center text-white font-bold shadow-sm`}>
+                           {todaySign?.luckyNumber || 7}
+                        </div>
+                        <div className="text-left">
+                           <div className="text-[10px] text-indigo-300 font-bold uppercase tracking-wider">Lucky No.</div>
+                           <div className="text-sm font-bold text-gray-700">幸运数字</div>
+                        </div>
+                      </div>
+                      <div className="bg-white/60 rounded-xl p-3 flex items-center gap-3 border border-indigo-50">
+                        <div className={`w-10 h-10 rounded-full ${todaySign?.luckyColor?.value || 'bg-pink-400'} shadow-sm border-2 border-white`}></div>
+                        <div className="text-left">
+                           <div className="text-[10px] text-indigo-300 font-bold uppercase tracking-wider">Lucky Color</div>
+                           <div className={`text-sm font-bold ${todaySign?.luckyColor?.text || 'text-pink-500'}`}>
+                             {todaySign?.luckyColor?.name || "桃花粉"}
+                           </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
