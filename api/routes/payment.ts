@@ -12,7 +12,7 @@ const orders: Record<string, {
   id: string;
   amount: number;
   status: 'pending' | 'paid';
-  method: 'wechat' | 'alipay';
+  method: 'wechat' | 'alipay' | 'zpay';
   createdAt: number;
 }> = {}
 
@@ -61,12 +61,6 @@ router.post('/create', async (req: Request, res: Response): Promise<void> => {
         notifyUrl,
         returnUrl,
       }, platform as 'mobile' | 'desktop')
-    } else if (method === 'manual') {
-      const manualUrl = process.env.MANUAL_QR_URL || ''
-      if (!manualUrl) {
-        throw new Error('Manual QR not configured')
-      }
-      payUrl = manualUrl
     } else if (method === 'zpay') {
       const notifyUrl = `${protocol}://${host}/api/payment/notify/zpay`
       payUrl = await createZPayOrder({
@@ -214,18 +208,7 @@ router.post('/notify/alipay', async (req: Request, res: Response) => {
   }
 })
 
-export default router
 /**
  * Manual mark paid
  */
-router.post('/manual/mark-paid', async (req: Request, res: Response) => {
-  const { orderId } = req.body
-  if (!orderId || !orders[orderId]) {
-    res.status(404).json({ success: false, error: 'Order not found' })
-    return
-  }
-  orders[orderId].status = 'paid'
-  res.json({ success: true })
-})
-
 export default router

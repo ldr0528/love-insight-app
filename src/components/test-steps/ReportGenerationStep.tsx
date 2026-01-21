@@ -33,7 +33,7 @@ interface ReportData {
 
 // Payment Modal Component
 function PaymentModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: () => void }) {
-  const [method, setMethod] = useState<'wechat' | 'alipay' | 'manual' | 'zpay'>('wechat');
+  const [method, setMethod] = useState<'wechat' | 'alipay' | 'zpay'>('wechat');
   const [status, setStatus] = useState<'creating' | 'waiting' | 'paid'>('creating');
   const [order, setOrder] = useState<{ id: string; payUrl: string } | null>(null);
   const pollTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -144,19 +144,6 @@ function PaymentModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
                   支付宝
                 </button>
                 <button
-                  onClick={() => setMethod('manual')}
-                  className={`flex-1 py-2 rounded-md text-sm font-bold flex items-center justify-center gap-2 transition-all ${
-                    method === 'manual' ? 'bg-gray-900 text-white shadow-md' : 'text-gray-500 hover:text-gray-700'
-                  }`}
-                >
-                  <span className={`w-5 h-5 rounded flex items-center justify-center text-[10px] font-bold ${
-                    method === 'manual' ? 'bg-white text-gray-900' : 'bg-gray-900 text-white'
-                  }`}>
-                    扫
-                  </span>
-                  线下扫码
-                </button>
-                <button
                   onClick={() => setMethod('zpay')}
                   className={`flex-1 py-2 rounded-md text-sm font-bold flex items-center justify-center gap-2 transition-all ${
                     method === 'zpay' ? 'bg-orange-500 text-white shadow-md' : 'text-gray-500 hover:text-gray-700'
@@ -190,27 +177,8 @@ function PaymentModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
 
               <div className="flex items-center gap-2 text-xs text-gray-400 mt-2">
                 <ScanLine className="w-3 h-3" />
-                <span>请使用{method === 'wechat' ? '微信' : method === 'alipay' ? '支付宝' : method === 'zpay' ? '聚合平台支持的支付方式' : '微信'}扫码支付</span>
+                <span>请使用{method === 'wechat' ? '微信' : method === 'alipay' ? '支付宝' : '聚合平台支持的支付方式'}扫码支付</span>
               </div>
-              
-              {method === 'manual' && status === 'waiting' && order && (
-                <button
-                  onClick={async () => {
-                    try {
-                      await fetch('/api/payment/manual/mark-paid', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ orderId: order.id })
-                      });
-                      setStatus('paid');
-                      setTimeout(onSuccess, 800);
-                    } catch {}
-                  }}
-                  className="mt-4 bg-gray-900 text-white px-6 py-2 rounded-lg font-bold hover:opacity-90"
-                >
-                  我已支付，去生成报告
-                </button>
-              )}
               
               {/* Debug/Dev Link - Removed for Production */}
               {/* {order && (

@@ -104,48 +104,6 @@ export interface WxPayOrder {
   }
 }
 
-export const createNativeOrderPartner = async (order: WxPayOrder): Promise<string> => {
-  const pay = getWxPay()
-  if (!pay) throw new Error('WeChat Pay not configured')
-  const spAppId = process.env.WECHAT_SP_APP_ID || ''
-  const spMchId = process.env.WECHAT_SP_MCH_ID || ''
-  const subMchId = process.env.WECHAT_MCH_ID || ''
-  if (!spAppId || !spMchId || !subMchId) {
-    throw new Error('WeChat Partner not configured')
-  }
-  const urlPath = '/v3/pay/partner/transactions/native'
-  const url = 'https://api.mch.weixin.qq.com' + urlPath
-  const params = {
-    sp_appid: spAppId,
-    sp_mchid: spMchId,
-    sub_mchid: subMchId,
-    description: order.description,
-    out_trade_no: order.out_trade_no,
-    notify_url: order.notify_url,
-    amount: order.amount,
-  }
-  const nonce_str = Math.random().toString(36).slice(2)
-  const timestamp = Math.floor(Date.now() / 1000).toString()
-  // @ts-ignore
-  const signature = pay.getSignature('POST', nonce_str, timestamp, urlPath, params)
-  // @ts-ignore
-  const authorization = pay.getAuthorization(nonce_str, timestamp, signature)
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      'User-Agent': 'LoveInsightPay/1.0',
-      Authorization: authorization,
-    } as any,
-    body: JSON.stringify(params),
-  })
-  const body = await res.json().catch(() => ({}))
-  if (res.status === 200 && body && body.code_url) {
-    return body.code_url as string
-  }
-  throw new Error(typeof body === 'string' ? body : JSON.stringify(body || { error: 'Unknown error' }))
-}
 
 /**
  * Create Native Pay Order
