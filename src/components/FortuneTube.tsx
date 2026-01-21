@@ -122,8 +122,8 @@ function TubeModel({ shaking, stickUp, onDraw }: { shaking: boolean, stickUp: bo
   }), []);
 
   return (
-    // 整体缩放 0.7 倍，显得更小巧
-    <group ref={group} onClick={(e) => { e.stopPropagation(); onDraw(); }} scale={[0.7, 0.7, 0.7]}>
+    // 整体缩放 0.65 倍，显得更小巧
+    <group ref={group} onClick={(e) => { e.stopPropagation(); onDraw(); }} scale={[0.65, 0.65, 0.65]}>
       {/* 筒身 - 变矮 */}
       <Cylinder args={[0.7, 0.65, 2.0, 64, 1, true]} position={[0, -0.6, 0]} material={woodMaterial} />
       
@@ -200,9 +200,9 @@ export default function FortuneTube() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-2">
       {/* 3D 场景容器 */}
-      <div className="w-64 h-80 cursor-pointer relative touch-none" onClick={handleDraw}>
+      <div className="w-48 h-64 cursor-pointer relative touch-none" onClick={handleDraw}>
         <ErrorBoundary fallback={
           <div className="flex flex-col items-center justify-center h-full text-gray-500 gap-2">
             <AlertCircle className="w-8 h-8 text-amber-500" />
@@ -247,9 +247,9 @@ export default function FortuneTube() {
       <button
         onClick={handleDraw}
         disabled={drawing}
-        className="bg-gray-900 text-white px-8 py-3 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed z-10"
+        className="bg-gray-900 text-white px-6 py-2 text-sm rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed z-10"
       >
-        {drawing ? (shaking ? "摇签中..." : "解签中...") : "抽取灵签"} <Sparkles className="w-5 h-5" />
+        {drawing ? (shaking ? "摇签中..." : "解签中...") : "抽取灵签"} <Sparkles className="w-4 h-4" />
       </button>
 
       {showModal && (
