@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom';
 import { Compass, ArrowRight, Brain, Hand, Heart, Target, PenTool, Feather, User } from 'lucide-react';
 import FortuneTube from '@/components/FortuneTube';
@@ -8,9 +7,9 @@ export default function Home() {
   const { user, openAuthModal, logout } = useAuthStore();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex flex-col items-center justify-center p-4 relative">
-      {/* Auth Button */}
-      <div className="absolute top-6 right-6 z-20">
+    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex flex-col relative">
+      {/* Header / Auth Button */}
+      <header className="w-full p-4 flex justify-end items-center z-20 absolute top-0 right-0">
         {user ? (
           <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm p-2 pr-4 rounded-full shadow-sm border border-pink-100 hover:shadow-md transition-all">
             <div className="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center text-pink-500 font-bold">
@@ -33,9 +32,9 @@ export default function Home() {
             <span>登录 / 注册</span>
           </button>
         )}
-      </div>
+      </header>
 
-      <div className="max-w-4xl w-full space-y-12">
+      <main className="flex-grow flex flex-col items-center justify-center p-4 pt-20 max-w-4xl w-full mx-auto space-y-12">
         {/* Hero Section */}
         <div className="text-center space-y-6">
           <h1 className="text-5xl font-extrabold text-gray-900 tracking-tight flex items-center justify-center gap-4">
@@ -52,10 +51,12 @@ export default function Home() {
         </div>
 
         {/* Fortune Tube */}
-        <FortuneTube />
+        <div className="w-full flex justify-center min-h-[350px]">
+          <FortuneTube />
+        </div>
         
         {/* Feature Cards */}
-        <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-6 w-full">
           {/* Main Wizard (kept as secondary entry) */}
           <Link to="/report" className="group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-pink-100 overflow-hidden flex flex-col h-full">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
@@ -171,7 +172,6 @@ export default function Home() {
           </Link>
         </div>
         
-
         {/* Stats */}
         <div className="pt-8 text-center text-gray-500 text-sm border-t border-gray-100 w-full">
           <p className="font-medium text-2xl text-pink-500 italic">希望你能遇见更好的自己 ✨</p>
