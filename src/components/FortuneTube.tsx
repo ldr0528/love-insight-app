@@ -47,20 +47,42 @@ export default function FortuneTube() {
           transition: 'transform 0.15s ease-in-out',
         }}
       >
-        <div className="absolute left-1/2 -translate-x-1/2 top-0 w-16 h-4 bg-yellow-100 rounded-full border border-yellow-300" />
-        <div className="absolute left-1/2 -translate-x-1/2 top-2 w-16 h-28 bg-gradient-to-b from-amber-200 to-yellow-300 border-2 border-amber-400 rounded-b-xl shadow-inner" />
-        <div className={`absolute -top-6 left-1/2 -translate-x-1/2 flex gap-1 justify-center ${stickUp ? '-translate-y-1' : ''}`}>
-          {[...Array(7)].map((_, i) => (
-            <div
-              key={i}
-              className="w-2 h-8 bg-amber-500 rounded-t-sm border border-amber-700"
-              style={{
-                transform: shaking ? `rotate(${(i - 3) * 2}deg)` : 'rotate(0deg)',
-                transition: 'transform 0.15s ease',
-              }}
-            />
-          ))}
-        </div>
+        <svg viewBox="0 0 120 180" className="absolute inset-0">
+          <defs>
+            <linearGradient id="wood" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="#F5D48A" />
+              <stop offset="100%" stop-color="#E3B768" />
+            </linearGradient>
+            <linearGradient id="lip" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="#FFF2C4" />
+              <stop offset="100%" stop-color="#EFD28B" />
+            </linearGradient>
+            <filter id="grain">
+              <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch" />
+              <feColorMatrix type="saturate" values="0.2" />
+              <feBlend mode="multiply" in2="SourceGraphic" />
+            </filter>
+            <filter id="rough">
+              <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="1" />
+              <feDisplacementMap in="SourceGraphic" scale="1" />
+            </filter>
+          </defs>
+          <ellipse cx="60" cy="22" rx="34" ry="10" fill="url(#lip)" filter="url(#rough)" />
+          <rect x="26" y="24" width="68" height="110" rx="16" fill="url(#wood)" filter="url(#grain)" />
+          <g transform={`translate(60,18)`}>
+            {[...Array(7)].map((_, i) => {
+              const angle = shaking ? (i - 3) * 2 : 0;
+              return (
+                <g key={i} transform={`translate(${(i - 3) * 8},-18) rotate(${angle})`}>
+                  <rect x="-3" y="0" width="6" height="30" fill="#D18A3A" stroke="#8C5A26" strokeWidth="1" />
+                  <polygon points="-3,0 0,-6 3,0" fill="#8C5A26" />
+                </g>
+              );
+            })}
+          </g>
+          <text x="60" y="80" text-anchor="middle" fill="#7A4E1F" font-size="18" font-weight="700">签筒</text>
+          <ellipse cx="60" cy="142" rx="30" ry="6" fill="#000" opacity="0.12" />
+        </svg>
       </div>
       <button
         onClick={handleDraw}
