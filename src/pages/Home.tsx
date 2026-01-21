@@ -21,6 +21,7 @@ export default function Home() {
             每日灵犀签：点击签筒，开启今日运势
           </p>
         </div>
+        )}
 
         {/* Fortune Tube */}
         <FortuneTube />

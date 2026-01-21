@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Sparkles, Heart } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Sparkles, Heart, X } from 'lucide-react';
+import DailyCheckIn from '@/components/DailyCheckIn';
 
 export default function FortuneTube() {
-  const navigate = useNavigate();
   const [drawing, setDrawing] = useState(false);
   const [stickUp, setStickUp] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const handleDraw = () => {
     if (drawing) return;
@@ -14,9 +14,24 @@ export default function FortuneTube() {
     setTimeout(() => setStickUp(false), 800);
     setTimeout(() => {
       setDrawing(false);
-      navigate('/report');
+      setShowModal(true);
     }, 1000);
   };
+
+  useEffect(() => {
+    const onMotion = (e: DeviceMotionEvent) => {
+      const acc = e.accelerationIncludingGravity;
+      if (!acc) return;
+      const magnitude = Math.sqrt(
+        Math.pow(acc.x || 0, 2) + Math.pow(acc.y || 0, 2) + Math.pow(acc.z || 0, 2)
+      );
+      if (magnitude > 18) {
+        handleDraw();
+      }
+    };
+    window.addEventListener('devicemotion', onMotion);
+    return () => window.removeEventListener('devicemotion', onMotion);
+  }, []);
 
   return (
     <div className="bg-white rounded-3xl shadow-2xl p-8 border border-pink-100 relative overflow-hidden">
@@ -30,7 +45,7 @@ export default function FortuneTube() {
           </div>
           <div>
             <div className="text-xl font-bold text-gray-900">每日灵犀签</div>
-            <div className="text-xs text-gray-500">坚持打卡，积攒桃花能量</div>
+            <div className="text-xs text-gray-500">摇一摇或点击抽签，开启今日指引</div>
           </div>
         </div>
         <div className="bg-pink-100 text-pink-700 text-xs px-3 py-1 rounded-full font-bold">灵犀萌新</div>
@@ -62,6 +77,22 @@ export default function FortuneTube() {
       </div>
 
       <div className="mt-4 text-center text-xs text-gray-400">已连续打卡 <span className="font-bold text-pink-600">1</span> 天</div>
+
+      {showModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="relative bg-white rounded-3xl w-full max-w-2xl shadow-2xl">
+            <button
+              onClick={() => setShowModal(false)}
+              className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <div className="p-2 md:p-4">
+              <DailyCheckIn />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
