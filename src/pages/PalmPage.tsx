@@ -144,7 +144,7 @@ export default function PalmPage() {
           <ArrowLeft className="w-5 h-5" /> 返回首页
         </Link>
         <h1 className="font-bold text-xl text-pink-800 flex items-center gap-2">
-          <Hand className="w-6 h-6" /> AI 手相大师
+          <Hand className="w-6 h-6" /> 手相大师
         </h1>
         <div className="w-20"></div> 
       </header>
@@ -157,9 +157,9 @@ export default function PalmPage() {
             </div>
             
             <div>
-              <h2 className="text-3xl font-extrabold text-gray-900 mb-4">上传手掌照片，AI 解读命运</h2>
+              <h2 className="text-3xl font-extrabold text-gray-900 mb-4">男左手女右手</h2>
               <p className="text-lg text-gray-600 max-w-lg mx-auto">
-                男左女右<br/>
+                利用最先进的计算机视觉模型，精准识别感情线、智慧线与生命线。<br/>
                 <span className="text-xs text-gray-400 block mt-2">*照片仅用于实时分析，不会被保存</span>
               </p>
             </div>
