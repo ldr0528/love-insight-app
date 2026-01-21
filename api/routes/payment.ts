@@ -43,15 +43,22 @@ router.post('/create', async (req: Request, res: Response): Promise<void> => {
 
     if (method === 'wechat') {
       const notifyUrl = `${protocol}://${host}/api/payment/notify/wechat`
-      payUrl = await createNativeOrder({
-        description: 'Love Insight Report',
-        out_trade_no: orderId,
-        notify_url: notifyUrl,
-        amount: {
-          total: 1660, // 16.60 CNY in cents
-          currency: 'CNY'
-        }
-      })
+      const usePartner = !!process.env.WECHAT_SP_MCH_ID
+      if (usePartner) {
+        payUrl = await (await import('../services/wechat.js')).createNativeOrderPartner({
+          description: 'Love Insight Report',
+          out_trade_no: orderId,
+          notify_url: notifyUrl,
+          amount: { total: 1660, currency: 'CNY' },
+        })
+      } else {
+        payUrl = await createNativeOrder({
+          description: 'Love Insight Report',
+          out_trade_no: orderId,
+          notify_url: notifyUrl,
+          amount: { total: 1660, currency: 'CNY' },
+        })
+      }
     } else if (method === 'alipay') {
       const notifyUrl = `${protocol}://${host}/api/payment/notify/alipay`
       const returnUrl = `${protocol}://${host}/report?orderId=${orderId}&status=paid` // Simple return handling
