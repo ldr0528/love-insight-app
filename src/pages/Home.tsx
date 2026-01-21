@@ -21,14 +21,12 @@ export default function Home() {
             每日灵犀签：点击签筒，开启今日运势
           </p>
         </div>
-        )}
 
         {/* Fortune Tube */}
         <FortuneTube />
         
-        
-        
         {/* Feature Cards */}
+        {false && (
         <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
           {/* Main Wizard (kept as secondary entry) */}
           <Link to="/report" className="group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-pink-100 overflow-hidden flex flex-col h-full">
@@ -125,6 +123,7 @@ export default function Home() {
             </div>
           </Link>
         </div>
+        )}
         
 
         {/* Stats */}
