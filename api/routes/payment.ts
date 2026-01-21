@@ -43,22 +43,12 @@ router.post('/create', async (req: Request, res: Response): Promise<void> => {
 
     if (method === 'wechat') {
       const notifyUrl = `${protocol}://${host}/api/payment/notify/wechat`
-      const usePartner = !!process.env.WECHAT_SP_MCH_ID
-      if (usePartner) {
-        payUrl = await (await import('../services/wechat.js')).createNativeOrderPartner({
-          description: 'Love Insight Report',
-          out_trade_no: orderId,
-          notify_url: notifyUrl,
-          amount: { total: 1660, currency: 'CNY' },
-        })
-      } else {
-        payUrl = await createNativeOrder({
-          description: 'Love Insight Report',
-          out_trade_no: orderId,
-          notify_url: notifyUrl,
-          amount: { total: 1660, currency: 'CNY' },
-        })
-      }
+      payUrl = await createNativeOrder({
+        description: 'Love Insight Report',
+        out_trade_no: orderId,
+        notify_url: notifyUrl,
+        amount: { total: 1660, currency: 'CNY' },
+      })
     } else if (method === 'alipay') {
       const notifyUrl = `${protocol}://${host}/api/payment/notify/alipay`
       const returnUrl = `${protocol}://${host}/report?orderId=${orderId}&status=paid` // Simple return handling
@@ -70,6 +60,12 @@ router.post('/create', async (req: Request, res: Response): Promise<void> => {
         notifyUrl,
         returnUrl,
       }, platform as 'mobile' | 'desktop')
+    } else if (method === 'manual') {
+      const manualUrl = process.env.MANUAL_QR_URL || ''
+      if (!manualUrl) {
+        throw new Error('Manual QR not configured')
+      }
+      payUrl = manualUrl
     } else {
       throw new Error('Unsupported payment method')
     }
@@ -184,6 +180,20 @@ router.post('/notify/alipay', async (req: Request, res: Response) => {
     console.error('Alipay Notify Error:', e)
     res.send('fail')
   }
+})
+
+export default router
+/**
+ * Manual mark paid
+ */
+router.post('/manual/mark-paid', async (req: Request, res: Response) => {
+  const { orderId } = req.body
+  if (!orderId || !orders[orderId]) {
+    res.status(404).json({ success: false, error: 'Order not found' })
+    return
+  }
+  orders[orderId].status = 'paid'
+  res.json({ success: true })
 })
 
 export default router
