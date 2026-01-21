@@ -4,6 +4,7 @@ import DailyCheckIn from '@/components/DailyCheckIn';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Cylinder, Environment, ContactShadows, Html } from '@react-three/drei';
 import * as THREE from 'three';
+import { useAuthStore } from '@/store/useAuthStore';
 
 // 错误边界组件
 class ErrorBoundary extends React.Component<{ children: React.ReactNode, fallback: React.ReactNode }, { hasError: boolean }> {
@@ -105,7 +106,7 @@ function TubeModel({ shaking, stickUp, onDraw }: { shaking: boolean, stickUp: bo
 
   // 材质 - 使用 useMemo 避免重复创建
   const woodMaterial = useMemo(() => new THREE.MeshPhysicalMaterial({
-    color: '#5c3a21', // 更深、更高级的黑胡桃木色
+    color: '#D66853', // 改为淡红木色/朱砂红，更喜庆且不深沉
     roughness: 0.4,
     metalness: 0.1,
     clearcoat: 0.3, // 降低清漆感，更自然
@@ -162,8 +163,13 @@ export default function FortuneTube() {
   const [stickUp, setStickUp] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [shaking, setShaking] = useState(false);
+  const { user, openAuthModal } = useAuthStore();
 
   const handleDraw = () => {
+    if (!user) {
+      openAuthModal();
+      return;
+    }
     if (drawing) return;
     setDrawing(true);
     setShaking(true);
