@@ -129,8 +129,8 @@ export default function SimpleAuthModal() {
               </div>
 
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 z-10">
-                  <Lock size={20} />
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 z-10">
+                  <Lock size={20} strokeWidth={3} />
                   <div className="h-6 w-px bg-gray-300 mx-2"></div>
                 </div>
                 <input
@@ -138,7 +138,7 @@ export default function SimpleAuthModal() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder={isLoginMode ? "请输入密码" : "请设置密码"}
-                  className="w-full pl-16 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-medium text-base placeholder:text-gray-400"
+                  className="w-full pl-16 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-bold text-lg placeholder:font-normal placeholder:text-gray-400"
                 />
               </div>
             </div>
