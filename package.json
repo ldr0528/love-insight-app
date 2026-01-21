@@ -14,7 +14,7 @@
     "dev": "concurrently \"npm run client:dev\" \"npm run server:dev\""
   },
   "dependencies": {
-    "@react-three/drei": "^10.7.7",
+    "@react-three/drei": "^9.100.0",
     "@react-three/fiber": "^8.18.0",
     "@types/three": "^0.182.0",
     "@types/uuid": "^10.0.0",
