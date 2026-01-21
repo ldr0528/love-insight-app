@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { X, User, ArrowRight, Loader2, Lock } from 'lucide-react';
+import { X, User, ArrowRight, Loader2, Lock, UserPlus } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
 
 export default function SimpleAuthModal() {
   const { isAuthModalOpen, closeAuthModal, login } = useAuthStore();
+  const [isLoginMode, setIsLoginMode] = useState(true);
   const [code, setCode] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -23,9 +24,10 @@ export default function SimpleAuthModal() {
 
     setIsLoading(true);
     
-    // Simulate API call
+    const endpoint = isLoginMode ? '/api/auth/login' : '/api/auth/register';
+
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code, password })
@@ -37,15 +39,22 @@ export default function SimpleAuthModal() {
         closeAuthModal();
         setCode('');
         setPassword('');
+        // Reset to login mode for next time
+        setTimeout(() => setIsLoginMode(true), 300); 
       } else {
-        alert(data.error || '登录失败');
+        alert(data.error || (isLoginMode ? '登录失败' : '注册失败'));
       }
     } catch (error) {
-       // Fallback for demo if backend fails (removed auto-login to enforce backend logic)
        alert('网络错误，请稍后重试');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const toggleMode = () => {
+    setIsLoginMode(!isLoginMode);
+    setCode('');
+    setPassword('');
   };
 
   return (
@@ -53,18 +62,22 @@ export default function SimpleAuthModal() {
       <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl relative">
          <button 
           onClick={closeAuthModal}
-          className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 rounded-full transition-colors"
+          className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 rounded-full transition-colors z-10"
         >
           <X size={20} />
         </button>
         
         <div className="p-8">
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4 text-pink-500">
-              <User size={32} />
+            <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-colors duration-300 ${isLoginMode ? 'bg-pink-100 text-pink-500' : 'bg-purple-100 text-purple-500'}`}>
+              {isLoginMode ? <User size={32} /> : <UserPlus size={32} />}
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">创建/登录账号</h2>
-            <p className="text-gray-500 text-sm mt-2">请输入4位数字账号与密码</p>
+            <h2 className="text-2xl font-bold text-gray-900 transition-all duration-300">
+              {isLoginMode ? '欢迎回来' : '创建账号'}
+            </h2>
+            <p className="text-gray-500 text-sm mt-2">
+              {isLoginMode ? '请输入您的灵犀账号' : '设置您的专属灵犀账号'}
+            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -91,7 +104,7 @@ export default function SimpleAuthModal() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="请设置/输入密码"
+                  placeholder={isLoginMode ? "请输入密码" : "请设置密码"}
                   className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-medium"
                 />
               </div>
@@ -100,12 +113,28 @@ export default function SimpleAuthModal() {
             <button
               type="submit"
               disabled={code.length !== 4 || !password || isLoading}
-              className="w-full py-3 px-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-xl font-bold shadow-lg shadow-pink-500/30 hover:shadow-pink-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className={`w-full py-3 px-4 text-white rounded-xl font-bold shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 ${
+                isLoginMode 
+                  ? 'bg-gradient-to-r from-pink-500 to-rose-500 shadow-pink-500/30 hover:shadow-pink-500/40' 
+                  : 'bg-gradient-to-r from-purple-500 to-indigo-500 shadow-purple-500/30 hover:shadow-purple-500/40'
+              }`}
             >
-              {isLoading ? <Loader2 className="animate-spin" /> : '进入灵犀空间'}
+              {isLoading ? <Loader2 className="animate-spin" /> : (isLoginMode ? '登录' : '立即注册')}
               {!isLoading && <ArrowRight size={18} />}
             </button>
           </form>
+
+          <div className="mt-6 text-center">
+            <button 
+              onClick={toggleMode}
+              className="text-sm text-gray-500 hover:text-gray-800 transition-colors font-medium"
+            >
+              {isLoginMode ? '还没有账号？' : '已有账号？'} 
+              <span className={`underline ml-1 ${isLoginMode ? 'text-pink-500' : 'text-purple-500'}`}>
+                {isLoginMode ? '去注册' : '去登录'}
+              </span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
