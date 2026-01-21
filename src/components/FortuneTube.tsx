@@ -1,8 +1,8 @@
-import { useEffect, useState, useRef, useMemo } from 'react';
-import { Sparkles, X } from 'lucide-react';
+import { useEffect, useState, useRef, useMemo, Suspense } from 'react';
+import { Sparkles, X, Loader2 } from 'lucide-react';
 import DailyCheckIn from '@/components/DailyCheckIn';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Text, Cylinder, Environment, ContactShadows, Html, useTexture } from '@react-three/drei';
+import { Cylinder, Environment, ContactShadows, Html } from '@react-three/drei';
 import * as THREE from 'three';
 
 // 竹签组件
@@ -183,16 +183,31 @@ export default function FortuneTube() {
   return (
     <div className="flex flex-col items-center gap-4">
       {/* 3D 场景容器 */}
-      <div className="w-64 h-80 cursor-pointer relative" onClick={handleDraw}>
-        <Canvas camera={{ position: [0, 2, 5.5], fov: 35 }} shadows>
-          <ambientLight intensity={0.7} />
-          <spotLight position={[5, 8, 5]} angle={0.4} penumbra={0.5} intensity={1.2} castShadow />
-          <pointLight position={[-3, 2, -3]} color="#ffecd2" intensity={0.5} />
-          
-          <TubeModel shaking={shaking} stickUp={stickUp} onDraw={handleDraw} />
-          
-          <Environment preset="studio" />
-          <ContactShadows position={[0, -2.2, 0]} opacity={0.4} scale={8} blur={2.5} far={4} color="#000000" />
+      <div className="w-64 h-80 cursor-pointer relative touch-none" onClick={handleDraw}>
+        <Canvas 
+          camera={{ position: [0, 2, 5.5], fov: 35 }} 
+          shadows
+          dpr={[1, 2]} // 适配移动端高清屏
+          gl={{ preserveDrawingBuffer: true, antialias: true, alpha: true }}
+          style={{ width: '100%', height: '100%' }}
+        >
+          <Suspense fallback={
+             <Html center>
+               <div className="flex flex-col items-center text-gray-400">
+                 <Loader2 className="w-8 h-8 animate-spin mb-2" />
+                 <span className="text-xs">加载签筒中...</span>
+               </div>
+             </Html>
+          }>
+            <ambientLight intensity={0.7} />
+            <spotLight position={[5, 8, 5]} angle={0.4} penumbra={0.5} intensity={1.2} castShadow />
+            <pointLight position={[-3, 2, -3]} color="#ffecd2" intensity={0.5} />
+            
+            <TubeModel shaking={shaking} stickUp={stickUp} onDraw={handleDraw} />
+            
+            <Environment preset="studio" />
+            <ContactShadows position={[0, -2.2, 0]} opacity={0.4} scale={8} blur={2.5} far={4} color="#000000" />
+          </Suspense>
         </Canvas>
       </div>
 
