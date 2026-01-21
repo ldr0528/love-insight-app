@@ -2,6 +2,7 @@
 import { Router, type Request, type Response } from 'express'
 import { v4 as uuidv4 } from 'uuid'
 import { createNativeOrder, getWxPay } from '../services/wechat.js'
+import { createZPayOrder, verifyZPayNotify } from '../services/zpay.js'
 import { createAlipayOrder, getAlipaySdk } from '../services/alipay.js'
 
 const router = Router()
@@ -66,6 +67,14 @@ router.post('/create', async (req: Request, res: Response): Promise<void> => {
         throw new Error('Manual QR not configured')
       }
       payUrl = manualUrl
+    } else if (method === 'zpay') {
+      const notifyUrl = `${protocol}://${host}/api/payment/notify/zpay`
+      payUrl = await createZPayOrder({
+        description: 'Love Insight Report',
+        out_trade_no: orderId,
+        notify_url: notifyUrl,
+        amount: { total: 1660, currency: 'CNY' },
+      })
     } else {
       throw new Error('Unsupported payment method')
     }
@@ -137,6 +146,29 @@ router.post('/notify/wechat', async (req: Request, res: Response) => {
   } catch (e: any) {
     console.error('WeChat Notify Error:', e)
     res.status(500).send({ code: 'FAIL', message: e.message })
+  }
+})
+
+/**
+ * 3b. ZPay Notify Callback
+ * POST /api/payment/notify/zpay
+ */
+router.post('/notify/zpay', async (req: Request, res: Response) => {
+  try {
+    const ok = verifyZPayNotify(req.body)
+    if (!ok) {
+      res.status(400).json({ code: 'FAIL', message: 'invalid sign' })
+      return
+    }
+    const orderId = req.body.out_trade_no || req.body.order_id
+    if (orderId && orders[orderId]) {
+      orders[orderId].status = 'paid'
+      console.log(`[ZPay] Order ${orderId} paid successfully`)
+    }
+    res.status(200).json({ code: 'SUCCESS' })
+  } catch (e: any) {
+    console.error('ZPay Notify Error:', e)
+    res.status(500).json({ code: 'FAIL', message: e.message })
   }
 })
 

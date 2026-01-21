@@ -33,7 +33,7 @@ interface ReportData {
 
 // Payment Modal Component
 function PaymentModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: () => void }) {
-  const [method, setMethod] = useState<'wechat' | 'alipay' | 'manual'>('wechat');
+  const [method, setMethod] = useState<'wechat' | 'alipay' | 'manual' | 'zpay'>('wechat');
   const [status, setStatus] = useState<'creating' | 'waiting' | 'paid'>('creating');
   const [order, setOrder] = useState<{ id: string; payUrl: string } | null>(null);
   const pollTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -156,12 +156,25 @@ function PaymentModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
                   </span>
                   线下扫码
                 </button>
+                <button
+                  onClick={() => setMethod('zpay')}
+                  className={`flex-1 py-2 rounded-md text-sm font-bold flex items-center justify-center gap-2 transition-all ${
+                    method === 'zpay' ? 'bg-orange-500 text-white shadow-md' : 'text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  <span className={`w-5 h-5 rounded flex items-center justify-center text-[10px] font-bold ${
+                    method === 'zpay' ? 'bg-white text-orange-500' : 'bg-orange-500 text-white'
+                  }`}>
+                    合
+                  </span>
+                  聚合支付
+                </button>
               </div>
 
               {/* QR Code Area */}
               <div className="relative group">
                 <div className={`w-48 h-48 border-2 rounded-xl p-2 flex items-center justify-center mb-4 transition-colors ${
-                  method === 'wechat' ? 'border-green-100' : method === 'alipay' ? 'border-blue-100' : 'border-gray-200'
+                  method === 'wechat' ? 'border-green-100' : method === 'alipay' ? 'border-blue-100' : method === 'zpay' ? 'border-orange-100' : 'border-gray-200'
                 }`}>
                   {status === 'creating' ? (
                     <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
@@ -177,7 +190,7 @@ function PaymentModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
 
               <div className="flex items-center gap-2 text-xs text-gray-400 mt-2">
                 <ScanLine className="w-3 h-3" />
-                <span>请使用{method === 'wechat' ? '微信' : method === 'alipay' ? '支付宝' : '微信'}扫码支付</span>
+                <span>请使用{method === 'wechat' ? '微信' : method === 'alipay' ? '支付宝' : method === 'zpay' ? '聚合平台支持的支付方式' : '微信'}扫码支付</span>
               </div>
               
               {method === 'manual' && status === 'waiting' && order && (
