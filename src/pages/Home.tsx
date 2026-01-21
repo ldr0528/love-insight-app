@@ -12,8 +12,12 @@ export default function Home() {
       <header className="w-full p-4 flex justify-end items-center z-20 absolute top-0 right-0">
         {user ? (
           <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm p-2 pr-4 rounded-full shadow-sm border border-pink-100 hover:shadow-md transition-all">
-            <div className="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center text-pink-500 font-bold relative">
-              <User size={16} />
+            <div className="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center text-pink-500 font-bold relative overflow-hidden">
+              {user.avatar ? (
+                <img src={user.avatar} alt="Avatar" className="w-full h-full object-cover" />
+              ) : (
+                <User size={16} />
+              )}
               {user.isVip && (
                 <div className="absolute -top-1 -right-1 bg-yellow-400 rounded-full p-0.5 border border-white">
                   <Crown size={8} className="text-white fill-current" />

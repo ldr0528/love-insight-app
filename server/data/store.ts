@@ -6,14 +6,15 @@ export interface User {
   phone: string;
   isVip: boolean;
   joinDate: string;
+  avatar?: string;
 }
 
 // Initial Mock Data
 export const users: User[] = [
-  { id: '1001', username: 'Lin1001', password: '123', nickname: 'Lin1001', phone: '13800138000', isVip: false, joinDate: '2023-01-01' },
-  { id: '1002', username: 'Lin1002', password: '123', nickname: 'Lin1002', phone: '13800138001', isVip: true, joinDate: '2023-01-02' },
+  { id: '1001', username: 'Lin1001', password: '123', nickname: 'Lin1001', phone: '13800138000', isVip: false, joinDate: '2023-01-01', avatar: '/images/ENFJ.jpg' },
+  { id: '1002', username: 'Lin1002', password: '123', nickname: 'Lin1002', phone: '13800138001', isVip: true, joinDate: '2023-01-02', avatar: '/images/INFJ.jpg' },
   { id: '1003', username: 'Lin1003', password: '123', nickname: 'Lin1003', phone: '13800138002', isVip: false, joinDate: '2023-01-03' },
-  { id: '8888', username: 'Lin8888', password: '123', nickname: 'Lin8888', phone: '13888888888', isVip: true, joinDate: '2023-05-20' },
+  { id: '8888', username: 'Lin8888', password: '123', nickname: 'Lin8888', phone: '13888888888', isVip: true, joinDate: '2023-05-20', avatar: '/images/ENTJ.jpg' },
 ];
 
 export const addUser = (user: User) => {

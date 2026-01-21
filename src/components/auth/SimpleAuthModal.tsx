@@ -8,8 +8,16 @@ export default function SimpleAuthModal() {
   const [code, setCode] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedAvatar, setSelectedAvatar] = useState('/images/ENFJ.jpg');
 
   if (!isAuthModalOpen) return null;
+
+  const AVATARS = [
+    '/images/ENFJ.jpg', '/images/ENFP.jpg', '/images/ENTJ.jpg', '/images/ENTP.jpg',
+    '/images/ESFJ.jpg', '/images/ESFP.jpg', '/images/ESTJ.jpg',
+    '/images/INFJ.jpg', '/images/INFP.jpg', '/images/INTJ.jpg', '/images/INTP.jpg',
+    '/images/ISFJ.jpg', '/images/ISFP.jpg', '/images/ISTJ.jpg', '/images/ISTP.jpg'
+  ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,12 +33,15 @@ export default function SimpleAuthModal() {
     setIsLoading(true);
     
     const endpoint = isLoginMode ? '/api/auth/login' : '/api/auth/register';
+    const body = isLoginMode 
+      ? { code, password }
+      : { code, password, avatar: selectedAvatar };
 
     try {
       const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code, password })
+        body: JSON.stringify(body)
       });
       const data = await res.json();
       
@@ -59,7 +70,7 @@ export default function SimpleAuthModal() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl relative">
+      <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl relative max-h-[90vh] overflow-y-auto scrollbar-hide">
          <button 
           onClick={closeAuthModal}
           className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 rounded-full transition-colors z-10"
@@ -68,9 +79,11 @@ export default function SimpleAuthModal() {
         </button>
         
         <div className="p-8">
-          <div className="text-center mb-8">
-            <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-colors duration-300 ${isLoginMode ? 'bg-pink-100 text-pink-500' : 'bg-purple-100 text-purple-500'}`}>
-              {isLoginMode ? <User size={32} /> : <UserPlus size={32} />}
+          <div className="text-center mb-6">
+            <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-colors duration-300 ${isLoginMode ? 'bg-pink-100 text-pink-500' : 'bg-purple-100 text-purple-500'} overflow-hidden`}>
+              {isLoginMode ? <User size={32} /> : (
+                 <img src={selectedAvatar} alt="Avatar" className="w-full h-full object-cover" />
+              )}
             </div>
             <h2 className="text-2xl font-bold text-gray-900 transition-all duration-300">
               {isLoginMode ? '欢迎回来' : '创建账号'}
@@ -79,6 +92,24 @@ export default function SimpleAuthModal() {
               {isLoginMode ? '请输入您的灵犀账号' : '设置您的专属灵犀账号'}
             </p>
           </div>
+
+          {!isLoginMode && (
+            <div className="mb-6">
+              <p className="text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider text-center">选择头像</p>
+              <div className="grid grid-cols-5 gap-2 max-h-32 overflow-y-auto p-1">
+                {AVATARS.map((avatar) => (
+                  <button
+                    key={avatar}
+                    type="button"
+                    onClick={() => setSelectedAvatar(avatar)}
+                    className={`relative rounded-full overflow-hidden aspect-square border-2 transition-all ${selectedAvatar === avatar ? 'border-purple-500 scale-110 shadow-md' : 'border-transparent hover:border-gray-200'}`}
+                  >
+                    <img src={avatar} alt="Avatar" className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-4">

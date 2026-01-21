@@ -6,6 +6,7 @@ interface User {
   username: string; // LinXXXX
   nickname: string;
   isVip?: boolean;
+  avatar?: string;
 }
 
 interface AuthState {

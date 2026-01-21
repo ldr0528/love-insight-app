@@ -43,7 +43,7 @@ router.post('/login', async (req: Request, res: Response) => {
 });
 
 router.post('/register', async (req: Request, res: Response) => {
-  const { code, password } = req.body;
+  const { code, password, avatar } = req.body;
   
   if (!code || code.length !== 4) {
     res.status(400).json({ error: 'Please provide a 4-digit code' });
@@ -73,7 +73,8 @@ router.post('/register', async (req: Request, res: Response) => {
     nickname: username,
     phone: '',
     isVip: false,
-    joinDate: new Date().toISOString().split('T')[0]
+    joinDate: new Date().toISOString().split('T')[0],
+    avatar: avatar || '' // Store avatar
   };
   addUser(user);
   
