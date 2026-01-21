@@ -36,6 +36,10 @@ router.post('/login', async (req: Request, res: Response) => {
       res.status(401).json({ error: '密码错误' });
       return;
     }
+
+    // Update last login time
+    user.lastLoginAt = new Date();
+    await user.save();
     
     // Return user without password
     const userObj = user.toObject();

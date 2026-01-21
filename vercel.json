@@ -1,18 +1,8 @@
 {
-  "version": 2,
-  "rewrites": [
+  "crons": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/index.ts"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "path": "/api/cron/cleanup",
+      "schedule": "0 0 * * *"
     }
-  ],
-  "functions": {
-    "api/index.ts": {
-      "includeFiles": "server/**"
-    }
-  }
+  ]
 }

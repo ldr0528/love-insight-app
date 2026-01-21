@@ -34,6 +34,10 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     default: '',
+  },
+  lastLoginAt: {
+    type: Date,
+    default: Date.now,
   }
 }, {
   timestamps: true,

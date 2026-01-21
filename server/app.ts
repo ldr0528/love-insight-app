@@ -19,6 +19,7 @@ import paymentRoutes from './routes/payment.js'
 import namingRoutes from './routes/naming.js'
 import compatibilityRoutes from './routes/compatibility.js'
 import adminRoutes from './routes/admin.js'
+import cronRoutes from './routes/cron.js'
 
 // for esm mode
 const __filename = fileURLToPath(import.meta.url)
@@ -46,6 +47,7 @@ app.use('/api/payment', paymentRoutes)
 app.use('/api/naming', namingRoutes)
 app.use('/api/compatibility', compatibilityRoutes)
 app.use('/api/admin', adminRoutes)
+app.use('/api/cron', cronRoutes)
 
 /**
  * health
