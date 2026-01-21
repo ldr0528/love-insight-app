@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { ArrowLeft, Heart, Sparkles, Send, RefreshCw, Feather } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Compatibility() {
   const navigate = useNavigate();
+  const userDateRef = useRef<HTMLInputElement>(null);
+  const partnerDateRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
     user_name: '',
     user_birth: '',
@@ -68,11 +70,12 @@ export default function Compatibility() {
                  </div>
                  <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1 ml-1">你的生日 (选填)</label>
-                  <div className="relative">
+                  <div className="relative" onClick={() => userDateRef.current?.showPicker?.()}>
                     <div className={`w-full px-5 py-3 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-purple-200 outline-none transition-all flex items-center ${formData.user_birth ? 'text-gray-900' : 'text-gray-400'}`}>
                       {formData.user_birth ? formData.user_birth.replace(/-/g, ' / ') : "请选择出生日期"}
                     </div>
                     <input 
+                      ref={userDateRef}
                       type="date"
                       value={formData.user_birth}
                       onChange={e => setFormData({...formData, user_birth: e.target.value})}
