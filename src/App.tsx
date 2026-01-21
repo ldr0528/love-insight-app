@@ -9,6 +9,7 @@ import Compatibility from "@/pages/Compatibility";
 import SimpleAuthModal from "@/components/auth/SimpleAuthModal";
 import AdminLogin from "@/pages/admin/AdminLogin";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
+import RequireAuth from "@/components/auth/RequireAuth";
 
 export default function App() {
   return (
@@ -18,12 +19,15 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/admin" element={<AdminLogin />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/report" element={<LoveTest />} />
-        <Route path="/mbti" element={<MBTIPage />} />
-        <Route path="/palm" element={<PalmPage />} />
-        <Route path="/coach" element={<LoveCoach />} />
-        <Route path="/naming" element={<NamingMaster />} />
-        <Route path="/compatibility" element={<Compatibility />} />
+        
+        {/* Protected Routes */}
+        <Route path="/report" element={<RequireAuth><LoveTest /></RequireAuth>} />
+        <Route path="/mbti" element={<RequireAuth><MBTIPage /></RequireAuth>} />
+        <Route path="/palm" element={<RequireAuth><PalmPage /></RequireAuth>} />
+        <Route path="/coach" element={<RequireAuth><LoveCoach /></RequireAuth>} />
+        <Route path="/naming" element={<RequireAuth><NamingMaster /></RequireAuth>} />
+        <Route path="/compatibility" element={<RequireAuth><Compatibility /></RequireAuth>} />
+        
         <Route path="/other" element={<div className="text-center text-xl">Other Page - Coming Soon</div>} />
       </Routes>
     </Router>
