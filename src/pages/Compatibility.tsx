@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Compatibility() {
   const navigate = useNavigate();
+  const userDateRef = React.useRef<HTMLInputElement>(null);
+  const partnerDateRef = React.useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
     user_name: '',
     user_birth: '',
