@@ -173,10 +173,10 @@ export default function Home() {
         
 
         {/* Stats */}
-        <div className="pt-8 text-center text-gray-500 text-sm border-t border-gray-100">
+        <div className="pt-8 text-center text-gray-500 text-sm border-t border-gray-100 w-full">
           <p className="font-medium text-2xl text-pink-500 italic">希望你能遇见更好的自己 ✨</p>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
