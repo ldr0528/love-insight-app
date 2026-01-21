@@ -113,10 +113,10 @@ export default function SimpleAuthModal() {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-4">
-              <div className="relative">
-                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-                   <span className="text-gray-500 font-bold text-lg">Linx</span>
-                   <div className="h-6 w-px bg-gray-300 mx-2"></div>
+              <div className="relative flex items-center">
+                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center z-10 w-24">
+                   <span className="text-gray-500 font-bold text-lg w-10 text-center">Linx</span>
+                   <div className="h-6 w-px bg-gray-300 mx-3"></div>
                  </div>
                  <input
                   type="text"
@@ -128,17 +128,19 @@ export default function SimpleAuthModal() {
                 />
               </div>
 
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 z-10">
-                  <Lock size={20} strokeWidth={3} />
-                  <div className="h-6 w-px bg-gray-300 mx-2"></div>
+              <div className="relative flex items-center">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-500 z-10 w-24">
+                  <div className="w-10 flex justify-center">
+                    <Lock size={20} strokeWidth={2.5} />
+                  </div>
+                  <div className="h-6 w-px bg-gray-300 mx-3"></div>
                 </div>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder={isLoginMode ? "请输入密码" : "请设置密码"}
-                  className="w-full pl-16 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-bold text-lg placeholder:font-normal placeholder:text-gray-400"
+                  className="w-full pl-24 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-bold text-lg placeholder:font-normal placeholder:text-gray-400"
                 />
               </div>
             </div>
