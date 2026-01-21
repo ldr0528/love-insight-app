@@ -6,12 +6,15 @@ export default function FortuneTube() {
   const [drawing, setDrawing] = useState(false);
   const [stickUp, setStickUp] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [shaking, setShaking] = useState(false);
 
   const handleDraw = () => {
     if (drawing) return;
     setDrawing(true);
+    setShaking(true);
     setStickUp(true);
     setTimeout(() => setStickUp(false), 800);
+    setTimeout(() => setShaking(false), 600);
     setTimeout(() => {
       setDrawing(false);
       setShowModal(true);
@@ -52,13 +55,33 @@ export default function FortuneTube() {
       </div>
 
       <div className="flex flex-col items-center">
-        <div className="relative w-44 h-52">
+        <div
+          className="relative w-32 h-44"
+          style={{
+            transform: shaking ? 'rotate(3deg)' : 'rotate(0deg)',
+            transition: 'transform 0.15s ease-in-out',
+          }}
+        >
           <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-pink-400 to-purple-500 shadow-xl" />
-          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-40 h-8 bg-gradient-to-r from-pink-300 to-purple-300 rounded-full blur-md opacity-40" />
-          <div
-            className={`absolute bottom-4 left-1/2 -translate-x-1/2 w-10 h-28 bg-yellow-200 rounded-xl border-2 border-yellow-400 flex items-center justify-center font-bold text-yellow-800 transition-all ${stickUp ? '-translate-y-10 rotate-3' : ''}`}
-          >
-            签
+          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-28 h-7 bg-gradient-to-r from-pink-300 to-purple-300 rounded-full blur-md opacity-40" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="relative w-20 h-32">
+              <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-16 h-4 bg-yellow-100 rounded-full border border-yellow-300" />
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-28 bg-gradient-to-b from-amber-200 to-yellow-300 border-2 border-amber-400 rounded-b-xl shadow-inner" />
+              <div className={`absolute -top-6 left-1/2 -translate-x-1/2 w-18 flex gap-1 justify-center ${stickUp ? 'translate-y-[-6px]' : ''}`}>
+                {[...Array(7)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="w-2 h-8 bg-amber-500 rounded-t-sm border border-amber-700"
+                    style={{
+                      transform: shaking ? `rotate(${(i - 3) * 2}deg)` : 'rotate(0deg)',
+                      transition: 'transform 0.15s ease',
+                    }}
+                  />
+                ))}
+              </div>
+              <div className="absolute top-10 left-1/2 -translate-x-1/2 text-amber-800 font-black tracking-widest">签筒</div>
+            </div>
           </div>
           <button
             onClick={handleDraw}
