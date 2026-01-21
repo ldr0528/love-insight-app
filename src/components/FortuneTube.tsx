@@ -192,7 +192,7 @@ export default function FortuneTube() {
             preserveDrawingBuffer: true, 
             antialias: true, 
             alpha: true,
-            powerPreference: "high-performance" // 优先使用高性能 GPU
+            // 移除 high-performance 以兼容部分移动设备
           }}
           style={{ width: '100%', height: '100%' }}
           onCreated={({ gl }) => {
@@ -202,7 +202,7 @@ export default function FortuneTube() {
             }, false);
           }}
         >
-          <Suspense fallback={<Html center><div className="flex flex-col items-center"><Loader2 className="w-8 h-8 animate-spin text-pink-500" /><span className="text-xs text-pink-400 mt-2">加载中...</span></div></Html>}>
+          {/* <Suspense fallback={<Html center><div className="flex flex-col items-center"><Loader2 className="w-8 h-8 animate-spin text-pink-500" /><span className="text-xs text-pink-400 mt-2">加载中...</span></div></Html>}> */}
             <ambientLight intensity={0.7} />
             <spotLight position={[5, 8, 5]} angle={0.4} penumbra={0.5} intensity={1.2} castShadow />
             <pointLight position={[-3, 2, -3]} color="#ffecd2" intensity={0.5} />
@@ -211,7 +211,7 @@ export default function FortuneTube() {
             
             <Environment preset="studio" />
             <ContactShadows position={[0, -2.2, 0]} opacity={0.4} scale={8} blur={2.5} far={4} color="#000000" />
-          </Suspense>
+          {/* </Suspense> */}
         </Canvas>
       </div>
 
