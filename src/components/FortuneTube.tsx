@@ -113,11 +113,17 @@ function TubeModel({ shaking, stickUp, onDraw }: { shaking: boolean, stickUp: bo
          <meshStandardMaterial color="#3d2616" roughness={0.9} side={THREE.BackSide} />
       </Cylinder>
 
+      {/* 装饰红圈 */}
+      <Cylinder args={[0.71, 0.71, 0.15, 64]} position={[0, 0.1, 0]} material={bandMaterial} />
+
       {/* 筒底 */}
       <Cylinder args={[0.65, 0.65, 0.1, 64]} position={[0, -1.55, 0]} material={woodMaterial} />
 
-      {/* 顶部边缘 - 加一点倒角感 */}
-      <Cylinder args={[0.75, 0.7, 0.15, 64]} position={[0, 0.35, 0]} material={woodMaterial} />
+      {/* 顶部边缘 - 使用圆环模拟口沿，避免封口 */}
+      <mesh position={[0, 0.4, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[0.68, 0.04, 16, 64]} />
+        <primitive object={woodMaterial} />
+      </mesh>
 
       {/* 竹签集合 */}
       {sticks.map((props, i) => (

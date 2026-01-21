@@ -69,10 +69,15 @@ export default function Compatibility() {
                  <div>
                    <label className="block text-sm font-medium text-gray-700 mb-1 ml-1">你的生日 (选填)</label>
                    <input 
-                     type="date" 
+                     type="text"
+                     onFocus={(e) => (e.target.type = "date")}
+                     onBlur={(e) => {
+                       if (!e.target.value) e.target.type = "text";
+                     }}
+                     placeholder="请选择出生日期"
                      value={formData.user_birth}
                      onChange={e => setFormData({...formData, user_birth: e.target.value})}
-                     className="w-full px-5 py-3 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-purple-200 outline-none transition-all text-gray-600"
+                     className="w-full px-5 py-3 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-purple-200 outline-none transition-all text-gray-600 placeholder-gray-400"
                    />
                  </div>
                  
@@ -99,10 +104,13 @@ export default function Compatibility() {
                  <div>
                    <label className="block text-sm font-medium text-gray-700 mb-1 ml-1">对方的生日 (选填)</label>
                    <input 
-                     type="date" 
+                     type="text"
+                     placeholder="请选择对方的生日"
+                     onFocus={(e) => e.target.type = 'date'}
+                     onBlur={(e) => { if(!e.target.value) e.target.type = 'text' }}
                      value={formData.partner_birth}
                      onChange={e => setFormData({...formData, partner_birth: e.target.value})}
-                     className="w-full px-5 py-3 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-purple-200 outline-none transition-all text-gray-600"
+                     className="w-full px-5 py-3 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-purple-200 outline-none transition-all text-gray-600 placeholder-gray-400"
                    />
                  </div>
                </div>
