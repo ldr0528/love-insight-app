@@ -185,17 +185,17 @@ export default function DailyCheckIn() {
           ) : (
             <div className="animate-in zoom-in duration-500">
               {/* The Sign Card */}
-              <div className="bg-gradient-to-br from-pink-50 via-white to-purple-50 rounded-3xl p-8 border border-pink-100 mb-6 relative overflow-hidden shadow-sm group hover:shadow-md transition-shadow">
+              <div className="bg-gradient-to-br from-pink-50 via-white to-purple-50 rounded-3xl p-5 md:p-8 border border-pink-100 mb-4 md:mb-6 relative overflow-hidden shadow-sm group hover:shadow-md transition-shadow">
                 <div className="absolute -right-6 -top-6 w-24 h-24 bg-pink-100 rounded-full opacity-50"></div>
                 <div className="absolute top-4 right-6 text-6xl opacity-10 font-serif text-pink-900 leading-none">“</div>
                 
-                <div className="flex flex-col md:flex-row gap-6 items-center relative z-10">
-                  <div className="flex-shrink-0 w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-lg border-4 border-pink-50 transform group-hover:rotate-12 transition-transform duration-300">
+                <div className="flex flex-col md:flex-row gap-4 md:gap-6 items-center relative z-10">
+                  <div className="flex-shrink-0 w-20 h-20 md:w-24 md:h-24 bg-white rounded-full flex items-center justify-center shadow-lg border-4 border-pink-50 transform group-hover:rotate-12 transition-transform duration-300">
                     <span className="text-4xl">{todaySign?.icon || "✨"}</span>
                   </div>
                   
                   <div className="text-center md:text-left flex-1">
-                    <p className="text-xl text-gray-800 font-bold leading-relaxed italic mb-4">
+                    <p className="text-lg md:text-xl text-gray-800 font-bold leading-relaxed italic mb-2 md:mb-4">
                       "{todaySign?.quote}"
                     </p>
                     <div className="flex items-center justify-center md:justify-start gap-2 text-xs text-pink-400 font-bold uppercase tracking-widest">
@@ -208,7 +208,7 @@ export default function DailyCheckIn() {
               {/* Energy Keyword Card */}
               <div 
                 onClick={() => !isRevealed && setIsRevealed(true)}
-                className={`relative overflow-hidden rounded-2xl p-6 transition-all duration-500 cursor-pointer group ${
+                className={`relative overflow-hidden rounded-2xl p-5 md:p-6 transition-all duration-500 cursor-pointer group ${
                   isRevealed 
                   ? 'bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-100' 
                   : 'bg-gradient-to-r from-violet-600 to-indigo-600 shadow-lg shadow-indigo-200 hover:scale-[1.02]'
@@ -229,42 +229,41 @@ export default function DailyCheckIn() {
                   </div>
                 ) : (
                   <div className="animate-in fade-in zoom-in duration-500">
-                    <div className="flex flex-col md:flex-row items-center gap-6">
-                       <div className="text-center md:text-left min-w-[120px]">
-                          <div className="text-xs font-bold text-indigo-400 uppercase tracking-wider mb-1">ENERGY WORD</div>
+                    <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6">
+                       <div className="text-center md:text-left">
+                          <div className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider mb-1">ENERGY WORD</div>
                           <div className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
                             {todaySign?.theme}
                           </div>
                        </div>
                        
                        <div className="w-px h-12 bg-indigo-100 hidden md:block"></div>
-                       <div className="h-px w-full bg-indigo-100 md:hidden"></div>
                        
-                       <div className="flex-1 text-center md:text-left">
-                          <h4 className="font-bold text-gray-800 mb-1 flex items-center justify-center md:justify-start gap-2">
-                            <Zap className="w-4 h-4 text-yellow-500 fill-current" /> 
+                       <div className="flex-1 text-center md:text-left bg-indigo-50/50 md:bg-transparent rounded-xl p-3 md:p-0 w-full md:w-auto">
+                          <h4 className="font-bold text-gray-800 mb-1 flex items-center justify-center md:justify-start gap-1.5 text-sm md:text-base">
+                            <Zap className="w-3.5 h-3.5 md:w-4 md:h-4 text-yellow-500 fill-current" /> 
                             行动指引
                           </h4>
-                          <p className="text-gray-600 leading-relaxed text-sm">{todaySign?.task}</p>
+                          <p className="text-gray-600 leading-relaxed text-xs md:text-sm">{todaySign?.task}</p>
                        </div>
                     </div>
 
                     {/* Lucky Items */}
-                    <div className="mt-6 pt-6 border-t border-indigo-100 grid grid-cols-2 gap-4">
-                      <div className="bg-white/60 rounded-xl p-3 flex items-center gap-3 border border-indigo-50">
-                        <div className={`w-10 h-10 rounded-full ${todaySign?.luckyColor?.value || 'bg-pink-400'} flex items-center justify-center text-white font-bold shadow-sm`}>
+                    <div className="mt-4 md:mt-6 pt-4 md:pt-6 border-t border-indigo-100 flex gap-3">
+                      <div className="flex-1 bg-white/60 rounded-xl p-2.5 flex items-center justify-center gap-2 md:gap-3 border border-indigo-50">
+                        <div className={`w-8 h-8 rounded-full ${todaySign?.luckyColor?.value || 'bg-pink-400'} flex items-center justify-center text-white font-bold text-sm shadow-sm flex-shrink-0`}>
                            {todaySign?.luckyNumber || 7}
                         </div>
-                        <div className="text-left">
-                           <div className="text-[10px] text-indigo-300 font-bold uppercase tracking-wider">Lucky No.</div>
-                           <div className="text-sm font-bold text-gray-700">幸运数字</div>
+                        <div className="flex flex-col items-start min-w-0">
+                           <div className="text-[10px] text-indigo-300 font-bold uppercase tracking-wider leading-none mb-0.5 whitespace-nowrap">LUCKY NO.</div>
+                           <div className="text-xs font-bold text-gray-700 leading-none whitespace-nowrap">幸运数字</div>
                         </div>
                       </div>
-                      <div className="bg-white/60 rounded-xl p-3 flex items-center gap-3 border border-indigo-50">
-                        <div className={`w-10 h-10 rounded-full ${todaySign?.luckyColor?.value || 'bg-pink-400'} shadow-sm border-2 border-white`}></div>
-                        <div className="text-left">
-                           <div className="text-[10px] text-indigo-300 font-bold uppercase tracking-wider">Lucky Color</div>
-                           <div className={`text-sm font-bold ${todaySign?.luckyColor?.text || 'text-pink-500'}`}>
+                      <div className="flex-1 bg-white/60 rounded-xl p-2.5 flex items-center justify-center gap-2 md:gap-3 border border-indigo-50">
+                        <div className={`w-8 h-8 rounded-full ${todaySign?.luckyColor?.value || 'bg-pink-400'} shadow-sm border-2 border-white flex-shrink-0`}></div>
+                        <div className="flex flex-col items-start min-w-0">
+                           <div className="text-[10px] text-indigo-300 font-bold uppercase tracking-wider leading-none mb-0.5 whitespace-nowrap">LUCKY COLOR</div>
+                           <div className={`text-xs font-bold ${todaySign?.luckyColor?.text || 'text-pink-500'} leading-none whitespace-nowrap`}>
                              {todaySign?.luckyColor?.name || "桃花粉"}
                            </div>
                         </div>
