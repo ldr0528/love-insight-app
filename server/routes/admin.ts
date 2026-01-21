@@ -1,5 +1,6 @@
 import { Router, type Request, type Response } from 'express';
-import { users, findUserById, deleteUserById } from '../data/store.js';
+import User from '../models/User.js';
+import connectDB from '../config/db.js';
 
 const router = Router();
 
@@ -14,30 +15,50 @@ router.post('/login', (req: Request, res: Response) => {
 });
 
 // Get Users
-router.get('/users', (req: Request, res: Response) => {
-  res.json({ success: true, users });
+router.get('/users', async (req: Request, res: Response) => {
+  try {
+    await connectDB();
+    const users = await User.find({}).sort({ createdAt: -1 });
+    res.json({ success: true, users });
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
 });
 
 // Toggle VIP
-router.post('/users/:id/toggle-vip', (req: Request, res: Response) => {
+router.post('/users/:id/toggle-vip', async (req: Request, res: Response) => {
   const { id } = req.params;
-  const user = findUserById(id);
-  if (user) {
-    user.isVip = !user.isVip;
-    res.json({ success: true, user });
-  } else {
-    res.status(404).json({ success: false, message: 'User not found' });
+  try {
+    await connectDB();
+    const user = await User.findOne({ id });
+    if (user) {
+      user.isVip = !user.isVip;
+      await user.save();
+      res.json({ success: true, user });
+    } else {
+      res.status(404).json({ success: false, message: 'User not found' });
+    }
+  } catch (error) {
+    console.error('Error toggling VIP:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
 // Delete User
-router.delete('/users/:id', (req: Request, res: Response) => {
+router.delete('/users/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
-  const deleted = deleteUserById(id);
-  if (deleted) {
-    res.json({ success: true });
-  } else {
-    res.status(404).json({ success: false, message: 'User not found' });
+  try {
+    await connectDB();
+    const result = await User.deleteOne({ id });
+    if (result.deletedCount === 1) {
+      res.json({ success: true });
+    } else {
+      res.status(404).json({ success: false, message: 'User not found' });
+    }
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
