@@ -67,19 +67,19 @@ export default function Compatibility() {
                    />
                  </div>
                  <div>
-                   <label className="block text-sm font-medium text-gray-700 mb-1 ml-1">你的生日 (选填)</label>
-                   <input 
-                     type="text"
-                     onFocus={(e) => (e.target.type = "date")}
-                     onBlur={(e) => {
-                       if (!e.target.value) e.target.type = "text";
-                     }}
-                     placeholder="请选择出生日期"
-                     value={formData.user_birth}
-                     onChange={e => setFormData({...formData, user_birth: e.target.value})}
-                     className="w-full px-5 py-3 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-purple-200 outline-none transition-all text-gray-600 placeholder-gray-400"
-                   />
-                 </div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1 ml-1">你的生日 (选填)</label>
+                  <div className="relative">
+                    <div className={`w-full px-5 py-3 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-purple-200 outline-none transition-all flex items-center ${formData.user_birth ? 'text-gray-900' : 'text-gray-400'}`}>
+                      {formData.user_birth ? formData.user_birth.replace(/-/g, ' / ') : "请选择出生日期"}
+                    </div>
+                    <input 
+                      type="date"
+                      value={formData.user_birth}
+                      onChange={e => setFormData({...formData, user_birth: e.target.value})}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                  </div>
+                </div>
                  
                  <div className="relative py-2 flex items-center justify-center">
                     <div className="absolute inset-0 flex items-center">
@@ -102,17 +102,19 @@ export default function Compatibility() {
                    />
                  </div>
                  <div>
-                   <label className="block text-sm font-medium text-gray-700 mb-1 ml-1">对方的生日 (选填)</label>
-                   <input 
-                     type="text"
-                     placeholder="请选择对方的生日"
-                     onFocus={(e) => e.target.type = 'date'}
-                     onBlur={(e) => { if(!e.target.value) e.target.type = 'text' }}
-                     value={formData.partner_birth}
-                     onChange={e => setFormData({...formData, partner_birth: e.target.value})}
-                     className="w-full px-5 py-3 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-purple-200 outline-none transition-all text-gray-600 placeholder-gray-400"
-                   />
-                 </div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1 ml-1">对方的生日 (选填)</label>
+                  <div className="relative">
+                    <div className={`w-full px-5 py-3 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-purple-200 outline-none transition-all flex items-center ${formData.partner_birth ? 'text-gray-900' : 'text-gray-400'}`}>
+                      {formData.partner_birth ? formData.partner_birth.replace(/-/g, ' / ') : "请选择对方生日"}
+                    </div>
+                    <input 
+                      type="date"
+                      value={formData.partner_birth}
+                      onChange={e => setFormData({...formData, partner_birth: e.target.value})}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                  </div>
+                </div>
                </div>
 
                <button 
