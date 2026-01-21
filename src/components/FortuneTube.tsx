@@ -213,7 +213,7 @@ export default function FortuneTube() {
         disabled={drawing}
         className="bg-gray-900 text-white px-8 py-3 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed z-10"
       >
-        {drawing ? (shaking ? "摇签中..." : "解签中...") : "抽取今日运势"} <Sparkles className="w-5 h-5" />
+        {drawing ? (shaking ? "摇签中..." : "解签中...") : "抽取灵签"} <Sparkles className="w-5 h-5" />
       </button>
 
       {showModal && (
