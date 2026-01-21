@@ -1,7 +1,6 @@
 
 import { Link } from 'react-router-dom';
 import { Compass, ArrowRight, Brain, Hand, Heart, Target, PenTool } from 'lucide-react';
-import DailyCheckIn from '@/components/DailyCheckIn';
 import FortuneTube from '@/components/FortuneTube';
 
 export default function Home() {
@@ -19,16 +18,15 @@ export default function Home() {
           </h1>
           
           <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            融合 MBTI、星盘与手相的 AI 灵性指引
+            每日灵犀签：点击签筒，开启今日运势
           </p>
         </div>
 
         {/* Fortune Tube */}
         <FortuneTube />
         
-        {/* Daily Check-in Section */}
-        <DailyCheckIn />
-
+        
+        
         {/* Feature Cards */}
         <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
           {/* Main Wizard (kept as secondary entry) */}
@@ -37,7 +35,7 @@ export default function Home() {
               <Heart className="w-24 h-24 text-pink-500" />
             </div>
             <div className="relative z-10 flex flex-col h-full justify-center">
-              <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify中心 text-pink-600 mb-4">
+              <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center text-pink-600 mb-4">
                 <Heart className="w-6 h-6 fill-current" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">专属运势分析</h3>
@@ -126,6 +124,7 @@ export default function Home() {
             </div>
           </Link>
         </div>
+        
 
         {/* Stats */}
         <div className="pt-8 text-center text-gray-500 text-sm border-t border-gray-100">
