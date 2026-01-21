@@ -2,7 +2,7 @@ import { useEffect, useState, useRef, useMemo } from 'react';
 import { Sparkles, X } from 'lucide-react';
 import DailyCheckIn from '@/components/DailyCheckIn';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Text, Cylinder, Environment, ContactShadows, Html } from '@react-three/drei';
+import { Text, Cylinder, Environment, ContactShadows, Html, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 
 // 竹签组件
@@ -29,12 +29,12 @@ function Stick({ position, rotation, isChosen, shaking }: { position: [number, n
     <group ref={ref} position={position} rotation={rotation}>
       <mesh>
         <boxGeometry args={[0.12, 2.8, 0.03]} />
-        <meshStandardMaterial color="#C48136" roughness={0.6} />
+        <meshStandardMaterial color="#D4A156" roughness={0.4} metalness={0.1} />
       </mesh>
       {/* 签头红色标记 */}
       <mesh position={[0, 1.2, 0]}>
          <boxGeometry args={[0.12, 0.2, 0.035]} />
-         <meshStandardMaterial color="#8B2A2A" />
+         <meshStandardMaterial color="#8B2A2A" roughness={0.3} />
       </mesh>
     </group>
   );
@@ -65,38 +65,56 @@ function TubeModel({ shaking, stickUp, onDraw }: { shaking: boolean, stickUp: bo
       const time = state.clock.elapsedTime;
       group.current.rotation.z = Math.sin(time * 15) * 0.15;
       group.current.position.y = Math.sin(time * 20) * 0.05;
+      group.current.rotation.x = Math.cos(time * 12) * 0.05;
     } else {
       // 复位
       group.current.rotation.z = THREE.MathUtils.lerp(group.current.rotation.z, 0, 0.1);
       group.current.position.y = THREE.MathUtils.lerp(group.current.position.y, 0, 0.1);
+      group.current.rotation.x = THREE.MathUtils.lerp(group.current.rotation.x, 0, 0.1);
     }
   });
 
+  // 材质 - 使用 useMemo 避免重复创建
+  const woodMaterial = useMemo(() => new THREE.MeshPhysicalMaterial({
+    color: '#8B5A2B', // 更深沉的木色
+    roughness: 0.5,
+    metalness: 0.1,
+    clearcoat: 0.5, // 表面清漆感
+    clearcoatRoughness: 0.2,
+  }), []);
+  
+  const bandMaterial = useMemo(() => new THREE.MeshPhysicalMaterial({
+    color: '#B84A3C',
+    roughness: 0.3,
+    metalness: 0.2,
+    clearcoat: 0.8,
+  }), []);
+
   return (
     <group ref={group} onClick={(e) => { e.stopPropagation(); onDraw(); }}>
-      {/* 筒身 (空心圆柱效果，用一个管子) */}
-      <Cylinder args={[1.0, 0.9, 3.2, 32, 1, true]} position={[0, -0.5, 0]}>
-        <meshStandardMaterial color="#E6C07A" side={THREE.DoubleSide} roughness={0.4} metalness={0.2} />
-      </Cylinder>
+      {/* 筒身 */}
+      <Cylinder args={[1.0, 0.9, 3.2, 64, 1, true]} position={[0, -0.5, 0]} material={woodMaterial} />
       
+      {/* 筒内壁 */}
+      <Cylinder args={[0.9, 0.9, 3.2, 64, 1, true]} position={[0, -0.5, 0]}>
+         <meshStandardMaterial color="#5D3A1A" roughness={0.8} side={THREE.BackSide} />
+      </Cylinder>
+
       {/* 筒底 */}
-      <Cylinder args={[0.9, 0.9, 0.1, 32]} position={[0, -2.1, 0]}>
-        <meshStandardMaterial color="#C9A05A" />
-      </Cylinder>
+      <Cylinder args={[0.9, 0.9, 0.2, 64]} position={[0, -2.05, 0]} material={woodMaterial} />
 
-      {/* 装饰环 (红色) */}
-      <Cylinder args={[1.01, 1.01, 0.3, 32]} position={[0, 0, 0]}>
-        <meshStandardMaterial color="#B84A3C" roughness={0.3} />
-      </Cylinder>
+      {/* 顶部边缘 */}
+      <Cylinder args={[1.05, 1.0, 0.1, 64]} position={[0, 1.05, 0]} material={woodMaterial} />
+
+      {/* 装饰环 (上) */}
+      <Cylinder args={[1.02, 1.02, 0.25, 64]} position={[0, 0.2, 0]} material={bandMaterial} />
       
-      {/* 装饰环 (底部) */}
-      <Cylinder args={[0.95, 0.95, 0.2, 32]} position={[0, -1.8, 0]}>
-        <meshStandardMaterial color="#B84A3C" roughness={0.3} />
-      </Cylinder>
+      {/* 装饰环 (下) */}
+      <Cylinder args={[0.96, 0.96, 0.2, 64]} position={[0, -1.8, 0]} material={bandMaterial} />
 
-      {/* "签筒" 文字贴图 - 使用 Html 以支持中文字符 */}
+      {/* "签筒" 文字贴图 - 调整样式使其更融合 */}
       <Html
-        position={[0, 0, 1.02]} // 放在筒壁前方
+        position={[0, 0.2, 1.05]} // 放在红色装饰环上
         transform
         occlude
         style={{
@@ -106,9 +124,15 @@ function TubeModel({ shaking, stickUp, onDraw }: { shaking: boolean, stickUp: bo
           alignItems: 'center',
           justifyContent: 'center',
           userSelect: 'none',
+          pointerEvents: 'none', // 避免阻挡点击
         }}
       >
-        <div className="text-[#5c3a1e] text-lg font-extrabold whitespace-nowrap" style={{ fontFamily: 'serif' }}>
+        <div className="text-[#FFD700] text-lg font-bold whitespace-nowrap" 
+             style={{ 
+               fontFamily: '"Kaiti", "STKaiti", serif', // 楷体更像刻字
+               textShadow: '0 1px 2px rgba(0,0,0,0.5)',
+               filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.3))'
+             }}>
           签筒
         </div>
       </Html>
@@ -171,25 +195,23 @@ export default function FortuneTube() {
   return (
     <div className="flex flex-col items-center gap-4">
       {/* 3D 场景容器 */}
-      <div className="w-48 h-64 cursor-pointer relative" onClick={handleDraw}>
-        <Canvas camera={{ position: [0, 1, 6], fov: 45 }}>
-          <ambientLight intensity={0.8} />
-          <directionalLight position={[5, 5, 5]} intensity={1.5} />
-          <pointLight position={[-5, 5, -5]} color="#ffecd2" intensity={1} />
+      <div className="w-64 h-80 cursor-pointer relative" onClick={handleDraw}>
+        <Canvas camera={{ position: [0, 1.5, 6], fov: 40 }} shadows>
+          <ambientLight intensity={0.6} />
+          <spotLight position={[5, 10, 5]} angle={0.5} penumbra={0.5} intensity={1} castShadow />
+          <pointLight position={[-5, 5, -5]} color="#ffecd2" intensity={0.8} />
           
           <TubeModel shaking={shaking} stickUp={stickUp} onDraw={handleDraw} />
           
-          <Environment preset="sunset" />
-          <ContactShadows position={[0, -2.5, 0]} opacity={0.4} scale={10} blur={2.5} far={4} />
+          <Environment preset="city" />
+          <ContactShadows position={[0, -2.2, 0]} opacity={0.5} scale={10} blur={2} far={4} color="#000000" />
         </Canvas>
-        
-        {/* 提示遮罩，避免 Canvas 拦截所有点击导致不好触发（Canvas 内部已处理 onClick，但加一层保障也可以，这里先不加） */}
       </div>
 
       <button
         onClick={handleDraw}
         disabled={drawing}
-        className="bg-gray-900 text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+        className="bg-gray-900 text-white px-8 py-3 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed z-10"
       >
         {drawing ? (shaking ? "摇签中..." : "解签中...") : "抽取今日运势"} <Sparkles className="w-5 h-5" />
       </button>

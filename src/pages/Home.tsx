@@ -18,7 +18,7 @@ export default function Home() {
           </h1>
           
           <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            每日灵犀签：点击签筒，开启今日运势
+            探索内心小小宇宙
           </p>
         </div>
 
@@ -74,9 +74,9 @@ export default function Home() {
               <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center text-orange-600 mb-4">
                 <Hand className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">AI 手相大师</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">智能手相大师</h3>
               <p className="text-gray-500 text-sm mb-6 flex-grow">
-                上传手掌照片，AI 视觉模型将自动识别你的感情线与生命线特征。
+                上传手掌照片，视觉模型将自动识别你的感情线与生命线特征。
               </p>
               <span className="inline-flex items-center text-orange-600 font-bold group-hover:gap-2 transition-all">
                 单独测手相 <ArrowRight className="w-4 h-4 ml-1" />
@@ -93,9 +93,9 @@ export default function Home() {
               <div className="w-12 h-12 bg-rose-100 rounded-xl flex items-center justify-center text-rose-600 mb-4">
                 <Target className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">AI 恋爱军师</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">恋爱军师</h3>
               <p className="text-gray-500 text-sm mb-6 flex-grow">
-                输入Ta的性格与你的困扰，AI 军师为你定制高情商追求与挽回攻略。
+                输入Ta的性格与你的困扰，军师为你定制高情商追求与挽回攻略。
               </p>
               <span className="inline-flex items-center text-rose-600 font-bold group-hover:gap-2 transition-all">
                 获取恋爱攻略 <ArrowRight className="w-4 h-4 ml-1" />
