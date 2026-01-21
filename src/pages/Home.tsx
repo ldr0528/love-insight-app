@@ -123,7 +123,7 @@ export default function Home() {
           </Link>
 
           {/* Compatibility Explorer */}
-          <Link to="/compatibility" className="group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-cyan-50 overflow-hidden flex flex-col h-full">
+          <Link to="/compatibility" className="hidden group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-cyan-50 overflow-hidden flex flex-col h-full">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
               <Feather className="w-24 h-24 text-cyan-500" />
             </div>
