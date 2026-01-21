@@ -74,7 +74,7 @@ export default function Home() {
         {/* Feature Cards */}
         <div className="grid md:grid-cols-2 gap-6 w-full">
           {/* Main Wizard (kept as secondary entry) */}
-          <Link to="/report" className="group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-pink-100 overflow-hidden flex flex-col h-full">
+          <Link to="/report" className="hidden group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-pink-100 overflow-hidden flex flex-col h-full">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
               <Heart className="w-24 h-24 text-pink-500" />
             </div>
