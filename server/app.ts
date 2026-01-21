@@ -11,6 +11,7 @@ import cors from 'cors'
 import path from 'path'
 import dotenv from 'dotenv'
 import { fileURLToPath } from 'url'
+import connectDB from './config/db.js'
 import authRoutes from './routes/auth.js'
 import reportRoutes from './routes/report.js'
 import analyzeRoutes from './routes/analyze.js'
@@ -25,6 +26,9 @@ const __dirname = path.dirname(__filename)
 
 // load env
 dotenv.config()
+
+// Connect to MongoDB
+connectDB();
 
 const app: express.Application = express()
 
