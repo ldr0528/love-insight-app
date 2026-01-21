@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom';
 import { Compass, ArrowRight, Brain, Hand, Heart, Target, PenTool } from 'lucide-react';
 import DailyCheckIn from '@/components/DailyCheckIn';
+import FortuneTube from '@/components/FortuneTube';
 
 export default function Home() {
   return (
@@ -22,18 +23,21 @@ export default function Home() {
           </p>
         </div>
 
+        {/* Fortune Tube */}
+        <FortuneTube />
+        
         {/* Daily Check-in Section */}
         <DailyCheckIn />
 
         {/* Feature Cards */}
         <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-          {/* Main Wizard */}
-          <Link to="/report" className="group relative bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 border border-pink-100 overflow-hidden flex flex-col h-full">
+          {/* Main Wizard (kept as secondary entry) */}
+          <Link to="/report" className="group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-pink-100 overflow-hidden flex flex-col h-full">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
               <Heart className="w-24 h-24 text-pink-500" />
             </div>
             <div className="relative z-10 flex flex-col h-full justify-center">
-              <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center text-pink-600 mb-4">
+              <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify中心 text-pink-600 mb-4">
                 <Heart className="w-6 h-6 fill-current" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">专属运势分析</h3>
