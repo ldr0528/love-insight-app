@@ -43,6 +43,7 @@ app.use('/api/analyze', analyzeRoutes)
 app.use('/api/payment', paymentRoutes)
 app.use('/api/naming', namingRoutes)
 app.use('/api/compatibility', compatibilityRoutes)
+app.use('/api/admin', adminRoutes)
 
 /**
  * health

@@ -6,14 +6,18 @@ import PalmPage from "@/pages/PalmPage";
 import LoveCoach from "@/pages/LoveCoach";
 import NamingMaster from "@/pages/NamingMaster";
 import Compatibility from "@/pages/Compatibility";
-import AuthModal from "@/components/auth/AuthModal";
+import SimpleAuthModal from "@/components/auth/SimpleAuthModal";
+import AdminLogin from "@/pages/admin/AdminLogin";
+import AdminDashboard from "@/pages/admin/AdminDashboard";
 
 export default function App() {
   return (
     <Router>
-      <AuthModal />
+      <SimpleAuthModal />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/admin" element={<AdminLogin />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/report" element={<LoveTest />} />
         <Route path="/mbti" element={<MBTIPage />} />
         <Route path="/palm" element={<PalmPage />} />

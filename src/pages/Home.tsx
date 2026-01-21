@@ -14,9 +14,9 @@ export default function Home() {
         {user ? (
           <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm p-2 pr-4 rounded-full shadow-sm border border-pink-100 hover:shadow-md transition-all">
             <div className="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center text-pink-500 font-bold">
-              {user.nickname?.[0] || <User size={16} />}
+              <User size={16} />
             </div>
-            <span className="text-sm font-medium text-gray-700">{user.nickname || user.phone}</span>
+            <span className="text-sm font-medium text-gray-700">{user.nickname}</span>
             <button 
               onClick={logout} 
               className="text-xs text-gray-400 hover:text-pink-500 ml-2 border-l border-gray-200 pl-3"

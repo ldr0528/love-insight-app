@@ -14,10 +14,6 @@
     "dev": "concurrently \"npm run client:dev\" \"npm run server:dev\""
   },
   "dependencies": {
-    "@alicloud/dypnsapi20170525": "^2.0.0",
-    "@alicloud/dysmsapi20170525": "^4.4.0",
-    "@alicloud/openapi-client": "^0.4.15",
-    "@alicloud/tea-util": "^1.4.11",
     "@react-three/drei": "^9.100.0",
     "@react-three/fiber": "^8.18.0",
     "@types/three": "^0.182.0",
