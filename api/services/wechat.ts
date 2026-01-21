@@ -14,6 +14,7 @@ export const getWxPay = () => {
     // This bypasses file system issues entirely on Vercel
     let privateKey: Buffer | undefined;
     let publicKey: Buffer | undefined;
+    const serialNo = process.env.WECHAT_SERIAL_NO || ''
 
     if (process.env.WECHAT_KEY_CONTENT && process.env.WECHAT_CERT_CONTENT) {
        console.log('[WeChat] Using certificates from Environment Variables');
@@ -78,6 +79,8 @@ export const getWxPay = () => {
       mchid: process.env.WECHAT_MCH_ID || '',
       publicKey,
       privateKey,
+      serial_no: serialNo,
+      key: process.env.WECHAT_API_V3_KEY || '',
     })
 
     return wxPay
@@ -109,19 +112,24 @@ export const createNativeOrder = async (order: WxPayOrder): Promise<string> => {
   const pay = getWxPay()
   if (!pay) throw new Error('WeChat Pay not configured')
 
-  const result = await pay.transactions_native({
-    description: order.description,
-    out_trade_no: order.out_trade_no,
-    notify_url: order.notify_url,
-    amount: order.amount,
-  })
-
-  // @ts-ignore
-  if (result.status === 200 && result.code_url) {
+  try {
+    const result = await pay.transactions_native({
+      description: order.description,
+      out_trade_no: order.out_trade_no,
+      notify_url: order.notify_url,
+      amount: order.amount,
+    })
     // @ts-ignore
-    return result.code_url
-  } else {
-    // @ts-ignore
-    throw new Error(`WeChat Pay Error: ${result.message || 'Unknown error'}`)
+    if (result && result.status === 200 && result.code_url) {
+      // @ts-ignore
+      return result.code_url
+    }
+    throw new Error(
+      typeof result === 'string'
+        ? result
+        : JSON.stringify(result || { error: 'Unknown error' })
+    )
+  } catch (e: any) {
+    throw new Error(e?.message || 'WeChat Pay create order failed')
   }
 }

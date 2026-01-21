@@ -35,8 +35,10 @@ router.post('/create', async (req: Request, res: Response): Promise<void> => {
       createdAt: Date.now()
     }
 
-    const protocol = req.protocol
-    const host = req.get('host')
+    const xfProto = (req.headers['x-forwarded-proto'] as string)?.split(',')[0]
+    const protocol = xfProto || (req.protocol === 'http' ? 'https' : req.protocol) || 'https'
+    const xfHost = (req.headers['x-forwarded-host'] as string)?.split(',')[0]
+    const host = xfHost || req.get('host') || process.env.PUBLIC_HOST || ''
     let payUrl = ''
 
     if (method === 'wechat') {
