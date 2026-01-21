@@ -76,7 +76,7 @@ export default function Compatibility() {
                       type="date"
                       value={formData.user_birth}
                       onChange={e => setFormData({...formData, user_birth: e.target.value})}
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                     />
                   </div>
                 </div>
@@ -111,7 +111,7 @@ export default function Compatibility() {
                       type="date"
                       value={formData.partner_birth}
                       onChange={e => setFormData({...formData, partner_birth: e.target.value})}
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                     />
                   </div>
                 </div>
