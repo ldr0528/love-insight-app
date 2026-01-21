@@ -14,27 +14,35 @@ function Stick({ position, rotation, isChosen, shaking }: { position: [number, n
     if (!ref.current) return;
     
     // 抽签动画：向上移动
-    const targetY = isChosen ? initialY + 1.2 : initialY;
+    const targetY = isChosen ? initialY + 1.5 : initialY;
     ref.current.position.y = THREE.MathUtils.lerp(ref.current.position.y, targetY, delta * 8);
 
     // 摇晃时的随机微动
     if (shaking) {
-      ref.current.rotation.z = rotation[2] + (Math.random() - 0.5) * 0.1;
+      ref.current.rotation.z = rotation[2] + (Math.random() - 0.5) * 0.2;
+      ref.current.rotation.x = rotation[0] + (Math.random() - 0.5) * 0.1;
     } else {
         ref.current.rotation.z = THREE.MathUtils.lerp(ref.current.rotation.z, rotation[2], delta * 5);
+        ref.current.rotation.x = THREE.MathUtils.lerp(ref.current.rotation.x, rotation[0], delta * 5);
     }
   });
 
   return (
     <group ref={ref} position={position} rotation={rotation}>
       <mesh>
-        <boxGeometry args={[0.12, 2.8, 0.03]} />
-        <meshStandardMaterial color="#D4A156" roughness={0.4} metalness={0.1} />
+        {/* 竹签稍微细一点 */}
+        <boxGeometry args={[0.08, 2.6, 0.02]} />
+        <meshStandardMaterial color="#E8C382" roughness={0.4} metalness={0.1} />
       </mesh>
       {/* 签头红色标记 */}
-      <mesh position={[0, 1.2, 0]}>
-         <boxGeometry args={[0.12, 0.2, 0.035]} />
-         <meshStandardMaterial color="#8B2A2A" roughness={0.3} />
+      <mesh position={[0, 1.1, 0]}>
+         <boxGeometry args={[0.08, 0.2, 0.025]} />
+         <meshStandardMaterial color="#D93025" roughness={0.3} />
+      </mesh>
+      {/* 签文文字模拟 (简单的纹理效果) */}
+       <mesh position={[0, 0.2, 0.011]}>
+         <planeGeometry args={[0.05, 1.2]} />
+         <meshBasicMaterial color="#333" transparent opacity={0.1} />
       </mesh>
     </group>
   );
@@ -44,17 +52,19 @@ function Stick({ position, rotation, isChosen, shaking }: { position: [number, n
 function TubeModel({ shaking, stickUp, onDraw }: { shaking: boolean, stickUp: boolean, onDraw: () => void }) {
   const group = useRef<THREE.Group>(null);
 
-  // 生成随机竹签位置
+  // 生成随机竹签位置 - 增加数量，调整位置确保露出
   const sticks = useMemo(() => {
-    return Array.from({ length: 18 }).map((_, i) => {
+    return Array.from({ length: 28 }).map((_, i) => {
       const angle = (Math.random() * Math.PI * 2);
-      const radius = Math.random() * 0.6; // 在筒内随机分布
+      const radius = Math.random() * 0.45; // 收紧半径，防止穿模
       const x = Math.cos(angle) * radius;
       const z = Math.sin(angle) * radius;
-      const y = -0.5 + (Math.random() - 0.5) * 0.2;
+      // 提高基础高度，让签露出来
+      const y = -0.2 + (Math.random() - 0.5) * 0.3; 
       const rotY = Math.random() * Math.PI;
-      const rotZ = (Math.random() - 0.5) * 0.1; // 稍微倾斜
-      return { position: [x, y, z] as [number, number, number], rotation: [0, rotY, rotZ] as [number, number, number] };
+      const rotZ = (Math.random() - 0.5) * 0.15; // 增加倾斜随机性
+      const rotX = (Math.random() - 0.5) * 0.15;
+      return { position: [x, y, z] as [number, number, number], rotation: [rotX, rotY, rotZ] as [number, number, number] };
     });
   }, []);
 
@@ -76,45 +86,48 @@ function TubeModel({ shaking, stickUp, onDraw }: { shaking: boolean, stickUp: bo
 
   // 材质 - 使用 useMemo 避免重复创建
   const woodMaterial = useMemo(() => new THREE.MeshPhysicalMaterial({
-    color: '#8B5A2B', // 更深沉的木色
-    roughness: 0.5,
+    color: '#5c3a21', // 更深、更高级的黑胡桃木色
+    roughness: 0.4,
     metalness: 0.1,
-    clearcoat: 0.5, // 表面清漆感
-    clearcoatRoughness: 0.2,
+    clearcoat: 0.3, // 降低清漆感，更自然
+    clearcoatRoughness: 0.4,
   }), []);
   
   const bandMaterial = useMemo(() => new THREE.MeshPhysicalMaterial({
-    color: '#B84A3C',
+    color: '#C41E3A', // 中国红
     roughness: 0.3,
-    metalness: 0.2,
+    metalness: 0.3,
     clearcoat: 0.8,
+    emissive: '#500000',
+    emissiveIntensity: 0.2
   }), []);
 
   return (
-    <group ref={group} onClick={(e) => { e.stopPropagation(); onDraw(); }}>
-      {/* 筒身 */}
-      <Cylinder args={[1.0, 0.9, 3.2, 64, 1, true]} position={[0, -0.5, 0]} material={woodMaterial} />
+    // 整体缩放 0.8 倍，显得更小巧
+    <group ref={group} onClick={(e) => { e.stopPropagation(); onDraw(); }} scale={[0.8, 0.8, 0.8]}>
+      {/* 筒身 - 稍微变细一点 */}
+      <Cylinder args={[0.85, 0.75, 2.8, 64, 1, true]} position={[0, -0.4, 0]} material={woodMaterial} />
       
       {/* 筒内壁 */}
-      <Cylinder args={[0.9, 0.9, 3.2, 64, 1, true]} position={[0, -0.5, 0]}>
-         <meshStandardMaterial color="#5D3A1A" roughness={0.8} side={THREE.BackSide} />
+      <Cylinder args={[0.75, 0.75, 2.8, 64, 1, true]} position={[0, -0.4, 0]}>
+         <meshStandardMaterial color="#3d2616" roughness={0.9} side={THREE.BackSide} />
       </Cylinder>
 
       {/* 筒底 */}
-      <Cylinder args={[0.9, 0.9, 0.2, 64]} position={[0, -2.05, 0]} material={woodMaterial} />
+      <Cylinder args={[0.75, 0.75, 0.1, 64]} position={[0, -1.75, 0]} material={woodMaterial} />
 
-      {/* 顶部边缘 */}
-      <Cylinder args={[1.05, 1.0, 0.1, 64]} position={[0, 1.05, 0]} material={woodMaterial} />
+      {/* 顶部边缘 - 加一点倒角感 */}
+      <Cylinder args={[0.9, 0.85, 0.15, 64]} position={[0, 0.95, 0]} material={woodMaterial} />
 
-      {/* 装饰环 (上) */}
-      <Cylinder args={[1.02, 1.02, 0.25, 64]} position={[0, 0.2, 0]} material={bandMaterial} />
+      {/* 装饰环 (上) - 变细 */}
+      <Cylinder args={[0.88, 0.88, 0.15, 64]} position={[0, 0.3, 0]} material={bandMaterial} />
       
-      {/* 装饰环 (下) */}
-      <Cylinder args={[0.96, 0.96, 0.2, 64]} position={[0, -1.8, 0]} material={bandMaterial} />
+      {/* 装饰环 (下) - 变细 */}
+      <Cylinder args={[0.8, 0.8, 0.15, 64]} position={[0, -1.4, 0]} material={bandMaterial} />
 
-      {/* "签筒" 文字贴图 - 调整样式使其更融合 */}
+      {/* "签筒" 文字贴图 - 调整位置 */}
       <Html
-        position={[0, 0.2, 1.05]} // 放在红色装饰环上
+        position={[0, 0.3, 0.9]} // 放在红色装饰环上
         transform
         occlude
         style={{
@@ -196,15 +209,15 @@ export default function FortuneTube() {
     <div className="flex flex-col items-center gap-4">
       {/* 3D 场景容器 */}
       <div className="w-64 h-80 cursor-pointer relative" onClick={handleDraw}>
-        <Canvas camera={{ position: [0, 1.5, 6], fov: 40 }} shadows>
-          <ambientLight intensity={0.6} />
-          <spotLight position={[5, 10, 5]} angle={0.5} penumbra={0.5} intensity={1} castShadow />
-          <pointLight position={[-5, 5, -5]} color="#ffecd2" intensity={0.8} />
+        <Canvas camera={{ position: [0, 2, 5.5], fov: 35 }} shadows>
+          <ambientLight intensity={0.7} />
+          <spotLight position={[5, 8, 5]} angle={0.4} penumbra={0.5} intensity={1.2} castShadow />
+          <pointLight position={[-3, 2, -3]} color="#ffecd2" intensity={0.5} />
           
           <TubeModel shaking={shaking} stickUp={stickUp} onDraw={handleDraw} />
           
-          <Environment preset="city" />
-          <ContactShadows position={[0, -2.2, 0]} opacity={0.5} scale={10} blur={2} far={4} color="#000000" />
+          <Environment preset="studio" />
+          <ContactShadows position={[0, -2.2, 0]} opacity={0.4} scale={8} blur={2.5} far={4} color="#000000" />
         </Canvas>
       </div>
 
