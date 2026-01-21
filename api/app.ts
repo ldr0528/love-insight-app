@@ -16,6 +16,7 @@ import reportRoutes from './routes/report.js'
 import analyzeRoutes from './routes/analyze.js'
 import paymentRoutes from './routes/payment.js'
 import namingRoutes from './routes/naming.js'
+import compatibilityRoutes from './routes/compatibility.js'
 
 // for esm mode
 const __filename = fileURLToPath(import.meta.url)
@@ -41,6 +42,7 @@ app.use('/api/report', reportRoutes)
 app.use('/api/analyze', analyzeRoutes)
 app.use('/api/payment', paymentRoutes)
 app.use('/api/naming', namingRoutes)
+app.use('/api/compatibility', compatibilityRoutes)
 
 /**
  * health

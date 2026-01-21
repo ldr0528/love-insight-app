@@ -1,6 +1,6 @@
 
 import { Link } from 'react-router-dom';
-import { Compass, ArrowRight, Brain, Hand, Heart, Target, PenTool } from 'lucide-react';
+import { Compass, ArrowRight, Brain, Hand, Heart, Target, PenTool, Feather } from 'lucide-react';
 import FortuneTube from '@/components/FortuneTube';
 
 export default function Home() {
@@ -18,7 +18,7 @@ export default function Home() {
           </h1>
           
           <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            探索内心小小宇宙
+            探索独属于你的小小宇宙
           </p>
         </div>
 
@@ -104,20 +104,39 @@ export default function Home() {
           </Link>
 
           {/* AI Naming Master */}
-          <Link to="/naming" className="group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-purple-50 overflow-hidden flex flex-col h-full md:col-span-2">
+          <Link to="/naming" className="group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-purple-50 overflow-hidden flex flex-col h-full">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
               <PenTool className="w-24 h-24 text-purple-500" />
             </div>
-            <div className="relative z-10 flex flex-col h-full justify-center items-center text-center">
+            <div className="relative z-10 flex flex-col h-full justify-center">
               <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center text-purple-600 mb-4">
                 <PenTool className="w-6 h-6" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">缘名堂</h3>
-              <p className="text-gray-500 text-sm mb-6 max-w-lg">
+              <p className="text-gray-500 text-sm mb-6 flex-grow">
                 结合传统生辰八字与现代美学，为宝宝、公司或品牌定制寓意深远、朗朗上口的好名字。
               </p>
               <span className="inline-flex items-center text-purple-600 font-bold group-hover:gap-2 transition-all">
                 立即开始起名 <ArrowRight className="w-4 h-4 ml-1" />
+              </span>
+            </div>
+          </Link>
+
+          {/* Compatibility Explorer */}
+          <Link to="/compatibility" className="group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-cyan-50 overflow-hidden flex flex-col h-full">
+            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+              <Feather className="w-24 h-24 text-cyan-500" />
+            </div>
+            <div className="relative z-10 flex flex-col h-full justify-center">
+              <div className="w-12 h-12 bg-cyan-100 rounded-xl flex items-center justify-center text-cyan-600 mb-4">
+                <Feather className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">缘分探索</h3>
+              <p className="text-gray-500 text-sm mb-6 flex-grow">
+                输入双方信息，AI 深度解析前世今生与性格契合度，并赠予专属定情古诗。
+              </p>
+              <span className="inline-flex items-center text-cyan-600 font-bold group-hover:gap-2 transition-all">
+                开启缘分测试 <ArrowRight className="w-4 h-4 ml-1" />
               </span>
             </div>
           </Link>

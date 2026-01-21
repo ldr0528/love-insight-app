@@ -117,7 +117,7 @@ export default function LoveCoach() {
           <ArrowLeft className="w-5 h-5" /> <span className="hidden md:inline">返回首页</span>
         </Link>
         <h1 className="font-extrabold text-xl text-transparent bg-clip-text bg-gradient-to-r from-rose-600 to-indigo-600 flex items-center gap-2">
-          <Target className="w-6 h-6 text-rose-500" /> AI 恋爱军师
+          <Target className="w-6 h-6 text-rose-500" /> 恋爱军师
         </h1>
         <div className="w-20"></div> 
       </header>

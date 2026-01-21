@@ -32,7 +32,7 @@ function Stick({ position, rotation, isChosen, shaking }: { position: [number, n
       <mesh>
         {/* 竹签稍微细一点 */}
         <boxGeometry args={[0.08, 2.6, 0.02]} />
-        <meshStandardMaterial color="#E8C382" roughness={0.4} metalness={0.1} />
+        <meshStandardMaterial color="#B08D55" roughness={0.6} metalness={0.1} />
       </mesh>
       {/* 签头红色标记 */}
       <mesh position={[0, 1.1, 0]}>
@@ -103,27 +103,21 @@ function TubeModel({ shaking, stickUp, onDraw }: { shaking: boolean, stickUp: bo
   }), []);
 
   return (
-    // 整体缩放 0.8 倍，显得更小巧
-    <group ref={group} onClick={(e) => { e.stopPropagation(); onDraw(); }} scale={[0.8, 0.8, 0.8]}>
+    // 整体缩放 0.7 倍，显得更小巧
+    <group ref={group} onClick={(e) => { e.stopPropagation(); onDraw(); }} scale={[0.7, 0.7, 0.7]}>
       {/* 筒身 - 变矮 */}
-      <Cylinder args={[0.85, 0.75, 2.0, 64, 1, true]} position={[0, -0.6, 0]} material={woodMaterial} />
+      <Cylinder args={[0.7, 0.65, 2.0, 64, 1, true]} position={[0, -0.6, 0]} material={woodMaterial} />
       
       {/* 筒内壁 */}
-      <Cylinder args={[0.75, 0.75, 2.0, 64, 1, true]} position={[0, -0.6, 0]}>
+      <Cylinder args={[0.6, 0.6, 2.0, 64, 1, true]} position={[0, -0.6, 0]}>
          <meshStandardMaterial color="#3d2616" roughness={0.9} side={THREE.BackSide} />
       </Cylinder>
 
       {/* 筒底 */}
-      <Cylinder args={[0.75, 0.75, 0.1, 64]} position={[0, -1.55, 0]} material={woodMaterial} />
+      <Cylinder args={[0.65, 0.65, 0.1, 64]} position={[0, -1.55, 0]} material={woodMaterial} />
 
       {/* 顶部边缘 - 加一点倒角感 */}
-      <Cylinder args={[0.9, 0.85, 0.15, 64]} position={[0, 0.35, 0]} material={woodMaterial} />
-
-      {/* 装饰环 (上) - 变细 */}
-      <Cylinder args={[0.88, 0.88, 0.15, 64]} position={[0, -0.1, 0]} material={bandMaterial} />
-      
-      {/* 装饰环 (下) - 变细 */}
-      <Cylinder args={[0.8, 0.8, 0.15, 64]} position={[0, -1.2, 0]} material={bandMaterial} />
+      <Cylinder args={[0.75, 0.7, 0.15, 64]} position={[0, 0.35, 0]} material={woodMaterial} />
 
       {/* 竹签集合 */}
       {sticks.map((props, i) => (
