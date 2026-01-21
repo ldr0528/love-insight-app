@@ -1,5 +1,6 @@
 import { Router, type Request, type Response } from 'express';
 import User from '../models/User.js';
+import connectDB from '../config/db.js';
 
 const router = Router();
 
@@ -19,6 +20,9 @@ router.post('/login', async (req: Request, res: Response) => {
   const username = `Lin${code}`;
   
   try {
+    // Ensure DB is connected
+    await connectDB();
+
     // Check if user exists
     const user = await User.findOne({ username });
 
@@ -42,9 +46,10 @@ router.post('/login', async (req: Request, res: Response) => {
       user: userWithoutPassword,
       token: 'mock-token-' + code
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Login error:', error);
-    res.status(500).json({ error: 'Server error' });
+    // Return detailed error message for debugging
+    res.status(500).json({ error: `Server error: ${error.message}` });
   }
 });
 
@@ -64,6 +69,9 @@ router.post('/register', async (req: Request, res: Response) => {
   const username = `Lin${code}`;
   
   try {
+    // Ensure DB is connected
+    await connectDB();
+
     // Check if user exists
     const existingUser = await User.findOne({ username });
 
@@ -92,9 +100,10 @@ router.post('/register', async (req: Request, res: Response) => {
       user: userWithoutPassword,
       token: 'mock-token-' + code
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Register error:', error);
-    res.status(500).json({ error: 'Server error' });
+    // Return detailed error message for debugging
+    res.status(500).json({ error: `Server error: ${error.message}` });
   }
 });
 

@@ -27,9 +27,6 @@ const __dirname = path.dirname(__filename)
 // load env
 dotenv.config()
 
-// Connect to MongoDB
-connectDB();
-
 const app: express.Application = express()
 
 app.use(cors())
