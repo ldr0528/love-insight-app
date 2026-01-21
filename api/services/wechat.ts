@@ -111,6 +111,9 @@ export interface WxPayOrder {
 export const createNativeOrder = async (order: WxPayOrder): Promise<string> => {
   const pay = getWxPay()
   if (!pay) throw new Error('WeChat Pay not configured')
+  if (!process.env.WECHAT_APP_ID) {
+    throw new Error('Missing WECHAT_APP_ID: Native支付需要与商户号绑定的AppID')
+  }
 
   try {
     const result = await pay.transactions_native({
