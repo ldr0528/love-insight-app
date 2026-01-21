@@ -6,10 +6,12 @@ import PalmPage from "@/pages/PalmPage";
 import LoveCoach from "@/pages/LoveCoach";
 import NamingMaster from "@/pages/NamingMaster";
 import Compatibility from "@/pages/Compatibility";
+import AuthModal from "@/components/auth/AuthModal";
 
 export default function App() {
   return (
     <Router>
+      <AuthModal />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/report" element={<LoveTest />} />

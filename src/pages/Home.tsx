@@ -1,11 +1,40 @@
 
 import { Link } from 'react-router-dom';
-import { Compass, ArrowRight, Brain, Hand, Heart, Target, PenTool, Feather } from 'lucide-react';
+import { Compass, ArrowRight, Brain, Hand, Heart, Target, PenTool, Feather, User } from 'lucide-react';
 import FortuneTube from '@/components/FortuneTube';
+import { useAuthStore } from '@/store/useAuthStore';
 
 export default function Home() {
+  const { user, openAuthModal, logout } = useAuthStore();
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex flex-col items-center justify-center p-4 relative">
+      {/* Auth Button */}
+      <div className="absolute top-6 right-6 z-20">
+        {user ? (
+          <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm p-2 pr-4 rounded-full shadow-sm border border-pink-100 hover:shadow-md transition-all">
+            <div className="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center text-pink-500 font-bold">
+              {user.nickname?.[0] || <User size={16} />}
+            </div>
+            <span className="text-sm font-medium text-gray-700">{user.nickname || user.phone}</span>
+            <button 
+              onClick={logout} 
+              className="text-xs text-gray-400 hover:text-pink-500 ml-2 border-l border-gray-200 pl-3"
+            >
+              退出
+            </button>
+          </div>
+        ) : (
+          <button 
+            onClick={openAuthModal}
+            className="flex items-center gap-2 px-5 py-2.5 bg-white/80 backdrop-blur-sm text-gray-700 rounded-full font-medium shadow-sm border border-pink-100 hover:bg-white hover:text-pink-600 hover:shadow-md transition-all"
+          >
+            <User size={18} />
+            <span>登录 / 注册</span>
+          </button>
+        )}
+      </div>
+
       <div className="max-w-4xl w-full space-y-12">
         {/* Hero Section */}
         <div className="text-center space-y-6">
@@ -28,7 +57,7 @@ export default function Home() {
         {/* Feature Cards */}
         <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
           {/* Main Wizard (kept as secondary entry) */}
-          <Link to="/report" className="hidden group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-pink-100 overflow-hidden flex flex-col h-full">
+          <Link to="/report" className="group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-pink-100 overflow-hidden flex flex-col h-full">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
               <Heart className="w-24 h-24 text-pink-500" />
             </div>
@@ -123,7 +152,7 @@ export default function Home() {
           </Link>
 
           {/* Compatibility Explorer */}
-          <Link to="/compatibility" className="group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-cyan-50 overflow-hidden flex flex-col h-full">
+          <Link to="/compatibility" className="hidden group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-cyan-50 overflow-hidden flex flex-col h-full">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
               <Feather className="w-24 h-24 text-cyan-500" />
             </div>
