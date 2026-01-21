@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 
 interface User {
   id: string;
-  username: string; // LinXXXX
+  username: string; // LinxXXXX
   nickname: string;
   isVip?: boolean;
   avatar?: string;

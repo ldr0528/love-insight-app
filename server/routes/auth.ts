@@ -17,7 +17,7 @@ router.post('/login', async (req: Request, res: Response) => {
     return;
   }
 
-  const username = `Lin${code}`;
+  const username = `Linx${code}`;
   
   try {
     // Ensure DB is connected
@@ -66,7 +66,7 @@ router.post('/register', async (req: Request, res: Response) => {
     return;
   }
 
-  const username = `Lin${code}`;
+  const username = `Linx${code}`;
   
   try {
     // Ensure DB is connected

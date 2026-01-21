@@ -115,14 +115,14 @@ export default function SimpleAuthModal() {
             <div className="space-y-4">
               <div className="relative">
                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                   <span className="text-gray-500 font-bold text-xl">Lin</span>
+                   <span className="text-gray-500 font-bold text-xl">Linx</span>
                  </div>
                  <input
                   type="text"
                   value={code}
                   onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 4))}
                   placeholder="0000"
-                  className="w-full pl-16 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-bold text-xl tracking-widest"
+                  className="w-full pl-20 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-bold text-xl tracking-widest"
                   autoFocus
                 />
               </div>
