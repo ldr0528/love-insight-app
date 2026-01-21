@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Compass, ArrowRight, Brain, Hand, Heart, Target, PenTool, Feather, User } from 'lucide-react';
+import { Compass, ArrowRight, Brain, Hand, Heart, Target, PenTool, Feather, User, Crown } from 'lucide-react';
 import FortuneTube from '@/components/FortuneTube';
 import { useAuthStore } from '@/store/useAuthStore';
 
@@ -12,10 +12,22 @@ export default function Home() {
       <header className="w-full p-4 flex justify-end items-center z-20 absolute top-0 right-0">
         {user ? (
           <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm p-2 pr-4 rounded-full shadow-sm border border-pink-100 hover:shadow-md transition-all">
-            <div className="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center text-pink-500 font-bold">
+            <div className="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center text-pink-500 font-bold relative">
               <User size={16} />
+              {user.isVip && (
+                <div className="absolute -top-1 -right-1 bg-yellow-400 rounded-full p-0.5 border border-white">
+                  <Crown size={8} className="text-white fill-current" />
+                </div>
+              )}
             </div>
-            <span className="text-sm font-medium text-gray-700">{user.nickname}</span>
+            <div className="flex flex-col">
+              <span className="text-sm font-medium text-gray-700 leading-tight">{user.nickname}</span>
+              {user.isVip && (
+                <span className="text-[10px] font-bold text-yellow-500 flex items-center gap-0.5 leading-tight">
+                  <Crown size={8} className="fill-current" /> VIP会员
+                </span>
+              )}
+            </div>
             <button 
               onClick={logout} 
               className="text-xs text-gray-400 hover:text-pink-500 ml-2 border-l border-gray-200 pl-3"
