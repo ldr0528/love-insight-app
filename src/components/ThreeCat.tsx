@@ -9,10 +9,34 @@ function CatModel({ hovered, setHovered, message }: { hovered: boolean, setHover
   const tailRef = useRef<THREE.Group>(null);
 
   // Materials
-  const whiteFur = useMemo(() => new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.6, metalness: 0.1 }), []);
-  const pinkSkin = useMemo(() => new THREE.MeshStandardMaterial({ color: '#ffb7b2', roughness: 0.5 }), []);
-  const darkEye = useMemo(() => new THREE.MeshStandardMaterial({ color: '#1a1a1a', roughness: 0.2, metalness: 0.5 }), []);
-  const cheekColor = useMemo(() => new THREE.MeshStandardMaterial({ color: '#ffcfcc', transparent: true, opacity: 0.6 }), []);
+  const greyFur = useMemo(() => new THREE.MeshStandardMaterial({ 
+    color: '#999999', 
+    roughness: 0.8, 
+    metalness: 0.05 
+  }), []);
+  
+  const darkGreyFur = useMemo(() => new THREE.MeshStandardMaterial({ 
+    color: '#777777', 
+    roughness: 0.8, 
+    metalness: 0.05 
+  }), []);
+
+  const pinkSkin = useMemo(() => new THREE.MeshStandardMaterial({ 
+    color: '#d4888d', 
+    roughness: 0.6 
+  }), []);
+  
+  const darkEye = useMemo(() => new THREE.MeshStandardMaterial({ 
+    color: '#000000', 
+    roughness: 0.1, 
+    metalness: 0.8 
+  }), []);
+  
+  const cheekColor = useMemo(() => new THREE.MeshStandardMaterial({ 
+    color: '#d4888d', 
+    transparent: true, 
+    opacity: 0.4 
+  }), []);
 
   useFrame((state) => {
     if (!headRef.current || !bodyRef.current || !tailRef.current) return;
@@ -43,69 +67,69 @@ function CatModel({ hovered, setHovered, message }: { hovered: boolean, setHover
     <group 
       onPointerOver={() => setHovered(true)} 
       onPointerOut={() => setHovered(false)}
-      scale={[1.3, 1.3, 1.3]} // Increased scale
+      scale={[1.1, 1.1, 1.1]} // Slightly smaller scale for realism
       position={[0, -0.6, 0]}
     >
       {/* Body */}
       <group ref={bodyRef} position={[0, 0, 0]}>
-        <Sphere args={[0.7, 32, 32]} position={[0, 0, 0]} scale={[1, 0.85, 0.9]}>
-          <primitive object={whiteFur} />
+        <Sphere args={[0.7, 32, 32]} position={[0, 0, 0]} scale={[1, 0.9, 0.9]}>
+          <primitive object={greyFur} />
         </Sphere>
       </group>
 
       {/* Head Group */}
-      <group ref={headRef} position={[0, 0.6, 0.2]}>
+      <group ref={headRef} position={[0, 0.65, 0.1]}>
         {/* Main Head */}
         <Sphere args={[0.55, 32, 32]} scale={[1, 0.9, 0.9]}>
-           <primitive object={whiteFur} />
+           <primitive object={greyFur} />
         </Sphere>
 
-        {/* Ears */}
-        <group position={[0.35, 0.45, 0]} rotation={[0, 0, -0.4]}>
-          <Cone args={[0.15, 0.3, 32]} material={whiteFur} />
-          <Cone args={[0.1, 0.2, 32]} position={[0, -0.02, 0.06]} material={pinkSkin} />
+        {/* Ears - More realistic shape */}
+        <group position={[0.35, 0.45, 0]} rotation={[0, 0, -0.2]}>
+          <Cone args={[0.18, 0.35, 32]} material={greyFur} />
+          <Cone args={[0.12, 0.25, 32]} position={[0, -0.02, 0.06]} material={pinkSkin} />
         </group>
-        <group position={[-0.35, 0.45, 0]} rotation={[0, 0, 0.4]}>
-          <Cone args={[0.15, 0.3, 32]} material={whiteFur} />
-          <Cone args={[0.1, 0.2, 32]} position={[0, -0.02, 0.06]} material={pinkSkin} />
+        <group position={[-0.35, 0.45, 0]} rotation={[0, 0, 0.2]}>
+          <Cone args={[0.18, 0.35, 32]} material={greyFur} />
+          <Cone args={[0.12, 0.25, 32]} position={[0, -0.02, 0.06]} material={pinkSkin} />
         </group>
 
-        {/* Eyes */}
-        <Sphere args={[0.06, 16, 16]} position={[0.18, 0.05, 0.45]}>
+        {/* Eyes - Larger and shinier */}
+        <Sphere args={[0.07, 32, 32]} position={[0.2, 0.05, 0.42]}>
           <primitive object={darkEye} />
         </Sphere>
-        <Sphere args={[0.06, 16, 16]} position={[-0.18, 0.05, 0.45]}>
+        <Sphere args={[0.07, 32, 32]} position={[-0.2, 0.05, 0.42]}>
           <primitive object={darkEye} />
         </Sphere>
         {/* Eye Highlights */}
-        <Sphere args={[0.02, 8, 8]} position={[0.2, 0.08, 0.5]} material={new THREE.MeshBasicMaterial({ color: 'white' })} />
-        <Sphere args={[0.02, 8, 8]} position={[-0.16, 0.08, 0.5]} material={new THREE.MeshBasicMaterial({ color: 'white' })} />
+        <Sphere args={[0.025, 16, 16]} position={[0.22, 0.08, 0.48]} material={new THREE.MeshBasicMaterial({ color: 'white' })} />
+        <Sphere args={[0.025, 16, 16]} position={[-0.18, 0.08, 0.48]} material={new THREE.MeshBasicMaterial({ color: 'white' })} />
 
-        {/* Nose */}
+        {/* Nose - Small and cute */}
         <Sphere args={[0.03, 16, 16]} position={[0, -0.05, 0.5]} material={pinkSkin} scale={[1, 0.6, 0.5]} />
 
-        {/* Mouth (Two small spheres/cylinders) */}
-        <group position={[0, -0.12, 0.48]} rotation={[0, 0, 0]}>
-             <Cylinder args={[0.015, 0.015, 0.1, 8]} rotation={[0, 0, Math.PI / 2]} material={darkEye} position={[0.03, 0, 0]} />
-             <Cylinder args={[0.015, 0.015, 0.1, 8]} rotation={[0, 0, Math.PI / 2]} material={darkEye} position={[-0.03, 0, 0]} />
-        </group>
+        {/* Mouth - Simple line */}
+        <mesh position={[0, -0.12, 0.48]} rotation={[0, 0, 0]}>
+           <boxGeometry args={[0.1, 0.02, 0.02]} />
+           <meshStandardMaterial color="#333" />
+        </mesh>
 
-        {/* Cheeks */}
-        <Sphere args={[0.1, 16, 16]} position={[0.25, -0.05, 0.4]} scale={[1, 0.6, 0.5]}>
+        {/* Cheeks - Subtle blush */}
+        <Sphere args={[0.12, 16, 16]} position={[0.3, -0.05, 0.35]} scale={[1, 0.6, 0.5]}>
              <primitive object={cheekColor} />
         </Sphere>
-        <Sphere args={[0.1, 16, 16]} position={[-0.25, -0.05, 0.4]} scale={[1, 0.6, 0.5]}>
+        <Sphere args={[0.12, 16, 16]} position={[-0.3, -0.05, 0.35]} scale={[1, 0.6, 0.5]}>
              <primitive object={cheekColor} />
         </Sphere>
 
         {/* Chat Bubble attached to mouth area */}
-        <Html position={[0.8, 0.2, 0]} center className="pointer-events-none w-64" style={{ transform: 'scale(1)' }}>
-          <div className="bg-white/95 backdrop-blur-sm px-4 py-3 rounded-2xl rounded-tl-none shadow-lg border border-orange-100 relative animate-in zoom-in duration-300 origin-top-left">
-            <div className="text-amber-900/90 text-xs font-medium leading-relaxed text-left">
+        <Html position={[0.9, 0.1, 0]} center className="pointer-events-none w-[280px]" style={{ transform: 'scale(1)' }}>
+          <div className="bg-white/95 backdrop-blur-sm px-5 py-4 rounded-2xl rounded-tl-none shadow-xl border border-orange-100 relative animate-in zoom-in duration-300 origin-top-left">
+            <div className="text-amber-900/90 text-sm font-medium leading-relaxed text-left break-words whitespace-pre-wrap">
               {message}
             </div>
             {/* Arrow pointing to mouth */}
-            <div className="absolute top-0 -left-2 w-0 h-0 border-t-[8px] border-t-white/95 border-l-[8px] border-l-transparent border-r-[0px] border-r-transparent transform rotate-0" style={{ filter: 'drop-shadow(-1px 1px 1px rgba(0,0,0,0.05))' }}></div>
+            <div className="absolute top-4 -left-2 w-0 h-0 border-t-[8px] border-t-transparent border-r-[10px] border-r-white/95 border-b-[8px] border-b-transparent transform rotate-0" style={{ filter: 'drop-shadow(-1px 0px 1px rgba(0,0,0,0.05))' }}></div>
           </div>
         </Html>
       </group>
@@ -113,17 +137,17 @@ function CatModel({ hovered, setHovered, message }: { hovered: boolean, setHover
       {/* Tail */}
       <group ref={tailRef} position={[0, -0.2, -0.6]}>
         <mesh position={[0, 0.3, 0]} rotation={[0.5, 0, 0]}>
-          <capsuleGeometry args={[0.1, 0.6, 4, 8]} />
-          <primitive object={whiteFur} />
+          <capsuleGeometry args={[0.12, 0.7, 4, 8]} />
+          <primitive object={greyFur} />
         </mesh>
       </group>
 
       {/* Paws */}
-      <Sphere args={[0.15, 16, 16]} position={[0.3, -0.6, 0.4]} scale={[1, 0.7, 1]}>
-        <primitive object={whiteFur} />
+      <Sphere args={[0.18, 32, 32]} position={[0.3, -0.6, 0.4]} scale={[1, 0.7, 1]}>
+        <primitive object={darkGreyFur} />
       </Sphere>
-      <Sphere args={[0.15, 16, 16]} position={[-0.3, -0.6, 0.4]} scale={[1, 0.7, 1]}>
-        <primitive object={whiteFur} />
+      <Sphere args={[0.18, 32, 32]} position={[-0.3, -0.6, 0.4]} scale={[1, 0.7, 1]}>
+        <primitive object={darkGreyFur} />
       </Sphere>
     </group>
   );
