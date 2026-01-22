@@ -213,20 +213,20 @@ export default function DailyCheckIn() {
           ) : (
             <div className="animate-in zoom-in duration-500">
               {/* The Sign Card */}
-              <div className="bg-gradient-to-br from-pink-50 via-white to-purple-50 rounded-3xl p-5 md:p-8 border border-pink-100 mb-4 md:mb-6 relative overflow-hidden shadow-sm group hover:shadow-md transition-shadow w-full">
+              <div className="bg-gradient-to-br from-pink-50 via-white to-purple-50 rounded-3xl p-5 md:p-8 border border-pink-100 mb-4 md:mb-6 relative overflow-hidden shadow-sm group hover:shadow-md transition-shadow">
                 <div className="absolute -right-6 -top-6 w-24 h-24 bg-pink-100 rounded-full opacity-50"></div>
                 <div className="absolute top-4 right-6 text-6xl opacity-10 font-serif text-pink-900 leading-none">“</div>
                 
-                <div className="flex flex-col md:flex-row gap-4 md:gap-6 items-center relative z-10 w-full">
-                  <div className="flex-shrink-0 w-20 h-20 md:w-24 md:h-24 bg-white rounded-full flex items-center justify-center shadow-lg border-4 border-pink-50 transform group-hover:rotate-12 transition-transform duration-300">
+                <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 items-center relative z-10">
+                  <div className="flex-shrink-0 w-20 h-20 lg:w-24 lg:h-24 bg-white rounded-full flex items-center justify-center shadow-lg border-4 border-pink-50 transform group-hover:rotate-12 transition-transform duration-300">
                     <span className="text-4xl">{todaySign?.icon || "✨"}</span>
                   </div>
                   
-                  <div className="text-center md:text-left flex-1 w-full min-w-0">
-                    <p className="text-lg md:text-xl text-gray-800 font-bold leading-relaxed italic mb-2 md:mb-4 break-words whitespace-pre-wrap">
+                  <div className="text-center lg:text-left flex-1">
+                    <p className="text-lg md:text-xl text-gray-800 font-bold leading-relaxed italic mb-2 lg:mb-4">
                       "{todaySign?.quote}"
                     </p>
-                    <div className="flex items-center justify-center md:justify-start gap-2 text-xs text-pink-400 font-bold uppercase tracking-widest">
+                    <div className="flex items-center justify-center lg:justify-start gap-2 text-xs text-pink-400 font-bold uppercase tracking-widest">
                       <Sparkles className="w-3 h-3" /> 今日灵犀指引
                     </div>
                   </div>
