@@ -120,7 +120,7 @@ export default function Home() {
               </div>
               
               {/* Button */}
-              <div className="mt-6 px-4 py-2 md:px-6 bg-[#2d3436] text-white rounded-full text-xs md:text-sm font-bold shadow-lg group-hover:scale-105 transition-transform flex items-center gap-1 md:gap-2 whitespace-nowrap">
+              <div className="mt-6 h-9 md:h-10 min-w-[6.5rem] md:min-w-[8rem] px-4 bg-[#2d3436] text-white rounded-full text-xs md:text-sm font-bold shadow-lg group-hover:scale-105 transition-transform flex items-center justify-center gap-1 md:gap-2 whitespace-nowrap">
                 进店看看 <Store className="w-3 h-3 md:w-4 md:h-4" />
               </div>
             </Link>
