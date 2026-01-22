@@ -69,11 +69,11 @@ export default function Home() {
         </div>
 
         {/* Fortune Tube & Worry Grocery */}
-        <div className="w-full flex justify-center gap-6 min-h-[350px]">
-          <div className="flex-1 flex justify-end">
+        <div className="w-full flex justify-center items-center gap-2 md:gap-6 min-h-[300px] md:min-h-[350px]">
+          <div className="flex-1 flex justify-end transform scale-90 md:scale-100 origin-right">
             <FortuneTube />
           </div>
-          <div className="flex-1 flex justify-start pl-8">
+          <div className="flex-1 flex justify-start pl-2 md:pl-8 transform scale-90 md:scale-100 origin-left">
             <Link to="/worry-grocery" className="group relative w-48 flex flex-col items-center gap-2">
               <div className="relative w-full h-64 transition-all duration-500 transform group-hover:-translate-y-2">
                 {/* Store Container - Simplified & Clean */}
