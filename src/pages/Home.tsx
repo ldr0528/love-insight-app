@@ -69,13 +69,13 @@ export default function Home() {
         </div>
 
         {/* Fortune Tube & Worry Grocery */}
-        <div className="w-full flex flex-row items-center justify-center gap-4 md:gap-6 min-h-[250px] md:min-h-[350px]">
-          <div className="flex-1 flex justify-center md:justify-end transform scale-75 md:scale-100 origin-center md:origin-right">
+        <div className="w-full flex flex-row items-end justify-center gap-4 md:gap-6 min-h-[250px] md:min-h-[350px]">
+          <div className="flex-1 flex flex-col items-center justify-end transform scale-75 md:scale-100 origin-bottom md:origin-right">
             <FortuneTube />
           </div>
-          <div className="flex-1 flex justify-center md:justify-start md:pl-8 transform scale-75 md:scale-100 origin-center md:origin-left">
+          <div className="flex-1 flex flex-col items-center justify-end transform scale-75 md:scale-100 origin-bottom md:origin-left">
             <Link to="/worry-grocery" className="group relative w-48 flex flex-col items-center gap-2">
-              <div className="relative w-full h-64 transition-all duration-500 transform group-hover:-translate-y-2">
+              <div className="relative w-full h-64 transition-all duration-500 transform group-hover:-translate-y-2 flex items-end justify-center">
                 {/* Store Container - Simplified & Clean */}
                 <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-36 h-44">
                   {/* Main Building Block */}
