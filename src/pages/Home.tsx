@@ -91,10 +91,6 @@ export default function Home() {
                     <Store className="w-12 h-12 text-orange-500" />
                   </div>
                   <h3 className="text-2xl font-bold text-amber-900 mb-2">解忧杂货铺</h3>
-                  <p className="text-sm text-amber-700/70 font-medium">
-                    在这里，写下你的心事<br/>
-                    就会收到温暖的回信
-                  </p>
                   <span className="mt-6 px-6 py-2 bg-orange-400 text-white rounded-full text-sm font-bold shadow-md group-hover:bg-orange-500 transition-colors">
                     进店看看
                   </span>
