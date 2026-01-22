@@ -173,8 +173,8 @@ export default function ThreeCat({ message }: { message?: React.ReactNode }) {
   useCursor(hovered);
 
   return (
-    <div className="w-full h-72 relative"> {/* Adjusted container size */}
-      <Canvas shadows camera={{ position: [0, 1, 5], fov: 35 }} dpr={[1, 2]}>
+    <div className="w-full h-96 relative -mt-8 -mb-12"> {/* Increased height and negative margins to allow overflow */}
+      <Canvas shadows camera={{ position: [0, 1, 5], fov: 40 }} dpr={[1, 2]}>
         <ambientLight intensity={0.7} />
         <spotLight position={[5, 10, 5]} angle={0.5} penumbra={1} intensity={0.8} castShadow />
         <pointLight position={[-5, 5, -5]} intensity={0.5} color="#ffb7b2" />
