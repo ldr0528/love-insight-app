@@ -124,9 +124,9 @@ function CatModel({ hovered, setHovered, message }: { hovered: boolean, setHover
 
         {/* Chat Bubble attached to mouth area */}
         <Html 
-          position={[0.7, 0.3, 0]} 
+          position={[0.6, 0.35, 0]} 
           center 
-          className="pointer-events-none w-64 md:w-72" 
+          className="pointer-events-none w-48 sm:w-64 md:w-72" 
           style={{ transform: 'scale(1)', zIndex: 0 }}
           zIndexRange={[0, 0]}
         >
@@ -164,7 +164,7 @@ export default function ThreeCat({ message }: { message?: React.ReactNode }) {
   useCursor(hovered);
 
   return (
-    <div className="w-full h-80 relative"> {/* Increased container size */}
+    <div className="w-full h-72 relative"> {/* Adjusted container size */}
       <Canvas shadows camera={{ position: [0, 1, 5], fov: 35 }} dpr={[1, 2]}>
         <ambientLight intensity={0.7} />
         <spotLight position={[5, 10, 5]} angle={0.5} penumbra={1} intensity={0.8} castShadow />

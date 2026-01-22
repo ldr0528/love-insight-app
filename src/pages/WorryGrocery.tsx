@@ -76,7 +76,7 @@ export default function WorryGrocery() {
 
       <main className="flex-1 max-w-2xl w-full mx-auto p-4 flex flex-col">
         {/* Cat Area */}
-        <div className="flex flex-col items-center mb-8 mt-4 animate-in fade-in slide-in-from-top-8 duration-700 w-full">
+        <div className="flex flex-col items-center mb-2 mt-4 animate-in fade-in slide-in-from-top-8 duration-700 w-full">
           <ThreeCat 
             message={loading 
               ? "喵... 正在用心聆听..." 
