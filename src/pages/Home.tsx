@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Compass, ArrowRight, Brain, Hand, Heart, Target, PenTool, Feather, User, Crown, Store, Cat, Sparkles, PawPrint } from 'lucide-react';
+import { Compass, ArrowRight, Brain, Hand, Heart, Target, PenTool, Feather, User, Crown, Store, Cat, Sparkles, PawPrint, MessageCircle } from 'lucide-react';
 import FortuneTube from '@/components/FortuneTube';
 import { useAuthStore } from '@/store/useAuthStore';
 
@@ -24,6 +24,17 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex flex-col relative">
+      {/* Contact Us Button (Top Left) */}
+      <div className="absolute top-4 left-4 z-20">
+        <Link 
+          to="/contact"
+          className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm text-gray-600 rounded-full font-medium shadow-sm border border-pink-100 hover:bg-white hover:text-pink-600 hover:shadow-md transition-all text-sm"
+        >
+          <MessageCircle size={16} />
+          <span>联系我们</span>
+        </Link>
+      </div>
+
       {/* Header / Auth Button */}
       <header className="w-full p-4 flex justify-end items-center z-20 absolute top-0 right-0">
         {user ? (
@@ -87,13 +98,13 @@ export default function Home() {
         {/* Fortune Tube & Worry Grocery */}
         <div className="w-full flex flex-row items-end justify-center gap-2 md:gap-12 min-h-[280px]">
           {/* Left: Fortune Tube */}
-          <div className="flex-1 max-w-[180px] flex flex-col items-center justify-end">
+          <div className="flex-1 max-w-[180px] h-72 flex flex-col items-center justify-end">
             <FortuneTube />
           </div>
 
           {/* Right: Worry Grocery */}
-          <div className="flex-1 max-w-[180px] flex flex-col items-center justify-end">
-            <Link to="/worry-grocery" className="group relative w-full flex flex-col items-center gap-2">
+          <div className="flex-1 max-w-[180px] h-72 flex flex-col items-center justify-end">
+            <Link to="/worry-grocery" className="group relative w-full h-full flex flex-col items-center justify-end gap-2">
               <div className="relative w-full h-48 md:h-64 transition-all duration-500 transform group-hover:-translate-y-2 flex items-end justify-center">
                 {/* Store Container */}
                 <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-28 h-36 md:w-36 md:h-44">

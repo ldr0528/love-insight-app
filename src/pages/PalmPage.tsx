@@ -180,7 +180,7 @@ export default function PalmPage() {
               </div>
               <p className="text-lg text-gray-600 max-w-lg mx-auto flex flex-col items-center gap-2">
                 <span className="flex items-center gap-2">
-                  我来瞅瞅你的手里藏着什么秘密 <Search className="w-5 h-5 text-pink-500" />
+                  我来瞅瞅你的手里藏着什么秘密 <span className="text-xl">🧐</span>
                 </span>
                 <span className="text-xs text-gray-400 block">*照片仅用于实时分析，不会被保存</span>
               </p>
