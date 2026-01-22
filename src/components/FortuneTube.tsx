@@ -69,7 +69,7 @@ function Stick({ position, rotation, isChosen, shaking }: { position: [number, n
 }
 
 // 签筒 3D 模型
-function TubeModel({ shaking, stickUp, onDraw }: { shaking: boolean, stickUp: boolean, onDraw: () => void }) {
+function TubeModel({ shaking, stickUp, onDraw, hovered, setHovered }: { shaking: boolean, stickUp: boolean, onDraw: () => void, hovered: boolean, setHovered: (h: boolean) => void }) {
   const group = useRef<THREE.Group>(null);
 
   // 生成随机竹签位置 - 增加数量，调整位置确保露出
@@ -90,13 +90,21 @@ function TubeModel({ shaking, stickUp, onDraw }: { shaking: boolean, stickUp: bo
 
   useFrame((state) => {
     if (!group.current) return;
+    
+    // Hover effect: slight random rotation when hovered
+    if (hovered && !shaking) {
+        const time = state.clock.elapsedTime;
+        group.current.rotation.z = Math.sin(time * 3) * 0.05;
+        group.current.rotation.x = Math.cos(time * 2) * 0.03;
+    }
+
     if (shaking) {
       // 整体摇晃动画
       const time = state.clock.elapsedTime;
       group.current.rotation.z = Math.sin(time * 15) * 0.15;
       group.current.position.y = Math.sin(time * 20) * 0.05;
       group.current.rotation.x = Math.cos(time * 12) * 0.05;
-    } else {
+    } else if (!hovered) {
       // 复位
       group.current.rotation.z = THREE.MathUtils.lerp(group.current.rotation.z, 0, 0.1);
       group.current.position.y = THREE.MathUtils.lerp(group.current.position.y, 0, 0.1);
@@ -124,7 +132,13 @@ function TubeModel({ shaking, stickUp, onDraw }: { shaking: boolean, stickUp: bo
 
   return (
     // 整体缩放 0.65 倍，显得更小巧
-    <group ref={group} onClick={(e) => { e.stopPropagation(); onDraw(); }} scale={[0.65, 0.65, 0.65]}>
+    <group 
+      ref={group} 
+      onClick={(e) => { e.stopPropagation(); onDraw(); }} 
+      onPointerOver={() => setHovered(true)}
+      onPointerOut={() => setHovered(false)}
+      scale={[0.65, 0.65, 0.65]}
+    >
       {/* 筒身 - 变矮 */}
       <Cylinder args={[0.7, 0.65, 2.0, 64, 1, true]} position={[0, -0.6, 0]} material={woodMaterial} />
       
@@ -163,6 +177,7 @@ export default function FortuneTube() {
   const [stickUp, setStickUp] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [shaking, setShaking] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const { user, openAuthModal } = useAuthStore();
 
   const handleDraw = () => {
@@ -239,7 +254,7 @@ export default function FortuneTube() {
             <spotLight position={[5, 8, 5]} angle={0.4} penumbra={0.5} intensity={1.2} castShadow />
             <pointLight position={[-3, 2, -3]} color="#ffecd2" intensity={0.5} />
             
-            <TubeModel shaking={shaking} stickUp={stickUp} onDraw={handleDraw} />
+            <TubeModel shaking={shaking} stickUp={stickUp} onDraw={handleDraw} hovered={hovered} setHovered={setHovered} />
             
             {/* 移除 Environment preset，改用更轻量的灯光方案或本地资源，避免 GitHub Raw 资源加载失败 */}
             {/* <Environment preset="city" /> */}
