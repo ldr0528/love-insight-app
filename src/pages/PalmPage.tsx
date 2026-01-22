@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { Hand, Camera, ArrowLeft, Loader2, Sparkles, BookOpen, Heart, Brain, Zap, Compass, ChevronRight, RotateCcw } from 'lucide-react';
+import { Hand, Camera, ArrowLeft, Loader2, Sparkles, BookOpen, Heart, Brain, Zap, Compass, ChevronRight, RotateCcw, ScanEye } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import PalmUploader from '@/components/PalmUploader';
 
@@ -178,9 +178,11 @@ export default function PalmPage() {
                   </div>
                 </div>
               </div>
-              <p className="text-lg text-gray-600 max-w-lg mx-auto">
-                让我瞅瞅你的手里藏着什么秘密<br/>
-                <span className="text-xs text-gray-400 block mt-2">*照片仅用于实时分析，不会被保存</span>
+              <p className="text-lg text-gray-600 max-w-lg mx-auto flex flex-col items-center gap-2">
+                <span className="flex items-center gap-2">
+                  让我瞅瞅你的手里藏着什么秘密 <ScanEye className="w-5 h-5 text-pink-500" />
+                </span>
+                <span className="text-xs text-gray-400 block">*照片仅用于实时分析，不会被保存</span>
               </p>
             </div>
 
