@@ -136,7 +136,7 @@ export default function DailyCheckIn() {
   const currentTitle = [...TITLES].reverse().find(t => t.days <= streak) || { name: "灵犀萌新", icon: "🥚" };
 
   return (
-    <div className="w-full max-w-2xl mx-auto mb-12 animate-in slide-in-from-bottom-4 duration-700">
+    <div className="w-full max-w-2xl mx-auto animate-in slide-in-from-bottom-4 duration-700">
       <div className="bg-white rounded-[2.5rem] shadow-xl shadow-pink-100 border-4 border-white overflow-hidden relative">
         {/* Cartoon Background Elements */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-pink-100/50 to-purple-100/50 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>

@@ -131,14 +131,13 @@ function TubeModel({ shaking, stickUp, onDraw, hovered, setHovered }: { shaking:
   }), []);
 
   return (
-    // 整体缩放 0.65 倍，显得更小巧，位置下移
+    // 整体缩放 0.65 倍，显得更小巧
     <group 
       ref={group} 
       onClick={(e) => { e.stopPropagation(); onDraw(); }} 
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
       scale={[0.65, 0.65, 0.65]}
-      position={[0, -0.2, 0]}
     >
       {/* 筒身 - 变矮 */}
       <Cylinder args={[0.7, 0.65, 2.0, 64, 1, true]} position={[0, -0.6, 0]} material={woodMaterial} />
@@ -260,7 +259,7 @@ export default function FortuneTube() {
             {/* 移除 Environment preset，改用更轻量的灯光方案或本地资源，避免 GitHub Raw 资源加载失败 */}
             {/* <Environment preset="city" /> */}
             
-            <ContactShadows position={[0, -2.4, 0]} opacity={0.4} scale={8} blur={2.5} far={4} color="#000000" />
+            <ContactShadows position={[0, -2.2, 0]} opacity={0.4} scale={8} blur={2.5} far={4} color="#000000" />
           </Suspense>
         </Canvas>
         </ErrorBoundary>
@@ -276,17 +275,15 @@ export default function FortuneTube() {
 
       {showModal && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setShowModal(false)}>
-          <button
-            aria-label="关闭"
-            onClick={(e) => { e.stopPropagation(); setShowModal(false); }}
-            className="absolute right-6 top-6 md:right-8 md:top-8 w-10 h-10 rounded-full bg-white/90 backdrop-blur shadow-lg border border-gray-200 text-gray-700 hover:bg-pink-50 hover:text-pink-600 flex items-center justify-center z-50"
-          >
-            <X className="w-6 h-6" />
-          </button>
-          <div className="relative bg-white rounded-[2rem] w-full max-w-3xl shadow-2xl ring-1 ring-gray-100" onClick={(e) => e.stopPropagation()}>
-            <div className="p-2 md:p-4">
-              <DailyCheckIn />
-            </div>
+          <div className="relative w-full max-w-2xl" onClick={(e) => e.stopPropagation()}>
+            <button
+              aria-label="关闭"
+              onClick={() => setShowModal(false)}
+              className="absolute right-4 top-4 z-50 w-10 h-10 rounded-full bg-white/90 backdrop-blur shadow-lg border border-gray-200 text-gray-700 hover:bg-pink-50 hover:text-pink-600 flex items-center justify-center transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <DailyCheckIn />
           </div>
         </div>
       )}
