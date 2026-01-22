@@ -76,25 +76,75 @@ export default function WorryGrocery() {
       <main className="flex-1 max-w-2xl w-full mx-auto p-4 flex flex-col">
         {/* Cat Area */}
         <div className="flex flex-col items-center mb-8 mt-4 animate-in fade-in slide-in-from-top-8 duration-700">
-          <div className="relative w-32 h-32 mb-4">
-            <div className={`w-full h-full bg-orange-100 rounded-full flex items-center justify-center border-4 border-white shadow-xl overflow-hidden transition-all duration-500 ${loading ? 'animate-pulse scale-105' : ''}`}>
-              <Cat className={`w-20 h-20 text-orange-400 ${loading ? 'animate-bounce' : ''}`} />
+          {/* CSS Art Cat */}
+          <div className="relative w-40 h-40 mb-2 transform hover:scale-105 transition-transform duration-500">
+            {/* Tail */}
+            <div className="absolute bottom-4 right-4 w-12 h-12 border-[6px] border-white rounded-full border-t-0 border-l-0 rotate-[-10deg] shadow-sm"></div>
+            
+            {/* Body */}
+            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-28 h-24 bg-white rounded-[50px] shadow-lg z-10"></div>
+            
+            {/* Head */}
+            <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-24 h-20 bg-white rounded-[45px] shadow-md z-20">
+              {/* Ears */}
+              <div className="absolute -top-3 left-1 w-8 h-8 bg-white rounded-tr-xl transform -rotate-12 border-l border-gray-50"></div>
+              <div className="absolute -top-3 right-1 w-8 h-8 bg-white rounded-tl-xl transform rotate-12 border-r border-gray-50"></div>
+              {/* Inner Ears */}
+              <div className="absolute -top-1 left-2.5 w-5 h-5 bg-pink-200 rounded-tr-lg transform -rotate-12"></div>
+              <div className="absolute -top-1 right-2.5 w-5 h-5 bg-pink-200 rounded-tl-lg transform rotate-12"></div>
+              
+              {/* Face */}
+              <div className="absolute top-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center w-full">
+                {/* Eyes */}
+                <div className="flex gap-8 mb-1.5">
+                  <div className="relative w-3 h-3 bg-gray-800 rounded-full overflow-hidden">
+                    <div className="absolute top-0.5 right-0.5 w-1 h-1 bg-white rounded-full opacity-80"></div>
+                  </div>
+                  <div className="relative w-3 h-3 bg-gray-800 rounded-full overflow-hidden">
+                    <div className="absolute top-0.5 right-0.5 w-1 h-1 bg-white rounded-full opacity-80"></div>
+                  </div>
+                </div>
+                {/* Nose */}
+                <div className="w-1.5 h-1 bg-pink-300 rounded-full mb-0.5"></div>
+                {/* Mouth */}
+                <div className="flex gap-0.5">
+                   <div className="w-2 h-1 border-b-[1.5px] border-gray-400 rounded-full"></div>
+                   <div className="w-2 h-1 border-b-[1.5px] border-gray-400 rounded-full"></div>
+                </div>
+                {/* Blush */}
+                <div className="absolute top-2 left-2 w-4 h-2 bg-pink-100 rounded-full opacity-60 blur-[1px]"></div>
+                <div className="absolute top-2 right-2 w-4 h-2 bg-pink-100 rounded-full opacity-60 blur-[1px]"></div>
+              </div>
             </div>
-            {/* Decorations */}
-            <div className="absolute -top-2 -right-2 text-yellow-400 animate-spin-slow">
-              <Sparkles className="w-8 h-8 fill-current" />
+            
+            {/* Paws */}
+            <div className="absolute bottom-0 left-10 w-5 h-4 bg-white rounded-full shadow-sm z-30 border-b-2 border-gray-100"></div>
+            <div className="absolute bottom-0 right-10 w-5 h-4 bg-white rounded-full shadow-sm z-30 border-b-2 border-gray-100"></div>
+
+            {/* Bow Tie */}
+            <div className="absolute top-[88px] left-1/2 transform -translate-x-1/2 z-30 flex items-center drop-shadow-sm">
+               <div className="w-3 h-3 bg-pink-400 rounded-full z-10 relative"></div>
+               <div className="absolute right-1 w-5 h-4 bg-pink-400 rounded-r-lg skew-y-12"></div>
+               <div className="absolute left-1 w-5 h-4 bg-pink-400 rounded-l-lg -skew-y-12"></div>
+            </div>
+            
+            {/* Sparkles */}
+            <div className="absolute -top-4 -right-4 text-yellow-300 animate-pulse">
+              <Sparkles className="w-6 h-6 fill-current" />
             </div>
           </div>
           
-          <div className="bg-white px-6 py-4 rounded-2xl rounded-tr-none shadow-lg border border-orange-100 max-w-sm relative animate-in zoom-in duration-500 delay-300">
-            <p className="text-amber-900 font-medium leading-relaxed">
+          {/* Chat Bubble - Positioned near mouth */}
+          <div className="bg-white px-5 py-3 rounded-2xl shadow-md border border-orange-100 max-w-[260px] relative animate-in zoom-in duration-500 delay-300 -mt-2 z-40">
+            <p className="text-amber-900/90 text-xs font-medium leading-relaxed text-center">
               {loading 
-                ? "喵... 正在用心聆听你的故事..." 
+                ? "喵... 正在用心聆听..." 
                 : response 
                   ? "我已经听到了你的心声..."
                   : "小乖，愿意将今天的心事分享给我吗？这里只有我们两个。"}
             </p>
-            <div className="absolute -right-2 top-0 w-4 h-4 bg-white border-r border-t border-orange-100 transform rotate-45"></div>
+            {/* Bubble Tail pointing up to cat */}
+            <div className="absolute -top-1.5 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-white border-l border-t border-orange-100 rotate-45"></div>
           </div>
         </div>
 
