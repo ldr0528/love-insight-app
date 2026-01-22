@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Compass, ArrowRight, Brain, Hand, Heart, Target, PenTool, Feather, User, Crown, Store } from 'lucide-react';
+import { Compass, ArrowRight, Brain, Hand, Heart, Target, PenTool, Feather, User, Crown, Store, Cat } from 'lucide-react';
 import FortuneTube from '@/components/FortuneTube';
 import { useAuthStore } from '@/store/useAuthStore';
 
@@ -107,7 +107,7 @@ export default function Home() {
                   <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-20 bg-[#ffeaa7] rounded-t-full border-4 border-[#8e5431] overflow-hidden">
                     <div className="absolute bottom-0 w-full h-1 bg-[#8e5431]/20"></div>
                     <div className="w-full h-full flex items-center justify-center opacity-30">
-                      <Store className="w-8 h-8 text-[#8e5431]" />
+                      <Cat className="w-8 h-8 text-[#8e5431]" />
                     </div>
                   </div>
                   
