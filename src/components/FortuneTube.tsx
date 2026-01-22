@@ -269,9 +269,9 @@ export default function FortuneTube() {
       <button
         onClick={handleDraw}
         disabled={drawing}
-        className="bg-[#2d3436] text-white px-6 py-2 text-sm rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed z-10 mt-6"
+        className="bg-[#2d3436] text-white px-4 py-2 md:px-6 rounded-full text-xs md:text-sm font-bold shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-1 md:gap-2 disabled:opacity-70 disabled:cursor-not-allowed z-10 mt-6 whitespace-nowrap"
       >
-        {drawing ? (shaking ? "摇签中..." : "解签中...") : "抽取灵签"} <Sparkles className="w-4 h-4" />
+        {drawing ? (shaking ? "摇签中..." : "解签中...") : "抽取灵签"} <Sparkles className="w-3 h-3 md:w-4 md:h-4" />
       </button>
 
       {showModal && createPortal(
