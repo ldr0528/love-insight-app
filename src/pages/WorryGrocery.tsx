@@ -155,25 +155,44 @@ export default function WorryGrocery() {
               {/* Quote Card */}
               {showQuote && (
                 <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000">
-                  <div className="bg-[#fffdf5] p-8 rounded-xl shadow-xl border-2 border-orange-100 relative overflow-hidden mx-4 transform rotate-1 hover:rotate-0 transition-transform">
-                    {/* Paper Texture Overlay */}
-                    <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')]"></div>
+                  <div className="bg-[#fffdf5] p-8 md:p-10 rounded-xl shadow-2xl border-4 border-double border-orange-200/80 relative overflow-hidden mx-4 transform rotate-1 hover:rotate-0 transition-transform duration-700">
+                    {/* Paper Texture Overlay - Enhanced */}
+                    <div className="absolute inset-0 opacity-40 bg-[url('https://www.transparenttextures.com/patterns/rice-paper.png')] mix-blend-multiply"></div>
+                    <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-orange-100 via-transparent to-transparent"></div>
                     
+                    {/* Decorative Corner Borders */}
+                    <div className="absolute top-2 left-2 w-8 h-8 border-t-2 border-l-2 border-orange-300/50 rounded-tl-lg"></div>
+                    <div className="absolute top-2 right-2 w-8 h-8 border-t-2 border-r-2 border-orange-300/50 rounded-tr-lg"></div>
+                    <div className="absolute bottom-2 left-2 w-8 h-8 border-b-2 border-l-2 border-orange-300/50 rounded-bl-lg"></div>
+                    <div className="absolute bottom-2 right-2 w-8 h-8 border-b-2 border-r-2 border-orange-300/50 rounded-br-lg"></div>
+
                     <div className="relative z-10 flex flex-col items-center text-center">
-                      <Sparkles className="w-6 h-6 text-orange-300 mb-4" />
-                      <p className="text-lg md:text-xl font-serif text-gray-800 leading-relaxed italic mb-6">
-                        “{response.quote.content}”
-                      </p>
-                      <div className="w-12 h-px bg-orange-200 mb-2"></div>
-                      <p className="text-sm text-gray-500 font-medium">
-                        —— {response.quote.source}
+                      <Sparkles className="w-8 h-8 text-orange-400 mb-6 animate-pulse" />
+                      
+                      <div className="relative mb-8">
+                         <span className="absolute -top-4 -left-6 text-4xl text-orange-200 font-serif opacity-50">“</span>
+                         <p className="text-xl md:text-2xl font-serif text-gray-800 leading-relaxed italic tracking-wide px-4">
+                           {response.quote.content}
+                         </p>
+                         <span className="absolute -bottom-6 -right-6 text-4xl text-orange-200 font-serif opacity-50">”</span>
+                      </div>
+
+                      <div className="w-16 h-px bg-gradient-to-r from-transparent via-orange-300 to-transparent mb-3"></div>
+                      
+                      <p className="text-sm md:text-base text-gray-500 font-medium tracking-widest uppercase">
+                        {response.quote.source}
                       </p>
                     </div>
                     
-                    {/* Stamp */}
-                    <div className="absolute bottom-[-10px] right-[-10px] opacity-20 transform rotate-[-15deg]">
-                      <div className="w-24 h-24 border-4 border-red-800 rounded-full flex items-center justify-center">
-                        <span className="text-red-800 font-serif font-bold">解忧</span>
+                    {/* Stamp - More Realistic */}
+                    <div className="absolute bottom-4 right-4 opacity-80 transform -rotate-[15deg] mix-blend-multiply">
+                      <div className="w-20 h-20 border-[3px] border-red-800/80 rounded-full flex items-center justify-center shadow-sm backdrop-blur-[1px]">
+                        <div className="w-[72px] h-[72px] border border-red-800/60 rounded-full flex items-center justify-center">
+                           <div className="flex flex-col items-center leading-none">
+                              <span className="text-red-900 font-serif font-black text-lg tracking-widest">解忧</span>
+                              <span className="text-[10px] text-red-800/80 mt-0.5 scale-75">GROCERY</span>
+                           </div>
+                        </div>
                       </div>
                     </div>
                   </div>
