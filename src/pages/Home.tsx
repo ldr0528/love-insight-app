@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Compass, ArrowRight, Brain, Hand, Heart, Target, PenTool, Feather, User, Crown, Store, Cat, Sparkles } from 'lucide-react';
 import FortuneTube from '@/components/FortuneTube';
@@ -5,6 +6,21 @@ import { useAuthStore } from '@/store/useAuthStore';
 
 export default function Home() {
   const { user, openAuthModal, logout } = useAuthStore();
+
+  useEffect(() => {
+    // 预加载图片
+    const images = [
+      '/images/ENFJ.jpg', '/images/ENFP.jpg', '/images/ENTJ.jpg', '/images/ENTP.jpg',
+      '/images/ESFJ.jpg', '/images/ESFP.jpg', '/images/ESTJ.jpg', '/images/ESTP.jpg',
+      '/images/INFJ.jpg', '/images/INFP.jpg', '/images/INTJ.jpg', '/images/INTP.jpg',
+      '/images/ISFJ.jpg', '/images/ISFP.jpg', '/images/ISTJ.jpg', '/images/ISTP.jpg'
+    ];
+    images.forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+    console.log('Home component mounted - v1.0.1');
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex flex-col relative">
