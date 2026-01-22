@@ -74,9 +74,9 @@ export default function WorryGrocery() {
         </h1>
       </header>
 
-      <main className="flex-1 max-w-2xl w-full mx-auto p-4 flex flex-col">
+      <main className="flex-1 max-w-2xl w-full mx-auto p-4 flex flex-col relative">
         {/* Cat Area */}
-        <div className="flex flex-col items-center mb-2 mt-4 animate-in fade-in slide-in-from-top-8 duration-700 w-full">
+        <div className="flex flex-col items-center mb-2 mt-4 animate-in fade-in slide-in-from-top-8 duration-700 w-full z-10">
           <ThreeCat 
             message={loading 
               ? "喵... 正在用心聆听..." 
@@ -86,8 +86,8 @@ export default function WorryGrocery() {
           />
         </div>
 
-        {/* Interaction Area */}
-        <div className="flex-1 flex flex-col gap-6" ref={replyContainerRef}>
+        {/* Interaction Area - Conditional Flex Grow */}
+        <div className={`flex flex-col gap-6 transition-all duration-500 ${response ? 'flex-1 pb-32' : 'flex-none'}`} ref={replyContainerRef}>
           {/* Result Display */}
           {response && (
             <div className="space-y-6 pb-20">
@@ -130,9 +130,9 @@ export default function WorryGrocery() {
           )}
         </div>
 
-        {/* Input Area (Fixed Bottom) */}
+        {/* Input Area (Fixed Bottom or Relative) */}
         {!response && !loading && (
-          <div className="sticky bottom-0 bg-[#fdf6e3] pt-4 pb-8 animate-in slide-in-from-bottom-full duration-500">
+          <div className="sticky bottom-0 bg-[#fdf6e3] pt-4 pb-8 animate-in slide-in-from-bottom-full duration-500 z-20">
             <div className="relative shadow-xl rounded-2xl overflow-hidden bg-white border border-orange-100 focus-within:ring-2 focus-within:ring-orange-200 transition-all">
               <textarea
                 value={input}

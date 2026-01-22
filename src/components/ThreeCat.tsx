@@ -10,13 +10,13 @@ function CatModel({ hovered, setHovered, message }: { hovered: boolean, setHover
 
   // Materials
   const greyFur = useMemo(() => new THREE.MeshStandardMaterial({ 
-    color: '#999999', 
+    color: '#b0b0b0', // Lighter grey
     roughness: 0.8, 
     metalness: 0.05 
   }), []);
   
   const darkGreyFur = useMemo(() => new THREE.MeshStandardMaterial({ 
-    color: '#777777', 
+    color: '#808080', // Lighter dark grey
     roughness: 0.8, 
     metalness: 0.05 
   }), []);
@@ -37,6 +37,15 @@ function CatModel({ hovered, setHovered, message }: { hovered: boolean, setHover
     transparent: true, 
     opacity: 0.4 
   }), []);
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useFrame((state) => {
     if (!headRef.current || !bodyRef.current || !tailRef.current) return;
@@ -68,7 +77,7 @@ function CatModel({ hovered, setHovered, message }: { hovered: boolean, setHover
       onPointerOver={() => setHovered(true)} 
       onPointerOut={() => setHovered(false)}
       scale={[1.1, 1.1, 1.1]} // Slightly smaller scale for realism
-      position={[0, -0.6, 0]}
+      position={[isMobile ? -0.4 : 0, -0.6, 0]}
     >
       {/* Body */}
       <group ref={bodyRef} position={[0, 0, 0]}>
