@@ -8,34 +8,37 @@ function CatModel({ hovered, setHovered, message }: { hovered: boolean, setHover
   const bodyRef = useRef<THREE.Group>(null);
   const tailRef = useRef<THREE.Group>(null);
 
-  // Materials
+  // Materials - Enhanced for realism
   const greyFur = useMemo(() => new THREE.MeshStandardMaterial({ 
-    color: '#b0b0b0', // Lighter grey
-    roughness: 0.8, 
-    metalness: 0.05 
+    color: '#9a9a9a', 
+    roughness: 1, 
+    metalness: 0.1,
   }), []);
   
   const darkGreyFur = useMemo(() => new THREE.MeshStandardMaterial({ 
-    color: '#808080', // Lighter dark grey
-    roughness: 0.8, 
-    metalness: 0.05 
+    color: '#606060', 
+    roughness: 1, 
+    metalness: 0.1
   }), []);
 
   const pinkSkin = useMemo(() => new THREE.MeshStandardMaterial({ 
-    color: '#d4888d', 
-    roughness: 0.6 
+    color: '#ffb7b2', 
+    roughness: 0.5,
+    metalness: 0
   }), []);
   
-  const darkEye = useMemo(() => new THREE.MeshStandardMaterial({ 
+  const eyeMaterial = useMemo(() => new THREE.MeshPhysicalMaterial({ 
     color: '#000000', 
     roughness: 0.1, 
-    metalness: 0.8 
+    metalness: 0.5,
+    clearcoat: 1,
+    clearcoatRoughness: 0.1
   }), []);
   
-  const cheekColor = useMemo(() => new THREE.MeshStandardMaterial({ 
-    color: '#d4888d', 
-    transparent: true, 
-    opacity: 0.4 
+  const noseMaterial = useMemo(() => new THREE.MeshStandardMaterial({ 
+    color: '#ff8a80', 
+    roughness: 0.4,
+    metalness: 0.1
   }), []);
 
   const [isMobile, setIsMobile] = useState(false);
@@ -79,56 +82,84 @@ function CatModel({ hovered, setHovered, message }: { hovered: boolean, setHover
       scale={[1.0, 1.0, 1.0]} // Slightly smaller scale for realism
       position={[isMobile ? -0.4 : 0, -0.6, 0]}
     >
-      {/* Body */}
+      {/* Body - Slightly adjusted shape for cuteness */}
       <group ref={bodyRef} position={[0, 0, 0]}>
-        <Sphere args={[0.7, 32, 32]} position={[0, 0, 0]} scale={[1, 0.9, 0.9]}>
+        <Sphere args={[0.7, 64, 64]} position={[0, 0, 0]} scale={[1, 0.95, 0.95]}>
           <primitive object={greyFur} />
+        </Sphere>
+        {/* Belly Patch */}
+        <Sphere args={[0.6, 64, 64]} position={[0, 0, 0.15]} scale={[0.8, 0.85, 0.85]}>
+          <meshStandardMaterial color="#c0c0c0" roughness={1} />
         </Sphere>
       </group>
 
       {/* Head Group */}
       <group ref={headRef} position={[0, 0.65, 0.1]}>
         {/* Main Head */}
-        <Sphere args={[0.55, 32, 32]} scale={[1, 0.9, 0.9]}>
+        <Sphere args={[0.55, 64, 64]} scale={[1, 0.9, 0.9]}>
            <primitive object={greyFur} />
         </Sphere>
 
-        {/* Ears - More realistic shape */}
+        {/* Ears - Smoother connections */}
         <group position={[0.35, 0.45, 0]} rotation={[0, 0, -0.2]}>
-          <Cone args={[0.18, 0.35, 32]} material={greyFur} />
-          <Cone args={[0.12, 0.25, 32]} position={[0, -0.02, 0.06]} material={pinkSkin} />
+          <Cone args={[0.18, 0.35, 64]} material={greyFur} />
+          <Cone args={[0.12, 0.25, 64]} position={[0, -0.02, 0.08]} material={pinkSkin} />
         </group>
         <group position={[-0.35, 0.45, 0]} rotation={[0, 0, 0.2]}>
-          <Cone args={[0.18, 0.35, 32]} material={greyFur} />
-          <Cone args={[0.12, 0.25, 32]} position={[0, -0.02, 0.06]} material={pinkSkin} />
+          <Cone args={[0.18, 0.35, 64]} material={greyFur} />
+          <Cone args={[0.12, 0.25, 64]} position={[0, -0.02, 0.08]} material={pinkSkin} />
         </group>
 
-        {/* Eyes - Larger and shinier */}
-        <Sphere args={[0.07, 32, 32]} position={[0.2, 0.05, 0.42]}>
-          <primitive object={darkEye} />
+        {/* Eyes - Deep and shiny */}
+        <Sphere args={[0.07, 64, 64]} position={[0.2, 0.05, 0.42]}>
+          <primitive object={eyeMaterial} />
         </Sphere>
-        <Sphere args={[0.07, 32, 32]} position={[-0.2, 0.05, 0.42]}>
-          <primitive object={darkEye} />
+        <Sphere args={[0.07, 64, 64]} position={[-0.2, 0.05, 0.42]}>
+          <primitive object={eyeMaterial} />
         </Sphere>
         {/* Eye Highlights */}
-        <Sphere args={[0.025, 16, 16]} position={[0.22, 0.08, 0.48]} material={new THREE.MeshBasicMaterial({ color: 'white' })} />
-        <Sphere args={[0.025, 16, 16]} position={[-0.18, 0.08, 0.48]} material={new THREE.MeshBasicMaterial({ color: 'white' })} />
+        <Sphere args={[0.025, 32, 32]} position={[0.23, 0.09, 0.47]} material={new THREE.MeshBasicMaterial({ color: 'white' })} />
+        <Sphere args={[0.025, 32, 32]} position={[-0.17, 0.09, 0.47]} material={new THREE.MeshBasicMaterial({ color: 'white' })} />
 
-        {/* Nose - Small and cute */}
-        <Sphere args={[0.03, 16, 16]} position={[0, -0.05, 0.5]} material={pinkSkin} scale={[1, 0.6, 0.5]} />
-
-        {/* Mouth - Simple line */}
-        <mesh position={[0, -0.12, 0.48]} rotation={[0, 0, 0]}>
-           <boxGeometry args={[0.1, 0.02, 0.02]} />
-           <meshStandardMaterial color="#333" />
-        </mesh>
-
-        {/* Cheeks - Subtle blush */}
-        <Sphere args={[0.12, 16, 16]} position={[0.3, -0.05, 0.35]} scale={[1, 0.6, 0.5]}>
-             <primitive object={cheekColor} />
+        {/* Nose - Rounded triangle */}
+        <Sphere args={[0.035, 32, 32]} position={[0, -0.05, 0.5]} scale={[1, 0.7, 0.5]}>
+          <primitive object={noseMaterial} />
         </Sphere>
-        <Sphere args={[0.12, 16, 16]} position={[-0.3, -0.05, 0.35]} scale={[1, 0.6, 0.5]}>
-             <primitive object={cheekColor} />
+
+        {/* Mouth - Cute curve */}
+        <group position={[0, -0.12, 0.48]}>
+           <mesh rotation={[0, 0, -0.2]} position={[0.03, 0, 0]}>
+             <capsuleGeometry args={[0.015, 0.06, 4, 8]} />
+             <meshStandardMaterial color="#4a4a4a" />
+           </mesh>
+           <mesh rotation={[0, 0, 0.2]} position={[-0.03, 0, 0]}>
+             <capsuleGeometry args={[0.015, 0.06, 4, 8]} />
+             <meshStandardMaterial color="#4a4a4a" />
+           </mesh>
+        </group>
+
+        {/* Whiskers */}
+        <group position={[0, -0.06, 0.48]}>
+           {[1, 0, -1].map((i) => (
+              <mesh key={`r-${i}`} position={[0.15, i * 0.03, 0]} rotation={[0, 0, -0.1 + i * 0.05]}>
+                 <boxGeometry args={[0.2, 0.005, 0.005]} />
+                 <meshBasicMaterial color="#cccccc" transparent opacity={0.6} />
+              </mesh>
+           ))}
+           {[1, 0, -1].map((i) => (
+              <mesh key={`l-${i}`} position={[-0.15, i * 0.03, 0]} rotation={[0, 0, 0.1 - i * 0.05]}>
+                 <boxGeometry args={[0.2, 0.005, 0.005]} />
+                 <meshBasicMaterial color="#cccccc" transparent opacity={0.6} />
+              </mesh>
+           ))}
+        </group>
+
+        {/* Cheeks - Softer blush */}
+        <Sphere args={[0.12, 32, 32]} position={[0.3, -0.05, 0.35]} scale={[1, 0.6, 0.5]}>
+             <meshStandardMaterial color="#ffb7b2" transparent opacity={0.3} roughness={1} />
+        </Sphere>
+        <Sphere args={[0.12, 32, 32]} position={[-0.3, -0.05, 0.35]} scale={[1, 0.6, 0.5]}>
+             <meshStandardMaterial color="#ffb7b2" transparent opacity={0.3} roughness={1} />
         </Sphere>
 
         {/* Chat Bubble attached to mouth area */}
