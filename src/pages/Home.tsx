@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Compass, ArrowRight, Brain, Hand, Heart, Target, PenTool, Feather, User, Crown, Store, Cat, Rocket } from 'lucide-react';
+import { Compass, ArrowRight, Brain, Hand, Heart, Target, PenTool, Feather, User, Crown, Store, Cat, Sparkles } from 'lucide-react';
 import FortuneTube from '@/components/FortuneTube';
 import { useAuthStore } from '@/store/useAuthStore';
 
@@ -64,7 +64,7 @@ export default function Home() {
           </h1>
           
           <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed flex items-center justify-center gap-2">
-            探索独属于你的小小宇宙 <Rocket className="w-5 h-5 text-indigo-400 animate-pulse" />
+            探索独属于你的小小宇宙 <Sparkles className="w-5 h-5 text-indigo-400 animate-pulse" />
           </p>
         </div>
 
