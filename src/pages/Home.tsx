@@ -74,52 +74,57 @@ export default function Home() {
             <FortuneTube />
           </div>
           <div className="flex-1 flex justify-start">
-            <Link to="/worry-grocery" className="group relative w-64 h-[350px] perspective-1000 block">
-              <div className="relative w-full h-full bg-[#fdf6e3] rounded-[2.5rem] shadow-xl shadow-orange-100 border-4 border-white overflow-hidden transition-all duration-500 transform hover:-translate-y-2 hover:shadow-2xl">
-                {/* Roof/Awning */}
-                <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-orange-400 to-orange-500 z-10">
-                  {/* Awning Stripes */}
-                  <div className="w-full h-full flex">
-                    {Array.from({ length: 8 }).map((_, i) => (
-                      <div key={i} className={`flex-1 h-full ${i % 2 === 0 ? 'bg-orange-600/20' : ''}`}></div>
-                    ))}
-                  </div>
-                  {/* Scalloped Edge */}
-                  <div className="absolute -bottom-2 left-0 w-full flex">
-                    {Array.from({ length: 8 }).map((_, i) => (
-                      <div key={i} className="flex-1 h-4 bg-orange-500 rounded-b-full"></div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Store Front */}
-                <div className="absolute inset-0 flex flex-col items-center pt-32 p-6">
-                  {/* Signboard */}
-                  <div className="relative bg-[#8b4513] px-6 py-3 rounded-lg shadow-lg border-2 border-[#5d2e0c] mb-8 transform -rotate-1 group-hover:rotate-0 transition-transform duration-500">
-                    <div className="absolute top-0 left-2 w-1 h-8 bg-[#5d2e0c] -mt-4 rounded-full"></div>
-                    <div className="absolute top-0 right-2 w-1 h-8 bg-[#5d2e0c] -mt-4 rounded-full"></div>
-                    <h3 className="text-xl font-bold text-[#fdf6e3] tracking-widest font-serif border-2 border-[#fdf6e3]/30 px-2 py-0.5 rounded">
-                      解忧杂货铺
-                    </h3>
-                  </div>
-
-                  {/* Window/Door Area */}
-                  <div className="relative w-32 h-32 bg-[#fff9e6] rounded-t-full border-[6px] border-[#8b4513] overflow-hidden shadow-inner group-hover:scale-105 transition-transform duration-500">
-                    <div className="absolute bottom-0 w-full h-2 bg-[#8b4513]"></div>
-                    <div className="w-full h-full flex items-center justify-center relative">
-                      <Store className="w-16 h-16 text-orange-800/80" />
-                      {/* Reflection */}
-                      <div className="absolute top-2 right-4 w-8 h-12 bg-white/20 rounded-full rotate-12 blur-sm"></div>
+            <Link to="/worry-grocery" className="group relative w-64 h-[350px] perspective-1000 block flex flex-col items-center justify-end">
+              <div className="relative w-48 h-64 transition-all duration-500 transform group-hover:-translate-y-2">
+                {/* 3D Store Building */}
+                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-40 h-48">
+                  {/* Building Body */}
+                  <div className="absolute bottom-0 w-full h-40 bg-[#fdf6e3] rounded-t-xl shadow-[inset_-10px_0_20px_rgba(0,0,0,0.05)] border-2 border-orange-100"></div>
+                  
+                  {/* Roof/Awning */}
+                  <div className="absolute top-0 -left-2 w-[110%] h-16 z-20">
+                    <div className="w-full h-full bg-gradient-to-b from-orange-400 to-orange-500 rounded-lg shadow-lg flex overflow-hidden">
+                      {Array.from({ length: 6 }).map((_, i) => (
+                        <div key={i} className={`flex-1 h-full ${i % 2 === 0 ? 'bg-orange-600/10' : ''}`}></div>
+                      ))}
+                    </div>
+                    {/* Scalloped Edge */}
+                    <div className="absolute -bottom-2 left-0 w-full flex">
+                      {Array.from({ length: 6 }).map((_, i) => (
+                        <div key={i} className="flex-1 h-4 bg-orange-500 rounded-b-full"></div>
+                      ))}
                     </div>
                   </div>
 
-                  {/* Welcome Mat/Button */}
-                  <div className="mt-auto mb-4">
-                    <span className="px-6 py-2 bg-[#8b4513] text-[#fdf6e3] rounded-full text-sm font-bold shadow-md group-hover:bg-[#a0522d] transition-colors border-2 border-[#5d2e0c] border-dashed">
-                      推门进入
-                    </span>
+                  {/* Signboard hanging */}
+                  <div className="absolute top-14 left-1/2 transform -translate-x-1/2 w-32 z-10">
+                    <div className="flex justify-between px-4 mb-[-4px]">
+                      <div className="w-0.5 h-4 bg-amber-800"></div>
+                      <div className="w-0.5 h-4 bg-amber-800"></div>
+                    </div>
+                    <div className="bg-[#8b4513] text-[#fdf6e3] text-xs font-bold text-center py-1.5 rounded shadow-sm border border-[#5d2e0c]">
+                      解忧杂货铺
+                    </div>
                   </div>
+
+                  {/* Door/Window */}
+                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-24 h-28 bg-[#fff9e6] rounded-t-full border-4 border-[#8b4513] overflow-hidden group-hover:bg-[#fffdf5] transition-colors">
+                    {/* Interior Light */}
+                    <div className="absolute inset-0 bg-orange-100/30"></div>
+                    {/* Cat Silhouette */}
+                    <div className="absolute bottom-0 right-2 w-8 h-10 opacity-20">
+                      <div className="w-full h-full bg-[#8b4513] rounded-t-full"></div>
+                    </div>
+                  </div>
+                  
+                  {/* Welcome Mat */}
+                  <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-28 h-2 bg-orange-200 rounded-full blur-[1px]"></div>
                 </div>
+              </div>
+              
+              {/* Button matching the left side style */}
+              <div className="mt-6 px-6 py-2 bg-orange-400 text-white rounded-full text-sm font-bold shadow-md group-hover:bg-orange-500 transition-colors flex items-center gap-2">
+                进店看看 <Store className="w-4 h-4" />
               </div>
             </Link>
           </div>
