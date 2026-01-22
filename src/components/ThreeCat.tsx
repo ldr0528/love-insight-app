@@ -123,9 +123,15 @@ function CatModel({ hovered, setHovered, message }: { hovered: boolean, setHover
         </Sphere>
 
         {/* Chat Bubble attached to mouth area */}
-        <Html position={[0.9, 0.1, 0]} center className="pointer-events-none w-[280px]" style={{ transform: 'scale(1)' }}>
-          <div className="bg-white/95 backdrop-blur-sm px-5 py-4 rounded-2xl rounded-tl-none shadow-xl border border-orange-100 relative animate-in zoom-in duration-300 origin-top-left">
-            <div className="text-amber-900/90 text-sm font-medium leading-relaxed text-left break-words whitespace-pre-wrap">
+        <Html 
+          position={[0.7, 0.3, 0]} 
+          center 
+          className="pointer-events-none w-64 md:w-72" 
+          style={{ transform: 'scale(1)', zIndex: 0 }}
+          zIndexRange={[0, 0]}
+        >
+          <div className="bg-white/95 backdrop-blur-sm px-4 py-3 md:px-5 md:py-4 rounded-2xl rounded-tl-none shadow-xl border border-orange-100 relative animate-in zoom-in duration-300 origin-top-left flex items-center min-h-[60px]">
+            <div className="text-amber-900/90 text-xs md:text-sm font-medium leading-relaxed text-left break-words whitespace-pre-wrap w-full">
               {message}
             </div>
             {/* Arrow pointing to mouth */}
