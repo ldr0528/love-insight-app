@@ -25,12 +25,12 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex flex-col relative">
       {/* Contact Us Button (Top Left) */}
-      <div className="absolute top-4 left-4 z-20">
+      <div className="absolute top-4 left-4 z-50">
         <Link 
           to="/contact"
-          className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm text-gray-600 rounded-full font-medium shadow-sm border border-pink-100 hover:bg-white hover:text-pink-600 hover:shadow-md transition-all text-sm"
+          className="flex items-center gap-2 px-3 py-1.5 h-[42px] bg-white/80 backdrop-blur-sm text-gray-700 rounded-full font-medium shadow-sm border border-pink-100 hover:bg-white hover:text-pink-600 hover:shadow-md transition-all text-sm"
         >
-          <MessageCircle size={16} />
+          <MessageCircle size={18} />
           <span>联系我们</span>
         </Link>
       </div>
@@ -38,7 +38,7 @@ export default function Home() {
       {/* Header / Auth Button */}
       <header className="w-full p-4 flex justify-end items-center z-20 absolute top-0 right-0">
         {user ? (
-          <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm p-2 pr-4 rounded-full shadow-sm border border-pink-100 hover:shadow-md transition-all">
+          <div className="flex items-center gap-2 h-[42px] bg-white/80 backdrop-blur-sm px-2 pr-4 rounded-full shadow-sm border border-pink-100 hover:shadow-md transition-all">
             <div className="relative w-8 h-8">
               <div className="w-full h-full bg-pink-100 rounded-full flex items-center justify-center text-pink-500 font-bold overflow-hidden">
                 {user.avatar ? (
@@ -53,7 +53,7 @@ export default function Home() {
                 </div>
               )}
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col justify-center">
               <span className="text-sm font-medium text-gray-700 leading-tight">{user.nickname}</span>
               {user.isVip && (
                 <span className="text-[10px] font-bold text-yellow-500 flex items-center gap-0.5 leading-tight">
@@ -63,7 +63,7 @@ export default function Home() {
             </div>
             <button 
               onClick={logout} 
-              className="text-xs text-gray-400 hover:text-pink-500 ml-2 border-l border-gray-200 pl-3"
+              className="text-xs text-gray-400 hover:text-pink-500 ml-2 border-l border-gray-200 pl-3 h-5 flex items-center"
             >
               退出
             </button>
@@ -71,7 +71,7 @@ export default function Home() {
         ) : (
           <button 
             onClick={openAuthModal}
-            className="flex items-center gap-2 px-5 py-2.5 bg-white/80 backdrop-blur-sm text-gray-700 rounded-full font-medium shadow-sm border border-pink-100 hover:bg-white hover:text-pink-600 hover:shadow-md transition-all"
+            className="flex items-center gap-2 px-5 py-2.5 h-[42px] bg-white/80 backdrop-blur-sm text-gray-700 rounded-full font-medium shadow-sm border border-pink-100 hover:bg-white hover:text-pink-600 hover:shadow-md transition-all"
           >
             <User size={18} />
             <span>登录 / 注册</span>
@@ -96,14 +96,14 @@ export default function Home() {
         </div>
 
         {/* Fortune Tube & Worry Grocery */}
-        <div className="w-full flex flex-row items-end justify-center gap-2 md:gap-12 min-h-[280px]">
+        <div className="w-full flex flex-row items-end justify-center gap-2 md:gap-12 min-h-[260px] md:min-h-[280px]">
           {/* Left: Fortune Tube */}
-          <div className="flex-1 max-w-[180px] h-72 flex flex-col items-center justify-end">
+          <div className="flex-1 max-w-[180px] h-64 md:h-72 flex flex-col items-center justify-end">
             <FortuneTube />
           </div>
 
           {/* Right: Worry Grocery */}
-          <div className="flex-1 max-w-[180px] h-72 flex flex-col items-center justify-end">
+          <div className="flex-1 max-w-[180px] h-64 md:h-72 flex flex-col items-center justify-end">
             <Link to="/worry-grocery" className="group relative w-full h-full flex flex-col items-center justify-end gap-2">
               <div className="relative w-full h-48 md:h-64 transition-all duration-500 transform group-hover:-translate-y-2 flex items-end justify-center">
                 {/* Store Container */}

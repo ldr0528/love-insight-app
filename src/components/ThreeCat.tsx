@@ -79,8 +79,8 @@ function CatModel({ hovered, setHovered, message }: { hovered: boolean, setHover
     <group 
       onPointerOver={() => setHovered(true)} 
       onPointerOut={() => setHovered(false)}
-      scale={[1.0, 1.0, 1.0]} // Slightly smaller scale for realism
-      position={[isMobile ? -0.4 : 0, -0.6, 0]}
+      scale={[isMobile ? 0.75 : 1.0, isMobile ? 0.75 : 1.0, isMobile ? 0.75 : 1.0]} // Scale down on mobile
+      position={[isMobile ? -0.3 : 0, -0.6, 0]}
     >
       {/* Body - Slightly adjusted shape for cuteness */}
       <group ref={bodyRef} position={[0, 0, 0]}>
@@ -152,18 +152,18 @@ function CatModel({ hovered, setHovered, message }: { hovered: boolean, setHover
 
         {/* Chat Bubble attached to mouth area */}
         <Html 
-          position={[0.6, 0.35, 0]} 
+          position={[isMobile ? 0.5 : 0.6, isMobile ? 0.25 : 0.35, 0]} 
           center 
-          className="pointer-events-none w-48 sm:w-64 md:w-72" 
+          className="pointer-events-none w-40 sm:w-64 md:w-72" 
           style={{ transform: 'scale(1)', zIndex: 0 }}
           zIndexRange={[0, 0]}
         >
-          <div className="bg-white/95 backdrop-blur-sm px-4 py-3 md:px-5 md:py-4 rounded-2xl rounded-tl-none shadow-xl border border-orange-100 relative animate-in zoom-in duration-300 origin-top-left flex items-center min-h-[60px]">
-            <div className="text-amber-900/90 text-xs md:text-sm font-medium leading-relaxed text-left break-words whitespace-pre-wrap w-full">
+          <div className="bg-white/95 backdrop-blur-sm px-3 py-2 md:px-5 md:py-4 rounded-2xl rounded-tl-none shadow-xl border border-orange-100 relative animate-in zoom-in duration-300 origin-top-left flex items-center min-h-[50px] md:min-h-[60px]">
+            <div className="text-amber-900/90 text-[10px] md:text-sm font-medium leading-relaxed text-left break-words whitespace-pre-wrap w-full">
               {message}
             </div>
             {/* Arrow pointing to mouth */}
-            <div className="absolute top-4 -left-2 w-0 h-0 border-t-[8px] border-t-transparent border-r-[10px] border-r-white/95 border-b-[8px] border-b-transparent transform rotate-0" style={{ filter: 'drop-shadow(-1px 0px 1px rgba(0,0,0,0.05))' }}></div>
+            <div className="absolute top-3 md:top-4 -left-2 w-0 h-0 border-t-[6px] md:border-t-[8px] border-t-transparent border-r-[8px] md:border-r-[10px] border-r-white/95 border-b-[6px] md:border-b-[8px] border-b-transparent transform rotate-0" style={{ filter: 'drop-shadow(-1px 0px 1px rgba(0,0,0,0.05))' }}></div>
           </div>
         </Html>
       </group>
