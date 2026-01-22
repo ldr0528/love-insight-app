@@ -179,7 +179,7 @@ export default function PalmPage() {
                 </div>
               </div>
               <p className="text-lg text-gray-600 max-w-lg mx-auto">
-                利用最先进的计算机视觉模型，精准识别感情线、智慧线与生命线。<br/>
+                让我瞅瞅你的手里藏着什么秘密<br/>
                 <span className="text-xs text-gray-400 block mt-2">*照片仅用于实时分析，不会被保存</span>
               </p>
             </div>
