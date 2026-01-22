@@ -46,6 +46,17 @@ const TITLES = [
   { days: 100, name: "恋爱大宗师", icon: "👑" },
 ];
 
+const LUCKY_COLORS = [
+  { name: "桃花粉", value: "bg-pink-400", text: "text-pink-500" },
+  { name: "薄荷绿", value: "bg-emerald-400", text: "text-emerald-500" },
+  { name: "天空蓝", value: "bg-sky-400", text: "text-sky-500" },
+  { name: "柠檬黄", value: "bg-yellow-400", text: "text-yellow-500" },
+  { name: "香芋紫", value: "bg-purple-400", text: "text-purple-500" },
+  { name: "珊瑚红", value: "bg-rose-400", text: "text-rose-500" },
+  { name: "极光紫", value: "bg-violet-400", text: "text-violet-500" },
+  { name: "活力橙", value: "bg-orange-400", text: "text-orange-500" },
+];
+
 export default function DailyCheckIn() {
   const [checkedIn, setCheckedIn] = useState(false);
   const [streak, setStreak] = useState(0);
@@ -87,15 +98,25 @@ export default function DailyCheckIn() {
       const today = new Date().toISOString().split('T')[0];
       const randomSign = SIGNS[Math.floor(Math.random() * SIGNS.length)];
       
+      // Generate daily lucky attributes
+      const luckyNumber = Math.floor(Math.random() * 9) + 1;
+      const luckyColor = LUCKY_COLORS[Math.floor(Math.random() * LUCKY_COLORS.length)];
+      
+      const fullSign = {
+        ...randomSign,
+        luckyNumber,
+        luckyColor
+      };
+      
       const newStreak = streak + 1;
       
       localStorage.setItem('lastCheckInDate', today);
       localStorage.setItem('checkInStreak', newStreak.toString());
-      localStorage.setItem('todaySign', JSON.stringify(randomSign));
+      localStorage.setItem('todaySign', JSON.stringify(fullSign));
       
       setCheckedIn(true);
       setStreak(newStreak);
-      setTodaySign(randomSign);
+      setTodaySign(fullSign);
       setShowAnimation(false);
       setIsRevealed(false); // Reset reveal state on new check-in
     }, 1500);
