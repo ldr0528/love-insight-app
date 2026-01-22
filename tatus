@@ -1,0 +1,29 @@
+[33mcommit 1ef35cc557736a55d7892757e10bdf6eb2267f90[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Dory (ldr0528) <229375224@qq.com>
+Date:   Thu Jan 22 14:15:34 2026 +0800
+
+    build: optimize chunk splitting for better deployment
+
+[33mcommit ae61aed85049423c2ad34af5a4b09efa3aa3a105[m
+Author: Dory (ldr0528) <229375224@qq.com>
+Date:   Thu Jan 22 14:08:03 2026 +0800
+
+    chore: trigger deployment
+
+[33mcommit 74cb5719015786369c8f7e610fad4f0fab3176f7[m
+Author: Dory (ldr0528) <229375224@qq.com>
+Date:   Thu Jan 22 14:07:07 2026 +0800
+
+    style: enforce equal button dimensions
+
+[33mcommit c54045d0688a97279a025b8832b26cf1cd8819e6[m
+Author: Dory (ldr0528) <229375224@qq.com>
+Date:   Thu Jan 22 14:04:46 2026 +0800
+
+    style: revert cat ears to truncated cone shape
+
+[33mcommit 5845d60aedab1530fcf71b2d8fee1dc6cc57061c[m
+Author: Dory (ldr0528) <229375224@qq.com>
+Date:   Thu Jan 22 14:02:23 2026 +0800
+
+    style: unify button styles for fortune tube and home page

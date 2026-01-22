@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Compass, ArrowRight, Brain, Hand, Heart, Target, PenTool, Feather, User, Crown, Store, Cat, Sparkles } from 'lucide-react';
+import { Compass, ArrowRight, Brain, Hand, Heart, Target, PenTool, Feather, User, Crown, Store, Cat, Sparkles, PawPrint } from 'lucide-react';
 import FortuneTube from '@/components/FortuneTube';
 import { useAuthStore } from '@/store/useAuthStore';
 
@@ -136,8 +136,9 @@ export default function Home() {
               </div>
               
               {/* Button */}
-              <div className="mt-6 h-9 md:h-10 min-w-[6.5rem] md:min-w-[8rem] px-4 bg-[#2d3436] text-white rounded-full text-xs md:text-sm font-bold shadow-lg group-hover:scale-105 transition-transform flex items-center justify-center gap-1 md:gap-2 whitespace-nowrap">
-                进店看看 <Store className="w-3 h-3 md:w-4 md:h-4" />
+              <div className="mt-6 h-9 md:h-10 min-w-[6.5rem] md:min-w-[8rem] px-4 bg-[#2d3436] text-white rounded-full text-xs md:text-sm font-bold shadow-lg group-hover:scale-105 transition-transform flex items-center justify-center gap-1 md:gap-2 whitespace-nowrap leading-none">
+                <span>进店看看</span>
+                <Store className="w-3 h-3 md:w-4 md:h-4" />
               </div>
             </Link>
           </div>
@@ -182,6 +183,25 @@ export default function Home() {
               </span>
             </div>
           </Link>
+
+          {/* Animal Personality Test */}
+          <a href="https://www.animal-personality-test.fun/" target="_blank" rel="noopener noreferrer" className="group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-green-50 overflow-hidden flex flex-col h-full">
+            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+              <PawPrint className="w-24 h-24 text-green-500" />
+            </div>
+            <div className="relative z-10 flex flex-col h-full justify-center">
+              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center text-green-600 mb-4">
+                <PawPrint className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">动物塑性格测试</h3>
+              <p className="text-gray-500 text-sm mb-6 flex-grow">
+                发现你内心的真实天性，探索属于你的精神动物。
+              </p>
+              <span className="inline-flex items-center text-green-600 font-bold group-hover:gap-2 transition-all">
+                开始动物塑测试 <ArrowRight className="w-4 h-4 ml-1" />
+              </span>
+            </div>
+          </a>
 
           {/* Standalone Palmistry */}
           <Link to="/palm" className="group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-orange-50 overflow-hidden flex flex-col h-full">
