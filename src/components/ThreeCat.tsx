@@ -126,34 +126,6 @@ function CatModel({ hovered, setHovered, message }: { hovered: boolean, setHover
           <primitive object={noseMaterial} />
         </Sphere>
 
-        {/* Mouth - Cute curve */}
-        <group position={[0, -0.12, 0.48]}>
-           <mesh rotation={[0, 0, -0.2]} position={[0.03, 0, 0]}>
-             <capsuleGeometry args={[0.015, 0.06, 4, 8]} />
-             <meshStandardMaterial color="#4a4a4a" />
-           </mesh>
-           <mesh rotation={[0, 0, 0.2]} position={[-0.03, 0, 0]}>
-             <capsuleGeometry args={[0.015, 0.06, 4, 8]} />
-             <meshStandardMaterial color="#4a4a4a" />
-           </mesh>
-        </group>
-
-        {/* Whiskers */}
-        <group position={[0, -0.06, 0.48]}>
-           {[1, 0, -1].map((i) => (
-              <mesh key={`r-${i}`} position={[0.15, i * 0.03, 0]} rotation={[0, 0, -0.1 + i * 0.05]}>
-                 <boxGeometry args={[0.2, 0.005, 0.005]} />
-                 <meshBasicMaterial color="#cccccc" transparent opacity={0.6} />
-              </mesh>
-           ))}
-           {[1, 0, -1].map((i) => (
-              <mesh key={`l-${i}`} position={[-0.15, i * 0.03, 0]} rotation={[0, 0, 0.1 - i * 0.05]}>
-                 <boxGeometry args={[0.2, 0.005, 0.005]} />
-                 <meshBasicMaterial color="#cccccc" transparent opacity={0.6} />
-              </mesh>
-           ))}
-        </group>
-
         {/* Cheeks - Softer blush */}
         <Sphere args={[0.12, 32, 32]} position={[0.3, -0.05, 0.35]} scale={[1, 0.6, 0.5]}>
              <meshStandardMaterial color="#ffb7b2" transparent opacity={0.3} roughness={1} />
