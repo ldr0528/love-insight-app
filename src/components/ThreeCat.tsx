@@ -76,7 +76,7 @@ function CatModel({ hovered, setHovered, message }: { hovered: boolean, setHover
     <group 
       onPointerOver={() => setHovered(true)} 
       onPointerOut={() => setHovered(false)}
-      scale={[1.1, 1.1, 1.1]} // Slightly smaller scale for realism
+      scale={[1.0, 1.0, 1.0]} // Slightly smaller scale for realism
       position={[isMobile ? -0.4 : 0, -0.6, 0]}
     >
       {/* Body */}

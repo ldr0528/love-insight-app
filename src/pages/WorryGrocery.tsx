@@ -63,9 +63,9 @@ export default function WorryGrocery() {
   }, [displayedReply, showQuote]);
 
   return (
-    <div className="min-h-screen bg-[#fdf6e3] flex flex-col font-sans">
+    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-pink-50 flex flex-col font-sans">
       {/* Header */}
-      <header className="p-4 flex items-center sticky top-0 bg-[#fdf6e3]/80 backdrop-blur-sm z-10">
+      <header className="p-4 flex items-center sticky top-0 bg-white/30 backdrop-blur-md z-10">
         <Link to="/" className="p-2 rounded-full hover:bg-orange-100 transition-colors text-amber-800">
           <ArrowLeft className="w-6 h-6" />
         </Link>
@@ -132,18 +132,18 @@ export default function WorryGrocery() {
 
         {/* Input Area (Fixed Bottom or Relative) */}
         {!response && !loading && (
-          <div className="sticky bottom-0 bg-[#fdf6e3] pt-4 pb-8 animate-in slide-in-from-bottom-full duration-500 z-20">
-            <div className="relative shadow-xl rounded-2xl overflow-hidden bg-white border border-orange-100 focus-within:ring-2 focus-within:ring-orange-200 transition-all">
+          <div className="sticky bottom-0 bg-gradient-to-t from-pink-50 to-transparent pt-4 pb-8 animate-in slide-in-from-bottom-full duration-500 z-20">
+            <div className="relative shadow-2xl rounded-2xl overflow-hidden bg-white/90 backdrop-blur border border-orange-100 focus-within:ring-2 focus-within:ring-orange-200 transition-all">
               <textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="在这里写下你的烦恼..."
-                className="w-full p-4 pr-14 min-h-[120px] resize-none outline-none text-gray-700 bg-transparent placeholder:text-gray-300"
+                className="w-full p-4 pr-16 min-h-[80px] resize-none outline-none text-lg text-gray-800 bg-transparent placeholder:text-gray-400 placeholder:font-medium"
               />
               <button
                 onClick={handleSubmit}
                 disabled={!input.trim()}
-                className="absolute bottom-3 right-3 p-2 bg-orange-400 text-white rounded-xl hover:bg-orange-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md hover:scale-105 active:scale-95"
+                className="absolute bottom-3 right-3 p-2.5 bg-orange-500 text-white rounded-xl hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:scale-105 active:scale-95"
               >
                 <Send className="w-5 h-5" />
               </button>
@@ -153,7 +153,7 @@ export default function WorryGrocery() {
         
         {/* Reset Button (When finished) */}
         {showQuote && (
-          <div className="sticky bottom-0 bg-[#fdf6e3] pt-4 pb-8 flex justify-center animate-in fade-in duration-500">
+          <div className="sticky bottom-0 bg-gradient-to-t from-pink-50 to-transparent pt-4 pb-8 flex justify-center animate-in fade-in duration-500">
             <button
               onClick={() => {
                 setResponse(null);
