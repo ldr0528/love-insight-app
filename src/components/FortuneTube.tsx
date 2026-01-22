@@ -131,13 +131,14 @@ function TubeModel({ shaking, stickUp, onDraw, hovered, setHovered }: { shaking:
   }), []);
 
   return (
-    // 整体缩放 0.65 倍，显得更小巧
+    // 整体缩放 0.65 倍，显得更小巧，位置下移
     <group 
       ref={group} 
       onClick={(e) => { e.stopPropagation(); onDraw(); }} 
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
       scale={[0.65, 0.65, 0.65]}
+      position={[0, -0.2, 0]}
     >
       {/* 筒身 - 变矮 */}
       <Cylinder args={[0.7, 0.65, 2.0, 64, 1, true]} position={[0, -0.6, 0]} material={woodMaterial} />
@@ -259,7 +260,7 @@ export default function FortuneTube() {
             {/* 移除 Environment preset，改用更轻量的灯光方案或本地资源，避免 GitHub Raw 资源加载失败 */}
             {/* <Environment preset="city" /> */}
             
-            <ContactShadows position={[0, -2.2, 0]} opacity={0.4} scale={8} blur={2.5} far={4} color="#000000" />
+            <ContactShadows position={[0, -2.4, 0]} opacity={0.4} scale={8} blur={2.5} far={4} color="#000000" />
           </Suspense>
         </Canvas>
         </ErrorBoundary>
