@@ -100,38 +100,30 @@ function CatModel({ hovered, setHovered, message }: { hovered: boolean, setHover
            <primitive object={greyFur} />
         </Sphere>
 
-        {/* Ears - Smoother, rounder, less pointy */}
+        {/* Ears - Cat shape but with soft rounded tips (Truncated Cones) */}
         <group position={[0.35, 0.45, 0]} rotation={[0, 0, -0.2]}>
-          {/* Outer Ear - Rounded top */}
-          <mesh position={[0, 0.05, 0]}>
-             <sphereGeometry args={[0.18, 32, 32, 0, Math.PI * 2, 0, Math.PI * 0.5]} />
+          {/* Outer Ear */}
+          <mesh>
+             <cylinderGeometry args={[0.03, 0.18, 0.35, 64]} />
              <primitive object={greyFur} />
           </mesh>
-          <mesh position={[0, -0.05, 0]}>
-             <cylinderGeometry args={[0.18, 0.22, 0.2, 32]} />
-             <primitive object={greyFur} />
-          </mesh>
-          {/* Inner Ear - Soft pink patch */}
-          <mesh position={[0, -0.02, 0.08]} rotation={[-0.2, 0, 0]} scale={[0.7, 0.7, 0.5]}>
-             <sphereGeometry args={[0.15, 32, 32, 0, Math.PI * 2, 0, Math.PI * 0.5]} />
+          {/* Inner Ear */}
+          <mesh position={[0, -0.02, 0.08]}>
+             <cylinderGeometry args={[0.02, 0.12, 0.25, 64]} />
              <primitive object={pinkSkin} />
           </mesh>
         </group>
         <group position={[-0.35, 0.45, 0]} rotation={[0, 0, 0.2]}>
-          {/* Outer Ear */}
-          <mesh position={[0, 0.05, 0]}>
-             <sphereGeometry args={[0.18, 32, 32, 0, Math.PI * 2, 0, Math.PI * 0.5]} />
+           {/* Outer Ear */}
+           <mesh>
+             <cylinderGeometry args={[0.03, 0.18, 0.35, 64]} />
              <primitive object={greyFur} />
-          </mesh>
-          <mesh position={[0, -0.05, 0]}>
-             <cylinderGeometry args={[0.18, 0.22, 0.2, 32]} />
-             <primitive object={greyFur} />
-          </mesh>
-          {/* Inner Ear */}
-          <mesh position={[0, -0.02, 0.08]} rotation={[-0.2, 0, 0]} scale={[0.7, 0.7, 0.5]}>
-             <sphereGeometry args={[0.15, 32, 32, 0, Math.PI * 2, 0, Math.PI * 0.5]} />
+           </mesh>
+           {/* Inner Ear */}
+           <mesh position={[0, -0.02, 0.08]}>
+             <cylinderGeometry args={[0.02, 0.12, 0.25, 64]} />
              <primitive object={pinkSkin} />
-          </mesh>
+           </mesh>
         </group>
 
         {/* Eyes - Deep and shiny */}
