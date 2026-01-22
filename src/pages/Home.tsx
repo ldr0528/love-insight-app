@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Compass, ArrowRight, Brain, Hand, Heart, Target, PenTool, Feather, User, Crown } from 'lucide-react';
+import { Compass, ArrowRight, Brain, Hand, Heart, Target, PenTool, Feather, User, Crown, Store } from 'lucide-react';
 import FortuneTube from '@/components/FortuneTube';
 import { useAuthStore } from '@/store/useAuthStore';
 
@@ -68,9 +68,40 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Fortune Tube */}
-        <div className="w-full flex justify-center min-h-[350px]">
-          <FortuneTube />
+        {/* Fortune Tube & Worry Grocery */}
+        <div className="w-full flex justify-center gap-6 min-h-[350px]">
+          <div className="flex-1 flex justify-end">
+            <FortuneTube />
+          </div>
+          <div className="flex-1 flex justify-start">
+            <Link to="/worry-grocery" className="group relative w-64 h-[350px] perspective-1000 block">
+              <div className="relative w-full h-full bg-[#fdf6e3] rounded-[2.5rem] shadow-xl shadow-orange-100 border-4 border-white overflow-hidden transition-all duration-500 transform hover:-translate-y-2 hover:shadow-2xl">
+                {/* Store Decor */}
+                <div className="absolute top-0 left-0 w-full h-16 bg-orange-400 z-10 flex items-end justify-around px-4 pb-2">
+                  <div className="w-2 h-2 rounded-full bg-white/50"></div>
+                  <div className="w-2 h-2 rounded-full bg-white/50"></div>
+                  <div className="w-2 h-2 rounded-full bg-white/50"></div>
+                  <div className="w-2 h-2 rounded-full bg-white/50"></div>
+                </div>
+                <div className="absolute top-16 left-0 w-full h-4 bg-white/20 z-10 skew-y-1"></div>
+                
+                {/* Content */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center pt-16 p-6 text-center">
+                  <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-lg border-4 border-orange-100 mb-6 group-hover:scale-110 transition-transform duration-500">
+                    <Store className="w-12 h-12 text-orange-500" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-amber-900 mb-2">解忧杂货铺</h3>
+                  <p className="text-sm text-amber-700/70 font-medium">
+                    在这里，写下你的心事<br/>
+                    就会收到温暖的回信
+                  </p>
+                  <span className="mt-6 px-6 py-2 bg-orange-400 text-white rounded-full text-sm font-bold shadow-md group-hover:bg-orange-500 transition-colors">
+                    进店看看
+                  </span>
+                </div>
+              </div>
+            </Link>
+          </div>
         </div>
         
         {/* Feature Cards */}
