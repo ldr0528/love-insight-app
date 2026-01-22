@@ -117,8 +117,8 @@ export default function Home() {
               </div>
               
               {/* Button - Aligned with left side */}
-              <div className="mt-auto px-8 py-3 bg-[#2d3436] text-white rounded-full text-sm font-bold shadow-lg group-hover:scale-105 transition-transform flex items-center gap-2">
-                进店看看 <Store className="w-3.5 h-3.5" />
+              <div className="mt-6 px-6 py-2 bg-[#2d3436] text-white rounded-full text-sm font-bold shadow-lg group-hover:scale-105 transition-transform flex items-center gap-2">
+                进店看看 <Store className="w-4 h-4" />
               </div>
             </Link>
           </div>
