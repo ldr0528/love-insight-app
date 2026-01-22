@@ -6,7 +6,6 @@ import PalmPage from "@/pages/PalmPage";
 import LoveCoach from "@/pages/LoveCoach";
 import NamingMaster from "@/pages/NamingMaster";
 import Compatibility from "@/pages/Compatibility";
-import WorryGrocery from "@/pages/WorryGrocery";
 import SimpleAuthModal from "@/components/auth/SimpleAuthModal";
 import AdminLogin from "@/pages/admin/AdminLogin";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
@@ -28,7 +27,6 @@ export default function App() {
         <Route path="/coach" element={<RequireAuth><LoveCoach /></RequireAuth>} />
         <Route path="/naming" element={<RequireAuth><NamingMaster /></RequireAuth>} />
         <Route path="/compatibility" element={<RequireAuth><Compatibility /></RequireAuth>} />
-        <Route path="/worry-grocery" element={<RequireAuth><WorryGrocery /></RequireAuth>} />
         
         <Route path="/other" element={<div className="text-center text-xl">Other Page - Coming Soon</div>} />
       </Routes>
