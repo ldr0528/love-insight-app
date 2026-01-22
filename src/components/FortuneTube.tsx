@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, useMemo, Suspense } from 'react';
+import { createPortal } from 'react-dom';
 import { Sparkles, X, Loader2, AlertCircle } from 'lucide-react';
 import DailyCheckIn from '@/components/DailyCheckIn';
 import { Canvas, useFrame } from '@react-three/fiber';
@@ -273,7 +274,7 @@ export default function FortuneTube() {
         {drawing ? (shaking ? "摇签中..." : "解签中...") : "抽取灵签"} <Sparkles className="w-4 h-4" />
       </button>
 
-      {showModal && (
+      {showModal && createPortal(
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setShowModal(false)}>
           <div className="relative w-full max-w-2xl" onClick={(e) => e.stopPropagation()}>
             <button
@@ -285,7 +286,8 @@ export default function FortuneTube() {
             </button>
             <DailyCheckIn />
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
