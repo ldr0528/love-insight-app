@@ -81,24 +81,24 @@ export default function Home() {
                   {/* Main Building Block */}
                   <div className="absolute bottom-0 w-full h-32 bg-[#fffbf0] rounded-xl shadow-lg border-2 border-orange-100/50"></div>
                   
-                  {/* Roof - Simplified Stripes */}
-                  <div className="absolute top-4 -left-2 w-[112%] h-14 z-20">
-                    <div className="w-full h-full bg-[#ff9f43] rounded-lg shadow-md flex overflow-hidden">
+                  {/* Roof - Trapezoid Shape */}
+                  <div className="absolute top-4 -left-3 w-[118%] h-12 z-20 filter drop-shadow-md">
+                    <div className="w-full h-full bg-[#ff9f43] flex overflow-hidden [clip-path:polygon(10%_0%,90%_0%,100%_100%,0%_100%)] rounded-t-sm">
                       {Array.from({ length: 5 }).map((_, i) => (
                         <div key={i} className={`flex-1 h-full ${i % 2 === 0 ? 'bg-[#ffb142]' : ''}`}></div>
                       ))}
                     </div>
-                    {/* Roof Edge */}
-                    <div className="absolute -bottom-1.5 left-0 w-full flex">
-                      {Array.from({ length: 5 }).map((_, i) => (
+                    {/* Roof Edge - Scalloped */}
+                    <div className="absolute -bottom-1.5 left-[2%] w-[96%] flex">
+                      {Array.from({ length: 7 }).map((_, i) => (
                         <div key={i} className="flex-1 h-3 bg-[#ff9f43] rounded-b-full"></div>
                       ))}
                     </div>
                   </div>
 
-                  {/* Signboard - Minimalist */}
-                  <div className="absolute top-20 left-1/2 transform -translate-x-1/2 w-24 z-20">
-                    <div className="bg-[#8e5431] text-[#fffbf0] text-[10px] font-bold text-center py-1 rounded shadow-sm border border-[#6d3e1d]">
+                  {/* Signboard - Larger Text */}
+                  <div className="absolute top-20 left-1/2 transform -translate-x-1/2 w-28 z-20">
+                    <div className="bg-[#8e5431] text-[#fffbf0] text-xs font-bold text-center py-1.5 rounded shadow-sm border border-[#6d3e1d] tracking-wide">
                       解忧杂货铺
                     </div>
                   </div>
