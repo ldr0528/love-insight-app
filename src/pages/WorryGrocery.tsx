@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Send, Sparkles, Store } from 'lucide-react';
+import { ArrowLeft, Send, Sparkles, Store, Mic, MicOff } from 'lucide-react';
 import ThreeCat from '@/components/ThreeCat';
 
 export default function WorryGrocery() {
@@ -10,8 +10,61 @@ export default function WorryGrocery() {
   const [response, setResponse] = useState<{ reply: string; quote: { content: string; source: string } } | null>(null);
   const [displayedReply, setDisplayedReply] = useState('');
   const [showQuote, setShowQuote] = useState(false);
+  const [isListening, setIsListening] = useState(false);
   
   const replyContainerRef = useRef<HTMLDivElement>(null);
+  const recognitionRef = useRef<any>(null);
+
+  // Initialize Speech Recognition
+  useEffect(() => {
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = true;
+      recognitionRef.current.interimResults = false;
+      recognitionRef.current.lang = 'zh-CN';
+
+      recognitionRef.current.onresult = (event: any) => {
+        let newContent = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            newContent += event.results[i][0].transcript;
+          }
+        }
+        if (newContent) {
+          setInput(prev => prev + newContent);
+        }
+      };
+      
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onerror = (event: any) => {
+        console.error('Speech recognition error', event.error);
+        setIsListening(false);
+      };
+    }
+  }, []);
+
+  const toggleListening = () => {
+    if (!recognitionRef.current) {
+      alert('您的浏览器不支持语音输入功能');
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    } else {
+      try {
+        recognitionRef.current.start();
+        setIsListening(true);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
 
   const handleSubmit = async () => {
     if (!input.trim() || loading) return;
@@ -138,15 +191,28 @@ export default function WorryGrocery() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="在这里写下你的烦恼..."
-                className="w-full p-4 pr-16 min-h-[80px] resize-none outline-none text-lg text-gray-800 bg-transparent placeholder:text-gray-400 placeholder:font-medium"
+                className="w-full p-4 pr-24 min-h-[80px] resize-none outline-none text-lg text-gray-800 bg-transparent placeholder:text-gray-400 placeholder:font-medium"
               />
-              <button
-                onClick={handleSubmit}
-                disabled={!input.trim()}
-                className="absolute bottom-3 right-3 p-2.5 bg-orange-500 text-white rounded-xl hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:scale-105 active:scale-95"
-              >
-                <Send className="w-5 h-5" />
-              </button>
+              <div className="absolute bottom-3 right-3 flex gap-2">
+                <button
+                  onClick={toggleListening}
+                  className={`p-2.5 rounded-xl transition-all shadow-lg hover:scale-105 active:scale-95 ${
+                    isListening 
+                      ? 'bg-red-500 text-white animate-pulse' 
+                      : 'bg-white text-gray-500 hover:bg-gray-100 border border-gray-200'
+                  }`}
+                  title="语音输入"
+                >
+                  {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+                </button>
+                <button
+                  onClick={handleSubmit}
+                  disabled={!input.trim()}
+                  className="p-2.5 bg-orange-500 text-white rounded-xl hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:scale-105 active:scale-95"
+                >
+                  <Send className="w-5 h-5" />
+                </button>
+              </div>
             </div>
           </div>
         )}
