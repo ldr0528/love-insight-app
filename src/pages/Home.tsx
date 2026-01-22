@@ -77,7 +77,7 @@ export default function Home() {
             <Link to="/worry-grocery" className="group relative w-48 flex flex-col items-center gap-2">
               <div className="relative w-full h-64 transition-all duration-500 transform group-hover:-translate-y-2">
                 {/* Store Container - Simplified & Clean */}
-                <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 w-32 h-40">
+                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-36 h-44">
                   {/* Main Building Block */}
                   <div className="absolute bottom-0 w-full h-32 bg-[#fffbf0] rounded-xl shadow-lg border-2 border-orange-100/50"></div>
                   
