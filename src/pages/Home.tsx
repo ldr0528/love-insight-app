@@ -73,58 +73,52 @@ export default function Home() {
           <div className="flex-1 flex justify-end">
             <FortuneTube />
           </div>
-          <div className="flex-1 flex justify-start">
-            <Link to="/worry-grocery" className="group relative w-64 h-[350px] perspective-1000 block flex flex-col items-center justify-end">
-              <div className="relative w-48 h-64 transition-all duration-500 transform group-hover:-translate-y-2">
-                {/* 3D Store Building */}
-                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-40 h-48">
-                  {/* Building Body */}
-                  <div className="absolute bottom-0 w-full h-40 bg-[#fdf6e3] rounded-t-xl shadow-[inset_-10px_0_20px_rgba(0,0,0,0.05)] border-2 border-orange-100"></div>
+          <div className="flex-1 flex justify-start pl-8">
+            <Link to="/worry-grocery" className="group relative w-40 h-[350px] flex flex-col items-center">
+              <div className="relative w-full h-[220px] transition-all duration-500 transform group-hover:-translate-y-2">
+                {/* Store Container - Simplified & Clean */}
+                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-32 h-40">
+                  {/* Main Building Block */}
+                  <div className="absolute bottom-0 w-full h-32 bg-[#fffbf0] rounded-xl shadow-lg border-2 border-orange-100/50"></div>
                   
-                  {/* Roof/Awning */}
-                  <div className="absolute top-0 -left-2 w-[110%] h-16 z-20">
-                    <div className="w-full h-full bg-gradient-to-b from-orange-400 to-orange-500 rounded-lg shadow-lg flex overflow-hidden">
-                      {Array.from({ length: 6 }).map((_, i) => (
-                        <div key={i} className={`flex-1 h-full ${i % 2 === 0 ? 'bg-orange-600/10' : ''}`}></div>
+                  {/* Roof - Simplified Stripes */}
+                  <div className="absolute top-4 -left-2 w-[112%] h-14 z-20">
+                    <div className="w-full h-full bg-[#ff9f43] rounded-lg shadow-md flex overflow-hidden">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <div key={i} className={`flex-1 h-full ${i % 2 === 0 ? 'bg-[#ffb142]' : ''}`}></div>
                       ))}
                     </div>
-                    {/* Scalloped Edge */}
-                    <div className="absolute -bottom-2 left-0 w-full flex">
-                      {Array.from({ length: 6 }).map((_, i) => (
-                        <div key={i} className="flex-1 h-4 bg-orange-500 rounded-b-full"></div>
+                    {/* Roof Edge */}
+                    <div className="absolute -bottom-1.5 left-0 w-full flex">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <div key={i} className="flex-1 h-3 bg-[#ff9f43] rounded-b-full"></div>
                       ))}
                     </div>
                   </div>
 
-                  {/* Signboard hanging */}
-                  <div className="absolute top-14 left-1/2 transform -translate-x-1/2 w-32 z-10">
-                    <div className="flex justify-between px-4 mb-[-4px]">
-                      <div className="w-0.5 h-4 bg-amber-800"></div>
-                      <div className="w-0.5 h-4 bg-amber-800"></div>
-                    </div>
-                    <div className="bg-[#8b4513] text-[#fdf6e3] text-xs font-bold text-center py-1.5 rounded shadow-sm border border-[#5d2e0c]">
+                  {/* Signboard - Minimalist */}
+                  <div className="absolute top-20 left-1/2 transform -translate-x-1/2 w-24 z-20">
+                    <div className="bg-[#8e5431] text-[#fffbf0] text-[10px] font-bold text-center py-1 rounded shadow-sm border border-[#6d3e1d]">
                       解忧杂货铺
                     </div>
                   </div>
 
-                  {/* Door/Window */}
-                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-24 h-28 bg-[#fff9e6] rounded-t-full border-4 border-[#8b4513] overflow-hidden group-hover:bg-[#fffdf5] transition-colors">
-                    {/* Interior Light */}
-                    <div className="absolute inset-0 bg-orange-100/30"></div>
-                    {/* Cat Silhouette */}
-                    <div className="absolute bottom-0 right-2 w-8 h-10 opacity-20">
-                      <div className="w-full h-full bg-[#8b4513] rounded-t-full"></div>
+                  {/* Door/Window - Clean Arch */}
+                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-20 bg-[#ffeaa7] rounded-t-full border-4 border-[#8e5431] overflow-hidden">
+                    <div className="absolute bottom-0 w-full h-1 bg-[#8e5431]/20"></div>
+                    <div className="w-full h-full flex items-center justify-center opacity-30">
+                      <Store className="w-8 h-8 text-[#8e5431]" />
                     </div>
                   </div>
                   
-                  {/* Welcome Mat */}
-                  <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-28 h-2 bg-orange-200 rounded-full blur-[1px]"></div>
+                  {/* Shadow */}
+                  <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-3 bg-black/10 rounded-full blur-md"></div>
                 </div>
               </div>
               
-              {/* Button matching the left side style */}
-              <div className="mt-6 px-6 py-2 bg-orange-400 text-white rounded-full text-sm font-bold shadow-md group-hover:bg-orange-500 transition-colors flex items-center gap-2">
-                进店看看 <Store className="w-4 h-4" />
+              {/* Button - Aligned with left side */}
+              <div className="mt-auto px-8 py-3 bg-[#2d3436] text-white rounded-full text-sm font-bold shadow-lg group-hover:scale-105 transition-transform flex items-center gap-2">
+                进店看看 <Store className="w-3.5 h-3.5" />
               </div>
             </Link>
           </div>
