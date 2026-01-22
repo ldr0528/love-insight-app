@@ -69,56 +69,59 @@ export default function Home() {
         </div>
 
         {/* Fortune Tube & Worry Grocery */}
-        <div className="w-full flex flex-row items-end justify-center gap-4 md:gap-6 min-h-[250px] md:min-h-[350px]">
-          <div className="flex-1 flex flex-col items-center justify-end transform scale-75 md:scale-100 origin-bottom md:origin-right">
+        <div className="w-full flex flex-row items-end justify-center gap-2 md:gap-12 min-h-[280px]">
+          {/* Left: Fortune Tube */}
+          <div className="flex-1 max-w-[180px] flex flex-col items-center justify-end">
             <FortuneTube />
           </div>
-          <div className="flex-1 flex flex-col items-center justify-end transform scale-75 md:scale-100 origin-bottom md:origin-left">
-            <Link to="/worry-grocery" className="group relative w-48 flex flex-col items-center gap-2">
-              <div className="relative w-full h-64 transition-all duration-500 transform group-hover:-translate-y-2 flex items-end justify-center">
-                {/* Store Container - Simplified & Clean */}
-                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-36 h-44">
+
+          {/* Right: Worry Grocery */}
+          <div className="flex-1 max-w-[180px] flex flex-col items-center justify-end">
+            <Link to="/worry-grocery" className="group relative w-full flex flex-col items-center gap-2">
+              <div className="relative w-full h-48 md:h-64 transition-all duration-500 transform group-hover:-translate-y-2 flex items-end justify-center">
+                {/* Store Container */}
+                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-28 h-36 md:w-36 md:h-44">
                   {/* Main Building Block */}
-                  <div className="absolute bottom-0 w-full h-32 bg-[#fffbf0] rounded-xl shadow-lg border-2 border-orange-100/50"></div>
+                  <div className="absolute bottom-0 w-full h-24 md:h-32 bg-[#fffbf0] rounded-xl shadow-lg border-2 border-orange-100/50"></div>
                   
-                  {/* Roof - Trapezoid Shape */}
-                  <div className="absolute top-4 -left-3 w-[118%] h-12 z-20 filter drop-shadow-md">
+                  {/* Roof */}
+                  <div className="absolute top-4 -left-3 w-[118%] h-8 md:h-12 z-20 filter drop-shadow-md">
                     <div className="w-full h-full bg-[#ff9f43] flex overflow-hidden [clip-path:polygon(10%_0%,90%_0%,100%_100%,0%_100%)] rounded-t-sm">
                       {Array.from({ length: 5 }).map((_, i) => (
                         <div key={i} className={`flex-1 h-full ${i % 2 === 0 ? 'bg-[#ffb142]' : ''}`}></div>
                       ))}
                     </div>
-                    {/* Roof Edge - Scalloped */}
+                    {/* Roof Edge */}
                     <div className="absolute -bottom-1.5 left-[2%] w-[96%] flex">
                       {Array.from({ length: 7 }).map((_, i) => (
-                        <div key={i} className="flex-1 h-3 bg-[#ff9f43] rounded-b-full"></div>
+                        <div key={i} className="flex-1 h-2 md:h-3 bg-[#ff9f43] rounded-b-full"></div>
                       ))}
                     </div>
                   </div>
 
-                  {/* Signboard - Larger Text */}
-                  <div className="absolute top-20 left-1/2 transform -translate-x-1/2 w-28 z-20">
-                    <div className="bg-[#8e5431] text-[#fffbf0] text-xs font-bold text-center py-1.5 rounded shadow-sm border border-[#6d3e1d] tracking-wide">
+                  {/* Signboard */}
+                  <div className="absolute top-16 md:top-20 left-1/2 transform -translate-x-1/2 w-20 md:w-28 z-20">
+                    <div className="bg-[#8e5431] text-[#fffbf0] text-[10px] md:text-xs font-bold text-center py-1 md:py-1.5 rounded shadow-sm border border-[#6d3e1d] tracking-wide whitespace-nowrap">
                       解忧杂货铺
                     </div>
                   </div>
 
-                  {/* Door/Window - Clean Arch */}
-                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-20 bg-[#ffeaa7] rounded-t-full border-4 border-[#8e5431] overflow-hidden">
+                  {/* Door/Window */}
+                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-12 h-16 md:w-16 md:h-20 bg-[#ffeaa7] rounded-t-full border-4 border-[#8e5431] overflow-hidden">
                     <div className="absolute bottom-0 w-full h-1 bg-[#8e5431]/20"></div>
                     <div className="w-full h-full flex items-center justify-center opacity-30">
-                      <Cat className="w-8 h-8 text-[#8e5431]" />
+                      <Cat className="w-6 h-6 md:w-8 md:h-8 text-[#8e5431]" />
                     </div>
                   </div>
                   
                   {/* Shadow */}
-                  <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-3 bg-black/10 rounded-full blur-md"></div>
+                  <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-20 md:w-24 h-3 bg-black/10 rounded-full blur-md"></div>
                 </div>
               </div>
               
-              {/* Button - Aligned with left side */}
-              <div className="mt-6 px-6 py-2 bg-[#2d3436] text-white rounded-full text-sm font-bold shadow-lg group-hover:scale-105 transition-transform flex items-center gap-2">
-                进店看看 <Store className="w-4 h-4" />
+              {/* Button */}
+              <div className="mt-6 px-4 py-2 md:px-6 bg-[#2d3436] text-white rounded-full text-xs md:text-sm font-bold shadow-lg group-hover:scale-105 transition-transform flex items-center gap-1 md:gap-2 whitespace-nowrap">
+                进店看看 <Store className="w-3 h-3 md:w-4 md:h-4" />
               </div>
             </Link>
           </div>
