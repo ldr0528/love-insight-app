@@ -55,6 +55,13 @@ const LUCKY_COLORS = [
   { name: "珊瑚红", value: "bg-rose-400", text: "text-rose-500" },
   { name: "极光紫", value: "bg-violet-400", text: "text-violet-500" },
   { name: "活力橙", value: "bg-orange-400", text: "text-orange-500" },
+  { name: "冰川蓝", value: "bg-cyan-400", text: "text-cyan-500" },
+  { name: "抹茶绿", value: "bg-green-400", text: "text-green-500" },
+  { name: "矢车菊", value: "bg-blue-400", text: "text-blue-500" },
+  { name: "暖阳金", value: "bg-amber-400", text: "text-amber-500" },
+  { name: "胭脂红", value: "bg-red-400", text: "text-red-500" },
+  { name: "月光白", value: "bg-slate-300", text: "text-slate-500" },
+  { name: "丁香紫", value: "bg-fuchsia-400", text: "text-fuchsia-500" },
 ];
 
 export default function DailyCheckIn() {
