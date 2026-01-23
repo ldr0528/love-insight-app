@@ -115,7 +115,7 @@ export default function SimpleAuthModal() {
             <div className="space-y-4">
               <div className="relative flex items-center">
                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center z-10 w-24">
-                   <span className="text-gray-500 font-bold text-sm w-10 text-center">手机号</span>
+                   <span className="text-gray-500 font-bold text-sm w-10 text-center">账号</span>
                    <div className="h-6 w-px bg-gray-300 mx-3"></div>
                  </div>
                  <input

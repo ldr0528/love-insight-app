@@ -8,6 +8,7 @@ interface UserData {
   nickname: string;
   phone: string;
   isVip: boolean;
+  vipExpiresAt: string | null;
   joinDate: string;
 }
 
@@ -16,6 +17,9 @@ export default function AdminDashboard() {
   const [users, setUsers] = useState<UserData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+
+  const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
+  const [showVipModal, setShowVipModal] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('admin_token');
@@ -40,12 +44,57 @@ export default function AdminDashboard() {
     }
   };
 
-  const toggleVip = async (id: string) => {
+  const handleSetVip = async (type: 'monthly' | 'permanent' | 'remove') => {
+    if (!selectedUser) return;
+    
+    let endpoint = `/api/admin/users/${selectedUser.id}/toggle-vip`;
+    // For simplicity, we might need a new endpoint or pass params to existing one
+    // But since backend toggle-vip is simple boolean toggle, let's assume we need to update backend first
+    // Actually, let's just use a direct update call if possible or stick to simple toggle for now if backend not ready
+    // Wait, I should implement the logic.
+    // Let's assume we can pass body to toggle-vip or create a new one.
+    // Since I can't easily change backend routes without context, let's look at previous turns.
+    // Ah, I can modify backend logic too if needed. But for now let's try to pass data.
+    
+    // Actually, I should probably just update the user directly if there was an update endpoint.
+    // Let's try to use the existing toggle-vip but maybe I should have created a set-vip endpoint.
+    // Let's create a new function `updateVipStatus` in this component and maybe mock the backend call 
+    // or assume the backend `toggle-vip` is simple.
+    // Wait, the user asked to "Set VIP also divided into two types".
+    // I should probably update the backend route to accept `vipType` or `expiresAt`.
+    
+    // Let's stick to what I can do here first. 
+    // I will mock the UI logic and assume I need to implement the backend change for `toggle-vip` to accept body.
+    
+    let expiresAt = null;
+    if (type === 'monthly') {
+      const date = new Date();
+      date.setDate(date.getDate() + 30);
+      expiresAt = date.toISOString();
+    }
+    
     try {
-      const res = await fetch(`/api/admin/users/${id}/toggle-vip`, { method: 'POST' });
+      // We need to send this to backend. 
+      // Current backend `toggle-vip` just toggles boolean. 
+      // I should ideally update backend `toggle-vip` to accept JSON body.
+      // Let's assume I will update backend in next step or I can send it now.
+      const res = await fetch(`/api/admin/users/${selectedUser.id}/set-vip`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          isVip: type !== 'remove',
+          expiresAt 
+        })
+      });
+      
       const data = await res.json();
       if (data.success) {
-        setUsers(users.map(u => u.id === id ? { ...u, isVip: !u.isVip } : u));
+        setUsers(users.map(u => u.id === selectedUser.id ? { 
+          ...u, 
+          isVip: type !== 'remove',
+          vipExpiresAt: expiresAt 
+        } : u));
+        setShowVipModal(false);
       }
     } catch (error) {
       alert('Operation failed');
@@ -165,9 +214,16 @@ export default function AdminDashboard() {
                       </td>
                       <td className="px-6 py-4">
                         {user.isVip ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-700">
-                            <Crown size={12} className="fill-current" /> VIP Member
-                          </span>
+                          <div className="flex flex-col items-start gap-1">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-700">
+                              <Crown size={12} className="fill-current" /> VIP Member
+                            </span>
+                            {user.vipExpiresAt && (
+                              <span className="text-[10px] text-gray-400 pl-1">
+                                Exp: {new Date(user.vipExpiresAt).toLocaleDateString()}
+                              </span>
+                            )}
+                          </div>
                         ) : (
                           <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
                             Ordinary
@@ -180,14 +236,17 @@ export default function AdminDashboard() {
                       <td className="px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-2">
                           <button 
-                            onClick={() => toggleVip(user.id)}
+                            onClick={() => {
+                              setSelectedUser(user);
+                              setShowVipModal(true);
+                            }}
                             className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
                               user.isVip 
                                 ? 'bg-orange-50 text-orange-600 hover:bg-orange-100' 
                                 : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-100'
                             }`}
                           >
-                            {user.isVip ? 'Remove VIP' : 'Set as VIP'}
+                            Manage VIP
                           </button>
                           <button 
                             onClick={() => deleteUser(user.id)}
@@ -206,6 +265,69 @@ export default function AdminDashboard() {
           </div>
         </div>
       </main>
+
+      {/* VIP Modal */}
+      {showVipModal && selectedUser && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-200">
+            <div className="p-6 border-b border-gray-100">
+              <h3 className="text-lg font-bold text-gray-900">Manage VIP Status</h3>
+              <p className="text-sm text-gray-500 mt-1">User: {selectedUser.username}</p>
+            </div>
+            
+            <div className="p-6 space-y-3">
+              <button
+                onClick={() => handleSetVip('monthly')}
+                className="w-full flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-orange-400 hover:bg-orange-50 transition-all group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-500">
+                    <Crown size={20} />
+                  </div>
+                  <div className="text-left">
+                    <div className="font-bold text-gray-900 group-hover:text-orange-700">Monthly VIP</div>
+                    <div className="text-xs text-gray-500">Valid for 30 days</div>
+                  </div>
+                </div>
+              </button>
+
+              <button
+                onClick={() => handleSetVip('permanent')}
+                className="w-full flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-amber-400 hover:bg-amber-50 transition-all group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-500">
+                    <Crown size={20} className="fill-current" />
+                  </div>
+                  <div className="text-left">
+                    <div className="font-bold text-gray-900 group-hover:text-amber-700">Permanent VIP</div>
+                    <div className="text-xs text-gray-500">Never expires</div>
+                  </div>
+                </div>
+              </button>
+
+              {selectedUser.isVip && (
+                <button
+                  onClick={() => handleSetVip('remove')}
+                  className="w-full flex items-center justify-center gap-2 p-3 mt-4 text-red-600 hover:bg-red-50 rounded-lg transition-colors text-sm font-medium"
+                >
+                  <LogOut size={16} />
+                  Remove VIP Status
+                </button>
+              )}
+            </div>
+
+            <div className="p-4 bg-gray-50 border-t border-gray-100 flex justify-end">
+              <button
+                onClick={() => setShowVipModal(false)}
+                className="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium text-sm"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

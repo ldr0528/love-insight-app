@@ -34,13 +34,19 @@ export default function Home() {
           <span>联系我们</span>
         </Link>
         
-        <Link 
-          to="/recharge"
+        <button 
+          onClick={() => {
+            if (user) {
+              window.location.href = '/recharge';
+            } else {
+              openAuthModal();
+            }
+          }}
           className="flex items-center gap-2 px-3 py-1.5 h-[42px] bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-full font-medium shadow-sm border border-yellow-200 hover:shadow-md hover:scale-105 transition-all text-sm"
         >
           <Crown size={18} className="fill-current" />
           <span>充值VIP</span>
-        </Link>
+        </button>
       </div>
 
       {/* Header / Auth Button */}

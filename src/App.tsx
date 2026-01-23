@@ -23,14 +23,16 @@ export default function App() {
         <Route path="/admin" element={<AdminLogin />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         
-        {/* Protected Routes */}
-        <Route path="/report" element={<RequireAuth><LoveTest /></RequireAuth>} />
-        <Route path="/mbti" element={<RequireAuth><MBTIPage /></RequireAuth>} />
-        <Route path="/palm" element={<RequireAuth><PalmPage /></RequireAuth>} />
-        <Route path="/coach" element={<RequireAuth><LoveCoach /></RequireAuth>} />
-        <Route path="/naming" element={<RequireAuth><NamingMaster /></RequireAuth>} />
-        <Route path="/compatibility" element={<RequireAuth><Compatibility /></RequireAuth>} />
-        <Route path="/worry-grocery" element={<RequireAuth><WorryGrocery /></RequireAuth>} />
+        {/* Feature Routes (Accessible without login) */}
+        <Route path="/report" element={<LoveTest />} />
+        <Route path="/mbti" element={<MBTIPage />} />
+        <Route path="/palm" element={<PalmPage />} />
+        <Route path="/coach" element={<LoveCoach />} />
+        <Route path="/naming" element={<NamingMaster />} />
+        <Route path="/compatibility" element={<Compatibility />} />
+        <Route path="/worry-grocery" element={<WorryGrocery />} />
+        
+        {/* Other Routes */}
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/recharge" element={<RechargePage />} />
         
