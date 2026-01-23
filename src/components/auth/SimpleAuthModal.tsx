@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, User, ArrowRight, Loader2, Lock, UserPlus } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
+import toast from 'react-hot-toast';
 
 export default function SimpleAuthModal() {
   const { isAuthModalOpen, closeAuthModal, login } = useAuthStore();
@@ -24,11 +25,13 @@ export default function SimpleAuthModal() {
 
   const handleSendCode = async () => {
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      alert('请输入有效的邮箱地址');
+      toast.error('请输入有效的邮箱地址');
       return;
     }
     
     setIsLoading(true);
+    const loadingToast = toast.loading('正在发送验证码...');
+    
     try {
       const res = await fetch('/api/auth/send-code', {
         method: 'POST',
@@ -38,7 +41,7 @@ export default function SimpleAuthModal() {
       const data = await res.json();
       
       if (res.ok) {
-        alert('验证码已发送，请查收邮件（5分钟内有效）');
+        toast.success('验证码已发送，请留意您的邮箱', { duration: 4000 });
         setCountdown(60);
         const timer = setInterval(() => {
           setCountdown((prev) => {
@@ -50,11 +53,12 @@ export default function SimpleAuthModal() {
           });
         }, 1000);
       } else {
-        alert(data.error || '发送失败');
+        toast.error(data.error || '发送失败');
       }
     } catch (error) {
-      alert('网络错误');
+      toast.error('网络错误');
     } finally {
+      toast.dismiss(loadingToast);
       setIsLoading(false);
     }
   };
@@ -62,20 +66,20 @@ export default function SimpleAuthModal() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!/^1[3-9]\d{9}$/.test(phone)) {
-      alert('请输入有效的11位手机号码');
+      toast.error('请输入有效的11位手机号码');
       return;
     }
     if (!password) {
-      alert('请输入密码');
+      toast.error('请输入密码');
       return;
     }
     if (!isLoginMode) {
       if (!email) {
-        alert('请输入邮箱');
+        toast.error('请输入邮箱');
         return;
       }
       if (!verificationCode) {
-        alert('请输入验证码');
+        toast.error('请输入验证码');
         return;
       }
     }
@@ -97,16 +101,17 @@ export default function SimpleAuthModal() {
       
       if (res.ok) {
         login(data.user);
+        toast.success(isLoginMode ? '登录成功' : '注册成功');
         closeAuthModal();
         setPhone('');
         setPassword('');
         // Reset to login mode for next time
         setTimeout(() => setIsLoginMode(true), 300); 
       } else {
-        alert(data.error || (isLoginMode ? '登录失败' : '注册失败'));
+        toast.error(data.error || (isLoginMode ? '登录失败' : '注册失败'));
       }
     } catch (error) {
-       alert('网络错误，请稍后重试');
+       toast.error('网络错误，请稍后重试');
     } finally {
       setIsLoading(false);
     }
