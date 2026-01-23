@@ -7,7 +7,10 @@ export default function SimpleAuthModal() {
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [verificationCode, setVerificationCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [countdown, setCountdown] = useState(0);
   const [selectedAvatar, setSelectedAvatar] = useState('/images/ENFJ.jpg');
 
   if (!isAuthModalOpen) return null;
@@ -19,6 +22,43 @@ export default function SimpleAuthModal() {
     '/images/ISFJ.jpg', '/images/ISFP.jpg', '/images/ISTJ.jpg', '/images/ISTP.jpg'
   ];
 
+  const handleSendCode = async () => {
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      alert('请输入有效的邮箱地址');
+      return;
+    }
+    
+    setIsLoading(true);
+    try {
+      const res = await fetch('/api/auth/send-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      const data = await res.json();
+      
+      if (res.ok) {
+        alert('验证码已发送，请查收邮件（5分钟内有效）');
+        setCountdown(60);
+        const timer = setInterval(() => {
+          setCountdown((prev) => {
+            if (prev <= 1) {
+              clearInterval(timer);
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000);
+      } else {
+        alert(data.error || '发送失败');
+      }
+    } catch (error) {
+      alert('网络错误');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!/^1[3-9]\d{9}$/.test(phone)) {
@@ -29,13 +69,17 @@ export default function SimpleAuthModal() {
       alert('请输入密码');
       return;
     }
+    if (!isLoginMode && email && !verificationCode) {
+      alert('请输入验证码');
+      return;
+    }
 
     setIsLoading(true);
     
     const endpoint = isLoginMode ? '/api/auth/login' : '/api/auth/register';
     const body = isLoginMode 
       ? { phone, password }
-      : { phone, password, avatar: selectedAvatar };
+      : { phone, password, avatar: selectedAvatar, email, code: verificationCode };
 
     try {
       const res = await fetch(endpoint, {
@@ -66,6 +110,8 @@ export default function SimpleAuthModal() {
     setIsLoginMode(!isLoginMode);
     setPhone('');
     setPassword('');
+    setEmail('');
+    setVerificationCode('');
   };
 
   return (
@@ -143,11 +189,51 @@ export default function SimpleAuthModal() {
                   className="w-full pl-24 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-bold text-lg placeholder:font-normal placeholder:text-gray-400"
                 />
               </div>
+
+              {!isLoginMode && (
+                <>
+                  <div className="relative flex items-center">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center z-10 w-24">
+                      <span className="text-gray-500 font-bold text-sm w-10 text-center">邮箱</span>
+                      <div className="h-6 w-px bg-gray-300 mx-3"></div>
+                    </div>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="选填，用于找回密码"
+                      className="w-full pl-24 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-bold text-lg placeholder:font-normal placeholder:text-gray-400"
+                    />
+                  </div>
+
+                  {email && (
+                    <div className="flex gap-2">
+                      <div className="relative flex items-center flex-1">
+                        <input
+                          type="text"
+                          value={verificationCode}
+                          onChange={(e) => setVerificationCode(e.target.value)}
+                          placeholder="请输入验证码"
+                          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-bold text-lg placeholder:font-normal placeholder:text-gray-400"
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleSendCode}
+                        disabled={countdown > 0 || isLoading || !email}
+                        className="px-4 py-3 bg-pink-100 text-pink-600 rounded-xl font-bold whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed hover:bg-pink-200 transition-colors"
+                      >
+                        {countdown > 0 ? `${countdown}s` : '发送验证码'}
+                      </button>
+                    </div>
+                  )}
+                </>
+              )}
             </div>
 
             <button
               type="submit"
-              disabled={phone.length !== 11 || !password || isLoading}
+              disabled={phone.length !== 11 || !password || isLoading || (!isLoginMode && email && !verificationCode)}
               className={`w-full py-3 px-4 text-white rounded-xl font-bold shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 ${
                 isLoginMode 
                   ? 'bg-gradient-to-r from-pink-500 to-rose-500 shadow-pink-500/30 hover:shadow-pink-500/40' 

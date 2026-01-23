@@ -23,6 +23,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: '',
   },
+  email: {
+    type: String,
+    unique: true,
+    sparse: true, // Allows null/undefined to not conflict
+  },
   isVip: {
     type: Boolean,
     default: false,
