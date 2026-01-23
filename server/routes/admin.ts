@@ -1,6 +1,7 @@
 import { Router, type Request, type Response } from 'express';
 import User from '../models/User.js';
 import connectDB from '../config/db.js';
+import { sendVIPNotificationEmail } from '../services/email.js';
 
 const router = Router();
 
@@ -26,7 +27,42 @@ router.get('/users', async (req: Request, res: Response) => {
   }
 });
 
-// Toggle VIP
+// Set VIP Status (Advanced)
+router.post('/users/:id/set-vip', async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { isVip, expiresAt } = req.body;
+  
+  try {
+    await connectDB();
+    const user = await User.findOne({ id });
+    if (user) {
+      const wasVip = user.isVip;
+      
+      user.isVip = isVip;
+      user.vipExpiresAt = expiresAt || null;
+      await user.save();
+      
+      // If user became VIP (and wasn't before, or just renewed), send email
+      // Here we assume "new VIP" means setting isVip to true. 
+      // You can add logic to only send if !wasVip if needed, but "renewal" might also warrant an email?
+      // The prompt says "if system detects added VIP user", usually implies new status.
+      // Let's send it if isVip is true.
+      if (isVip && user.email) {
+        // Run asynchronously, don't block response
+        sendVIPNotificationEmail(user.email).catch(err => console.error('Failed to send VIP email:', err));
+      }
+
+      res.json({ success: true, user });
+    } else {
+      res.status(404).json({ success: false, message: 'User not found' });
+    }
+  } catch (error) {
+    console.error('Set VIP error:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// Toggle VIP (Legacy, kept for compatibility if needed, but AdminDashboard uses set-vip now)
 router.post('/users/:id/toggle-vip', async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
