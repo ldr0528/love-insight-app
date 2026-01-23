@@ -37,6 +37,14 @@ router.post('/login', async (req: Request, res: Response) => {
       return;
     }
 
+    // Check VIP expiration
+    if (user.isVip && user.vipExpiresAt) {
+      if (new Date() > new Date(user.vipExpiresAt)) {
+        user.isVip = false;
+        user.vipExpiresAt = null; // Optional: clear expiration date
+      }
+    }
+
     // Update last login time
     user.lastLoginAt = new Date();
     await user.save();

@@ -27,6 +27,10 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  vipExpiresAt: {
+    type: Date,
+    default: null,
+  },
   joinDate: {
     type: String,
     default: () => new Date().toISOString().split('T')[0],
