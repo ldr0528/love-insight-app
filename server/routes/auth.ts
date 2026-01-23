@@ -1,12 +1,10 @@
 import { Router, type Request, type Response } from 'express';
 import User from '../models/User.js';
+import VerificationCode from '../models/VerificationCode.js';
 import connectDB from '../config/db.js';
 import { sendVerificationEmail } from '../services/email.js';
 
 const router = Router();
-
-// In-memory store for verification codes (Use Redis in production)
-const verificationCodes: Record<string, { code: string; expires: number }> = {};
 
 router.post('/send-code', async (req: Request, res: Response) => {
   const { email } = req.body;
@@ -16,29 +14,53 @@ router.post('/send-code', async (req: Request, res: Response) => {
     return;
   }
 
-  // Check if email already exists
-  await connectDB();
-  const existingUser = await User.findOne({ email });
-  if (existingUser) {
-    res.status(409).json({ error: '该邮箱已被注册' });
-    return;
-  }
+  try {
+    await connectDB();
 
-  // Generate 6-digit code
-  const code = Math.floor(100000 + Math.random() * 900000).toString();
-  
-  // Store code (5 minutes expiration)
-  verificationCodes[email] = {
-    code,
-    expires: Date.now() + 5 * 60 * 1000
-  };
+    // Check if email already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      res.status(409).json({ error: '该邮箱已被注册' });
+      return;
+    }
 
-  const sent = await sendVerificationEmail(email, code);
-  
-  if (sent) {
-    res.json({ success: true, message: '验证码已发送' });
-  } else {
-    res.status(500).json({ error: '邮件发送失败，请稍后重试' });
+    // Check rate limit (1 minute)
+    const existingCode = await VerificationCode.findOne({ email });
+    if (existingCode) {
+      const timeSinceLastSent = Date.now() - existingCode.lastSent.getTime();
+      if (timeSinceLastSent < 60 * 1000) {
+        res.status(429).json({ error: '发送太频繁，请稍后再试' });
+        return;
+      }
+    }
+
+    // Generate 6-digit code
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    // Update or Create code in DB
+    if (existingCode) {
+      existingCode.code = code;
+      existingCode.lastSent = new Date();
+      existingCode.createdAt = new Date(); // Reset expiration timer
+      await existingCode.save();
+    } else {
+      await VerificationCode.create({
+        email,
+        code,
+        lastSent: new Date()
+      });
+    }
+
+    const sent = await sendVerificationEmail(email, code);
+    
+    if (sent) {
+      res.json({ success: true, message: '验证码已发送' });
+    } else {
+      res.status(500).json({ error: '邮件发送失败，请稍后重试' });
+    }
+  } catch (error) {
+    console.error('Send code error:', error);
+    res.status(500).json({ error: '服务器错误' });
   }
 });
 
@@ -118,14 +140,14 @@ router.post('/register', async (req: Request, res: Response) => {
 
   // Verify email code if email is provided
   if (email) {
-    if (!verificationCodes[email] || 
-        verificationCodes[email].code !== code || 
-        Date.now() > verificationCodes[email].expires) {
+    await connectDB();
+    const validCode = await VerificationCode.findOne({ email, code });
+    if (!validCode) {
       res.status(400).json({ error: '验证码错误或已过期' });
       return;
     }
     // Clean up used code
-    delete verificationCodes[email];
+    await VerificationCode.deleteOne({ _id: validCode._id });
   }
 
   const username = phone;

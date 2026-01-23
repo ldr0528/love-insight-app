@@ -26,10 +26,11 @@ export const sendVerificationEmail = async (email: string, code: string) => {
   }
 
   try {
+    const timestamp = new Date().toLocaleTimeString();
     await transporter.sendMail({
       from: `"灵犀指引" <${process.env.SMTP_USER}>`,
       to: email,
-      subject: '【灵犀指引】注册验证码',
+      subject: `【灵犀指引】注册验证码 [${timestamp}]`,
       text: `您的验证码是：${code}。有效期5分钟，请勿泄露给他人。`,
       html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px; max-width: 500px;">
@@ -38,6 +39,7 @@ export const sendVerificationEmail = async (email: string, code: string) => {
           <p>您正在注册灵犀指引账号，您的验证码是：</p>
           <h1 style="color: #4f46e5; font-size: 32px; letter-spacing: 5px;">${code}</h1>
           <p style="color: #666; font-size: 12px;">有效期5分钟，请勿泄露给他人。</p>
+          <p style="color: #999; font-size: 10px; margin-top: 20px;">发送时间：${new Date().toLocaleString()}</p>
         </div>
       `,
     });
