@@ -1,9 +1,7 @@
 
 import { Router, type Request, type Response } from 'express'
 import { v4 as uuidv4 } from 'uuid'
-import { createNativeOrder, getWxPay } from '../services/wechat.js'
-import { createZPayOrder, verifyZPayNotify } from '../services/zpay.js'
-import { createAlipayOrder, getAlipaySdk } from '../services/alipay.js'
+import { createEPayOrder, verifyEPayNotify } from '../services/epay.js'
 
 const router = Router()
 
@@ -12,7 +10,7 @@ const orders: Record<string, {
   id: string;
   amount: number;
   status: 'pending' | 'paid';
-  method: 'wechat' | 'alipay' | 'zpay';
+  method: 'epay';
   createdAt: number;
 }> = {}
 
@@ -22,9 +20,7 @@ const orders: Record<string, {
  */
 router.post('/create', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { method = 'wechat', platform = 'mobile' } = req.body
-    // Alipay supports dashes, but WeChat V3 works better with standard strings.
-    // For consistency, let's keep it simple.
+    const { method = 'epay', platform = 'mobile' } = req.body
     const orderId = uuidv4().replace(/-/g, '') 
     
     // Save order status
@@ -32,7 +28,7 @@ router.post('/create', async (req: Request, res: Response): Promise<void> => {
       id: orderId,
       amount: 16.60,
       status: 'pending',
-      method,
+      method: 'epay',
       createdAt: Date.now()
     }
 
@@ -42,32 +38,18 @@ router.post('/create', async (req: Request, res: Response): Promise<void> => {
     const host = xfHost || req.get('host') || process.env.PUBLIC_HOST || ''
     let payUrl = ''
 
-    if (method === 'wechat') {
-      const notifyUrl = `${protocol}://${host}/api/payment/notify/wechat`
-      payUrl = await createNativeOrder({
-        description: 'Love Insight Report',
-        out_trade_no: orderId,
-        notify_url: notifyUrl,
-        amount: { total: 1660, currency: 'CNY' },
-      })
-    } else if (method === 'alipay') {
-      const notifyUrl = `${protocol}://${host}/api/payment/notify/alipay`
-      const returnUrl = `${protocol}://${host}/report?orderId=${orderId}&status=paid` // Simple return handling
+    if (method === 'epay') {
+      // Use EPay for generic third-party
+      const notifyUrl = `${protocol}://${host}/api/payment/notify/epay`
+      const returnUrl = `${protocol}://${host}/report?orderId=${orderId}&status=paid`
       
-      payUrl = await createAlipayOrder({
-        outTradeNo: orderId,
-        totalAmount: '16.60',
-        subject: 'Love Insight Report',
-        notifyUrl,
-        returnUrl,
-      }, platform as 'mobile' | 'desktop')
-    } else if (method === 'zpay') {
-      const notifyUrl = `${protocol}://${host}/api/payment/notify/zpay`
-      payUrl = await createZPayOrder({
-        description: 'Love Insight Report',
+      payUrl = await createEPayOrder({
+        name: 'Love Insight Report',
         out_trade_no: orderId,
         notify_url: notifyUrl,
-        amount: { total: 1660, currency: 'CNY' },
+        return_url: returnUrl,
+        money: '16.60',
+        type: 'wxpay' // Default to wxpay or pass from frontend
       })
     } else {
       throw new Error('Unsupported payment method')
@@ -109,104 +91,38 @@ router.get('/status/:orderId', async (req: Request, res: Response) => {
 })
 
 /**
- * 3. WeChat Pay Notify Callback
- * POST /api/payment/notify/wechat
+ * 3. EPay Notify Callback
+ * POST /api/payment/notify/epay
  */
-router.post('/notify/wechat', async (req: Request, res: Response) => {
-  try {
-    const wxPay = getWxPay()
-    if (!wxPay) {
-      console.error('WeChat Pay not initialized')
-      res.status(500).send()
-      return
-    }
-
-    // Verify Signature & Decrypt
-    // wechatpay-node-v3 expects the raw headers and body
-    const { ciphertext, associated_data, nonce } = req.body.resource
-    const result = wxPay.decipher_gcm(ciphertext, associated_data, nonce, process.env.WECHAT_API_V3_KEY || '')
-    
-    // @ts-ignore
-    if (result && result.out_trade_no) {
-       // @ts-ignore
-       const orderId = result.out_trade_no
-       if (orders[orderId]) {
-         orders[orderId].status = 'paid'
-         console.log(`[WeChat] Order ${orderId} paid successfully`)
-       }
-    }
-
-    res.status(200).send()
-  } catch (e: any) {
-    console.error('WeChat Notify Error:', e)
-    res.status(500).send({ code: 'FAIL', message: e.message })
-  }
+router.get('/notify/epay', async (req: Request, res: Response) => {
+  // EPay often sends notify via GET or POST. We handle GET here for redirects or simple notifys.
+  // Actually standard EPay notify is POST. But let's support both just in case.
+  handleEPayNotify(req, res)
 })
 
-/**
- * 3b. ZPay Notify Callback
- * POST /api/payment/notify/zpay
- */
-router.post('/notify/zpay', async (req: Request, res: Response) => {
+router.post('/notify/epay', async (req: Request, res: Response) => {
+  handleEPayNotify(req, res)
+})
+
+const handleEPayNotify = async (req: Request, res: Response) => {
   try {
-    const ok = verifyZPayNotify(req.body)
+    const params = req.method === 'GET' ? req.query : req.body
+    const ok = verifyEPayNotify(params)
     if (!ok) {
-      res.status(400).json({ code: 'FAIL', message: 'invalid sign' })
+      res.send('fail')
       return
     }
-    const orderId = req.body.out_trade_no || req.body.order_id
+    const orderId = params.out_trade_no
     if (orderId && orders[orderId]) {
       orders[orderId].status = 'paid'
-      console.log(`[ZPay] Order ${orderId} paid successfully`)
+      console.log(`[EPay] Order ${orderId} paid successfully`)
     }
-    res.status(200).json({ code: 'SUCCESS' })
+    res.send('success')
   } catch (e: any) {
-    console.error('ZPay Notify Error:', e)
-    res.status(500).json({ code: 'FAIL', message: e.message })
-  }
-})
-
-/**
- * 4. Alipay Notify Callback
- * POST /api/payment/notify/alipay
- */
-router.post('/notify/alipay', async (req: Request, res: Response) => {
-  try {
-    const sdk = getAlipaySdk()
-    if (!sdk) {
-      console.error('Alipay not initialized')
-      res.status(500).send()
-      return
-    }
-
-    // Verify signature
-    // req.body contains all the POST params from Alipay
-    // Note: Express body-parser must be enabled for urlencoded/json
-    const params = req.body
-    
-    // Note: checkNotifySign requires the Alipay Public Key to be configured
-    const isValid = await sdk.checkNotifySign(params);
-    
-    if (isValid) {
-      const orderId = params.out_trade_no
-      const tradeStatus = params.trade_status
-      
-      if (tradeStatus === 'TRADE_SUCCESS' || tradeStatus === 'TRADE_FINISHED') {
-        if (orders[orderId]) {
-          orders[orderId].status = 'paid'
-          console.log(`[Alipay] Order ${orderId} paid successfully`)
-        }
-      }
-      res.send('success')
-    } else {
-      console.error('Alipay signature verification failed')
-      res.send('fail')
-    }
-  } catch (e: any) {
-    console.error('Alipay Notify Error:', e)
+    console.error('EPay Notify Error:', e)
     res.send('fail')
   }
-})
+}
 
 /**
  * Manual mark paid

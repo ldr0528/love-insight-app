@@ -25,13 +25,21 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex flex-col relative">
       {/* Contact Us Button (Top Left) */}
-      <div className="absolute top-4 left-4 z-50">
+      <div className="absolute top-4 left-4 z-50 flex items-center gap-2">
         <Link 
           to="/contact"
           className="flex items-center gap-2 px-3 py-1.5 h-[42px] bg-white/80 backdrop-blur-sm text-gray-700 rounded-full font-medium shadow-sm border border-pink-100 hover:bg-white hover:text-pink-600 hover:shadow-md transition-all text-sm"
         >
           <MessageCircle size={18} />
           <span>联系我们</span>
+        </Link>
+        
+        <Link 
+          to="/recharge"
+          className="flex items-center gap-2 px-3 py-1.5 h-[42px] bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-full font-medium shadow-sm border border-yellow-200 hover:shadow-md hover:scale-105 transition-all text-sm"
+        >
+          <Crown size={18} className="fill-current" />
+          <span>充值VIP</span>
         </Link>
       </div>
 

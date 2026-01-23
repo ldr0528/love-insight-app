@@ -12,6 +12,7 @@ import AdminLogin from "@/pages/admin/AdminLogin";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
 import RequireAuth from "@/components/auth/RequireAuth";
 import ContactUs from "@/pages/ContactUs";
+import RechargePage from "@/pages/RechargePage";
 
 export default function App() {
   return (
@@ -31,6 +32,7 @@ export default function App() {
         <Route path="/compatibility" element={<RequireAuth><Compatibility /></RequireAuth>} />
         <Route path="/worry-grocery" element={<RequireAuth><WorryGrocery /></RequireAuth>} />
         <Route path="/contact" element={<ContactUs />} />
+        <Route path="/recharge" element={<RechargePage />} />
         
         <Route path="/other" element={<div className="text-center text-xl">Other Page - Coming Soon</div>} />
       </Routes>

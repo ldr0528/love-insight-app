@@ -5,7 +5,7 @@ import { useAuthStore } from '@/store/useAuthStore';
 export default function SimpleAuthModal() {
   const { isAuthModalOpen, closeAuthModal, login } = useAuthStore();
   const [isLoginMode, setIsLoginMode] = useState(true);
-  const [code, setCode] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState('/images/ENFJ.jpg');
@@ -21,8 +21,8 @@ export default function SimpleAuthModal() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (code.length !== 4) {
-      alert('请输入4位数字');
+    if (!/^1[3-9]\d{9}$/.test(phone)) {
+      alert('请输入有效的11位手机号码');
       return;
     }
     if (!password) {
@@ -34,8 +34,8 @@ export default function SimpleAuthModal() {
     
     const endpoint = isLoginMode ? '/api/auth/login' : '/api/auth/register';
     const body = isLoginMode 
-      ? { code, password }
-      : { code, password, avatar: selectedAvatar };
+      ? { phone, password }
+      : { phone, password, avatar: selectedAvatar };
 
     try {
       const res = await fetch(endpoint, {
@@ -48,7 +48,7 @@ export default function SimpleAuthModal() {
       if (res.ok) {
         login(data.user);
         closeAuthModal();
-        setCode('');
+        setPhone('');
         setPassword('');
         // Reset to login mode for next time
         setTimeout(() => setIsLoginMode(true), 300); 
@@ -64,7 +64,7 @@ export default function SimpleAuthModal() {
 
   const toggleMode = () => {
     setIsLoginMode(!isLoginMode);
-    setCode('');
+    setPhone('');
     setPassword('');
   };
 
@@ -115,14 +115,14 @@ export default function SimpleAuthModal() {
             <div className="space-y-4">
               <div className="relative flex items-center">
                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center z-10 w-24">
-                   <span className="text-gray-500 font-bold text-lg w-10 text-center">Linx</span>
+                   <span className="text-gray-500 font-bold text-sm w-10 text-center">手机号</span>
                    <div className="h-6 w-px bg-gray-300 mx-3"></div>
                  </div>
                  <input
-                  type="text"
-                  value={code}
-                  onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 4))}
-                  placeholder="请输入任意4位数字"
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 11))}
+                  placeholder="请输入11位手机号码"
                   className="w-full pl-24 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-bold text-lg placeholder:font-normal placeholder:text-gray-400"
                   autoFocus
                 />
@@ -147,7 +147,7 @@ export default function SimpleAuthModal() {
 
             <button
               type="submit"
-              disabled={code.length !== 4 || !password || isLoading}
+              disabled={phone.length !== 11 || !password || isLoading}
               className={`w-full py-3 px-4 text-white rounded-xl font-bold shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 ${
                 isLoginMode 
                   ? 'bg-gradient-to-r from-pink-500 to-rose-500 shadow-pink-500/30 hover:shadow-pink-500/40' 

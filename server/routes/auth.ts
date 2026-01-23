@@ -5,19 +5,19 @@ import connectDB from '../config/db.js';
 const router = Router();
 
 router.post('/login', async (req: Request, res: Response) => {
-  const { code, password } = req.body;
+  const { phone, password } = req.body;
   
-  if (!code || code.length !== 4) {
-    res.status(400).json({ error: 'Please provide a 4-digit code' });
+  if (!phone || !/^1[3-9]\d{9}$/.test(phone)) {
+    res.status(400).json({ error: '请输入有效的11位手机号码' });
     return;
   }
   
   if (!password) {
-    res.status(400).json({ error: 'Please provide a password' });
+    res.status(400).json({ error: '请输入密码' });
     return;
   }
 
-  const username = `Linx${code}`;
+  const username = phone;
   
   try {
     // Ensure DB is connected
@@ -48,7 +48,7 @@ router.post('/login', async (req: Request, res: Response) => {
     res.json({
       success: true,
       user: userWithoutPassword,
-      token: 'mock-token-' + code
+      token: 'mock-token-' + phone
     });
   } catch (error: any) {
     console.error('Login error:', error);
@@ -58,19 +58,19 @@ router.post('/login', async (req: Request, res: Response) => {
 });
 
 router.post('/register', async (req: Request, res: Response) => {
-  const { code, password, avatar } = req.body;
+  const { phone, password, avatar } = req.body;
   
-  if (!code || code.length !== 4) {
-    res.status(400).json({ error: 'Please provide a 4-digit code' });
+  if (!phone || !/^1[3-9]\d{9}$/.test(phone)) {
+    res.status(400).json({ error: '请输入有效的11位手机号码' });
     return;
   }
   
   if (!password) {
-    res.status(400).json({ error: 'Please provide a password' });
+    res.status(400).json({ error: '请输入密码' });
     return;
   }
 
-  const username = `Linx${code}`;
+  const username = phone;
   
   try {
     // Ensure DB is connected
@@ -80,17 +80,17 @@ router.post('/register', async (req: Request, res: Response) => {
     const existingUser = await User.findOne({ username });
 
     if (existingUser) {
-      res.status(409).json({ error: '该账号已被注册' });
+      res.status(409).json({ error: '该手机号已被注册' });
       return;
     }
 
     // Register: Create new user
     const user = await User.create({
-      id: code,
+      id: phone.slice(-4), // Use last 4 digits as short ID
       username,
       password, // In production, hash this!
-      nickname: username,
-      phone: '',
+      nickname: `用户${phone.slice(-4)}`,
+      phone,
       isVip: false,
       avatar: avatar || ''
     });
@@ -102,7 +102,7 @@ router.post('/register', async (req: Request, res: Response) => {
     res.json({
       success: true,
       user: userWithoutPassword,
-      token: 'mock-token-' + code
+      token: 'mock-token-' + phone
     });
   } catch (error: any) {
     console.error('Register error:', error);
