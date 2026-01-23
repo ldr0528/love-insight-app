@@ -69,9 +69,15 @@ export default function SimpleAuthModal() {
       alert('请输入密码');
       return;
     }
-    if (!isLoginMode && email && !verificationCode) {
-      alert('请输入验证码');
-      return;
+    if (!isLoginMode) {
+      if (!email) {
+        alert('请输入邮箱');
+        return;
+      }
+      if (!verificationCode) {
+        alert('请输入验证码');
+        return;
+      }
     }
 
     setIsLoading(true);
@@ -201,39 +207,37 @@ export default function SimpleAuthModal() {
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="选填，用于找回密码"
+                      placeholder="必填，用于找回密码"
                       className="w-full pl-24 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-bold text-lg placeholder:font-normal placeholder:text-gray-400"
                     />
                   </div>
 
-                  {email && (
-                    <div className="flex gap-2">
-                      <div className="relative flex items-center flex-1">
-                        <input
-                          type="text"
-                          value={verificationCode}
-                          onChange={(e) => setVerificationCode(e.target.value)}
-                          placeholder="请输入验证码"
-                          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-bold text-lg placeholder:font-normal placeholder:text-gray-400"
-                        />
-                      </div>
-                      <button
-                        type="button"
-                        onClick={handleSendCode}
-                        disabled={countdown > 0 || isLoading || !email}
-                        className="px-4 py-3 bg-pink-100 text-pink-600 rounded-xl font-bold whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed hover:bg-pink-200 transition-colors"
-                      >
-                        {countdown > 0 ? `${countdown}s` : '发送验证码'}
-                      </button>
+                  <div className="flex gap-2">
+                    <div className="relative flex items-center flex-1">
+                      <input
+                        type="text"
+                        value={verificationCode}
+                        onChange={(e) => setVerificationCode(e.target.value)}
+                        placeholder="请输入验证码"
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-bold text-lg placeholder:font-normal placeholder:text-gray-400"
+                      />
                     </div>
-                  )}
+                    <button
+                      type="button"
+                      onClick={handleSendCode}
+                      disabled={countdown > 0 || isLoading || !email}
+                      className="px-4 py-3 bg-pink-100 text-pink-600 rounded-xl font-bold whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed hover:bg-pink-200 transition-colors"
+                    >
+                      {countdown > 0 ? `${countdown}s` : '发送验证码'}
+                    </button>
+                  </div>
                 </>
               )}
             </div>
 
             <button
               type="submit"
-              disabled={phone.length !== 11 || !password || isLoading || (!isLoginMode && email && !verificationCode)}
+              disabled={phone.length !== 11 || !password || isLoading || (!isLoginMode && (!email || !verificationCode))}
               className={`w-full py-3 px-4 text-white rounded-xl font-bold shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 ${
                 isLoginMode 
                   ? 'bg-gradient-to-r from-pink-500 to-rose-500 shadow-pink-500/30 hover:shadow-pink-500/40' 
