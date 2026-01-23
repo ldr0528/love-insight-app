@@ -36,6 +36,10 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: null,
   },
+  isBlacklisted: {
+    type: Boolean,
+    default: false,
+  },
   joinDate: {
     type: String,
     default: () => new Date().toISOString().split('T')[0],

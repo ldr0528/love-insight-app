@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
 import Home from "@/pages/Home";
 import LoveTest from "@/pages/LoveTest";
 import MBTIPage from "@/pages/MBTIPage";
@@ -13,10 +14,46 @@ import AdminDashboard from "@/pages/admin/AdminDashboard";
 import RequireAuth from "@/components/auth/RequireAuth";
 import ContactUs from "@/pages/ContactUs";
 import RechargePage from "@/pages/RechargePage";
+import { useAuthStore } from "@/store/useAuthStore";
+
+// Component to handle global auth effects
+function AuthEffect() {
+  const { isAuthenticated, refreshProfile } = useAuthStore();
+
+  useEffect(() => {
+    // Check profile immediately on mount if authenticated
+    if (isAuthenticated) {
+      refreshProfile();
+    }
+
+    // Poll every 30 seconds to keep VIP status updated
+    const interval = setInterval(() => {
+      if (useAuthStore.getState().isAuthenticated) {
+        refreshProfile();
+      }
+    }, 30000);
+
+    // Refresh when window regains focus
+    const handleFocus = () => {
+      if (useAuthStore.getState().isAuthenticated) {
+        refreshProfile();
+      }
+    };
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [isAuthenticated, refreshProfile]);
+
+  return null;
+}
 
 export default function App() {
   return (
     <Router>
+      <AuthEffect />
       <SimpleAuthModal />
       <Routes>
         <Route path="/" element={<Home />} />

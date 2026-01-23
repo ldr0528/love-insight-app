@@ -91,6 +91,12 @@ router.post('/login', async (req: Request, res: Response) => {
       return;
     }
 
+    // Check if user is blacklisted
+    if (user.isBlacklisted) {
+      res.status(403).json({ error: '该账号已被禁用，请联系客服' });
+      return;
+    }
+
     // Login: Verify password
     if (user.password !== password) {
       res.status(401).json({ error: '密码错误' });
@@ -189,6 +195,46 @@ router.post('/register', async (req: Request, res: Response) => {
     console.error('Register error:', error);
     // Return detailed error message for debugging
     res.status(500).json({ error: `Server error: ${error.message}` });
+  }
+});
+
+// Get Current User Profile (Refresh)
+router.get('/me', async (req: Request, res: Response) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
+  }
+
+  // In a real app, verify JWT here. 
+  // For this mock, we extract phone/id from the mock token or just rely on a query param/header if we had one.
+  // Since our mock token is "mock-token-PHONE", let's extract the phone.
+  const token = authHeader.split(' ')[1];
+  const phone = token.replace('mock-token-', '');
+
+  try {
+    await connectDB();
+    const user = await User.findOne({ phone });
+    
+    if (!user) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    // Check VIP expiration
+    if (user.isVip && user.vipExpiresAt) {
+      if (new Date() > new Date(user.vipExpiresAt)) {
+        user.isVip = false;
+        user.vipExpiresAt = null;
+        await user.save();
+      }
+    }
+
+    const userObj = user.toObject();
+    const { password: _, ...userWithoutPassword } = userObj;
+    res.json({ success: true, user: userWithoutPassword });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
   }
 });
 

@@ -81,6 +81,25 @@ router.post('/users/:id/toggle-vip', async (req: Request, res: Response) => {
   }
 });
 
+// Toggle Blacklist Status
+router.post('/users/:id/toggle-blacklist', async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    await connectDB();
+    const user = await User.findOne({ id });
+    if (user) {
+      user.isBlacklisted = !user.isBlacklisted;
+      await user.save();
+      res.json({ success: true, user });
+    } else {
+      res.status(404).json({ success: false, message: 'User not found' });
+    }
+  } catch (error) {
+    console.error('Toggle blacklist error:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
 // Delete User
 router.delete('/users/:id', async (req: Request, res: Response) => {
   const { id } = req.params;

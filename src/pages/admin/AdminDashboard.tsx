@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Users, Crown, Trash2, LogOut, Search, User } from 'lucide-react';
+import { Users, Crown, Trash2, LogOut, Search, User, Ban } from 'lucide-react';
 
 interface UserData {
   id: string;
@@ -10,6 +10,7 @@ interface UserData {
   isVip: boolean;
   vipExpiresAt: string | null;
   joinDate: string;
+  isBlacklisted?: boolean;
 }
 
 export default function AdminDashboard() {
@@ -95,6 +96,23 @@ export default function AdminDashboard() {
           vipExpiresAt: expiresAt 
         } : u));
         setShowVipModal(false);
+      }
+    } catch (error) {
+      alert('Operation failed');
+    }
+  };
+
+  const handleToggleBlacklist = async (user: UserData) => {
+    const action = user.isBlacklisted ? 'unban' : 'ban';
+    if (!confirm(`Are you sure you want to ${action} this user?`)) return;
+
+    try {
+      const res = await fetch(`/api/admin/users/${user.id}/toggle-blacklist`, { method: 'POST' });
+      const data = await res.json();
+      if (data.success) {
+        setUsers(users.map(u => u.id === user.id ? { ...u, isBlacklisted: !u.isBlacklisted } : u));
+      } else {
+        alert(data.message || 'Operation failed');
       }
     } catch (error) {
       alert('Operation failed');
@@ -200,14 +218,17 @@ export default function AdminDashboard() {
                   </tr>
                 ) : (
                   filteredUsers.map(user => (
-                    <tr key={user.id} className="hover:bg-gray-50 transition-colors">
+                    <tr key={user.id} className={`hover:bg-gray-50 transition-colors ${user.isBlacklisted ? 'bg-gray-50' : ''}`}>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-500">
-                            <User size={20} />
+                          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${user.isBlacklisted ? 'bg-red-100 text-red-500' : 'bg-gray-100 text-gray-500'}`}>
+                            {user.isBlacklisted ? <Ban size={20} /> : <User size={20} />}
                           </div>
                           <div>
-                            <div className="font-medium text-gray-900">{user.username}</div>
+                            <div className="font-medium text-gray-900 flex items-center gap-2">
+                              {user.username}
+                              {user.isBlacklisted && <span className="text-[10px] bg-red-100 text-red-600 px-1.5 py-0.5 rounded font-bold uppercase">Banned</span>}
+                            </div>
                             <div className="text-xs text-gray-400">{user.phone}</div>
                           </div>
                         </div>
@@ -247,6 +268,17 @@ export default function AdminDashboard() {
                             }`}
                           >
                             Manage VIP
+                          </button>
+                          <button 
+                            onClick={() => handleToggleBlacklist(user)}
+                            className={`p-1.5 rounded-md transition-colors ${
+                              user.isBlacklisted 
+                                ? 'text-green-500 hover:bg-green-50' 
+                                : 'text-gray-400 hover:text-red-500 hover:bg-red-50'
+                            }`}
+                            title={user.isBlacklisted ? "Unban User" : "Ban User"}
+                          >
+                            <Ban size={16} />
                           </button>
                           <button 
                             onClick={() => deleteUser(user.id)}
