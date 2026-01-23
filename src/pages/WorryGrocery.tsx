@@ -123,7 +123,7 @@ export default function WorryGrocery() {
           <ArrowLeft className="w-6 h-6" />
         </Link>
         <h1 className="ml-2 font-bold text-xl text-amber-900 flex items-center gap-2">
-          <Store className="w-5 h-5" /> 解忧杂货铺
+          <Store className="w-5 h-5" /> 电子宠物
         </h1>
       </header>
 
@@ -185,7 +185,7 @@ export default function WorryGrocery() {
                       <div className="w-20 h-20 border-[3px] border-red-800/70 rounded-full flex items-center justify-center shadow-sm backdrop-blur-[1px]">
                         <div className="w-[70px] h-[70px] border border-red-800/50 rounded-full flex items-center justify-center">
                            <div className="flex flex-col items-center leading-none">
-                              <span className="text-red-900 font-serif font-black text-lg tracking-widest writing-vertical-rl">解忧</span>
+                              <span className="text-red-900 font-serif font-black text-lg tracking-widest writing-vertical-rl">灵犀</span>
                            </div>
                         </div>
                       </div>
