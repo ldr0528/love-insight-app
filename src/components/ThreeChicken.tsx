@@ -1,6 +1,6 @@
 import React, { useRef, useState, useMemo, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Sphere, Cone, Float, ContactShadows, useCursor, Html } from '@react-three/drei';
+import { Sphere, Cone, Float, ContactShadows, useCursor, Html, Cylinder } from '@react-three/drei';
 import * as THREE from 'three';
 
 function ChickenModel({ hovered, setHovered, message }: { hovered: boolean, setHovered: (h: boolean) => void, message: React.ReactNode }) {

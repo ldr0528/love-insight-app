@@ -45,7 +45,7 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleSetVip = async (type: 'monthly' | 'permanent' | 'remove') => {
+  const handleSetVip = async (type: 'weekly' | 'monthly' | 'permanent' | 'remove') => {
     if (!selectedUser) return;
     
     let endpoint = `/api/admin/users/${selectedUser.id}/toggle-vip`;
@@ -71,6 +71,10 @@ export default function AdminDashboard() {
     if (type === 'monthly') {
       const date = new Date();
       date.setDate(date.getDate() + 30);
+      expiresAt = date.toISOString();
+    } else if (type === 'weekly') {
+      const date = new Date();
+      date.setDate(date.getDate() + 7);
       expiresAt = date.toISOString();
     }
     
@@ -236,8 +240,13 @@ export default function AdminDashboard() {
                       <td className="px-6 py-4">
                         {user.isVip ? (
                           <div className="flex flex-col items-start gap-1">
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-700">
-                              <Crown size={12} className="fill-current" /> VIP Member
+                            <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${
+                              !user.vipExpiresAt 
+                                ? 'bg-amber-100 text-amber-700' 
+                                : 'bg-indigo-100 text-indigo-700'
+                            }`}>
+                              <Crown size={12} className="fill-current" /> 
+                              {!user.vipExpiresAt ? 'Permanent VIP' : 'VIP Member'}
                             </span>
                             {user.vipExpiresAt && (
                               <span className="text-[10px] text-gray-400 pl-1">
@@ -308,6 +317,21 @@ export default function AdminDashboard() {
             </div>
             
             <div className="p-6 space-y-3">
+              <button
+                onClick={() => handleSetVip('weekly')}
+                className="w-full flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-blue-400 hover:bg-blue-50 transition-all group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-500">
+                    <Crown size={20} />
+                  </div>
+                  <div className="text-left">
+                    <div className="font-bold text-gray-900 group-hover:text-blue-700">Weekly VIP</div>
+                    <div className="text-xs text-gray-500">Valid for 7 days</div>
+                  </div>
+                </div>
+              </button>
+
               <button
                 onClick={() => handleSetVip('monthly')}
                 className="w-full flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-orange-400 hover:bg-orange-50 transition-all group"
