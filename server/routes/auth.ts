@@ -1,8 +1,8 @@
 import { Router, type Request, type Response } from 'express';
-import User from '../models/User.js';
-import VerificationCode from '../models/VerificationCode.js';
-import connectDB from '../config/db.js';
-import { sendVerificationEmail } from '../services/email.js';
+import User from '../models/User';
+import VerificationCode from '../models/VerificationCode';
+import connectDB from '../config/db';
+import { sendVerificationEmail } from '../services/email';
 
 const router = Router();
 
@@ -58,7 +58,7 @@ router.post('/send-code', async (req: Request, res: Response) => {
     } else {
       res.status(500).json({ error: '邮件发送失败，请稍后重试' });
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error('Send code error:', error);
     res.status(500).json({ error: '服务器错误' });
   }
@@ -233,7 +233,7 @@ router.get('/me', async (req: Request, res: Response) => {
     const userObj = user.toObject();
     const { password: _, ...userWithoutPassword } = userObj;
     res.json({ success: true, user: userWithoutPassword });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ error: 'Server error' });
   }
 });
@@ -266,7 +266,7 @@ router.post('/pet', async (req: Request, res: Response) => {
     const userObj = user.toObject();
     const { password: _, ...userWithoutPassword } = userObj;
     res.json({ success: true, user: userWithoutPassword });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ error: 'Server error' });
   }
 });

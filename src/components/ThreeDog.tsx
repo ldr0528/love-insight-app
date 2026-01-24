@@ -10,7 +10,7 @@ function DogModel({ hovered, setHovered, message }: { hovered: boolean, setHover
 
   // Materials - Improved dog colors to match realistic puppy photo (Cream/Beige)
   const furMaterial = useMemo(() => new THREE.MeshStandardMaterial({ 
-    color: '#f0e0c9', // Champagne/Cream color
+    color: '#E8DCC4', // Champagne/Cream color - slightly warmer/lighter
     roughness: 1, 
     metalness: 0
   }), []);
@@ -96,16 +96,14 @@ function DogModel({ hovered, setHovered, message }: { hovered: boolean, setHover
            <primitive object={furMaterial} />
         </Sphere>
 
-        {/* Ears - More dog-like, teardrop shape */}
-        <group position={[0.45, 0.2, 0]} rotation={[0, 0, -0.6]}>
-           {/* Outer Ear - Fluffier and folded */}
-           <Sphere args={[0.16, 32, 32]} scale={[1, 1.8, 0.5]} position={[0, -0.1, 0]}>
+        {/* Ears - Floppy and triangular (Golden Retriever puppy style) */}
+        <group position={[0.42, 0.1, 0.1]} rotation={[0, 0, -0.5]}>
+           <Sphere args={[0.16, 32, 32]} scale={[1, 2.0, 0.5]} position={[0, -0.15, 0]}>
              <primitive object={furMaterial} />
            </Sphere>
         </group>
-        <group position={[-0.45, 0.2, 0]} rotation={[0, 0, 0.6]}>
-           {/* Outer Ear - Fluffier and folded */}
-           <Sphere args={[0.16, 32, 32]} scale={[1, 1.8, 0.5]} position={[0, -0.1, 0]}>
+        <group position={[-0.42, 0.1, 0.1]} rotation={[0, 0, 0.5]}>
+           <Sphere args={[0.16, 32, 32]} scale={[1, 2.0, 0.5]} position={[0, -0.15, 0]}>
              <primitive object={furMaterial} />
            </Sphere>
         </group>
@@ -121,9 +119,9 @@ function DogModel({ hovered, setHovered, message }: { hovered: boolean, setHover
         <Sphere args={[0.02, 32, 32]} position={[0.23, 0.08, 0.5]} material={new THREE.MeshBasicMaterial({ color: 'white' })} />
         <Sphere args={[0.02, 32, 32]} position={[-0.17, 0.08, 0.5]} material={new THREE.MeshBasicMaterial({ color: 'white' })} />
         
-        {/* Snout - Pronounced and lighter color */}
-        <group position={[0, -0.12, 0.5]}>
-          <Sphere args={[0.2, 32, 32]} scale={[1.1, 0.8, 0.9]}>
+        {/* Snout - More protruding (Dog vs Bear) */}
+        <group position={[0, -0.12, 0.55]}>
+          <Sphere args={[0.18, 32, 32]} scale={[1.1, 0.85, 1.2]}>
             <primitive object={lightFurMaterial} />
           </Sphere>
           {/* Nose - Triangle shape */}
@@ -138,11 +136,11 @@ function DogModel({ hovered, setHovered, message }: { hovered: boolean, setHover
              <meshStandardMaterial color="#ffb7b2" transparent opacity={0.15} roughness={1} />
         </Sphere>
 
-        {/* Chat Bubble - Fixed for desktop width */}
+        {/* Chat Bubble - Adjusted position to prevent cutoff */}
         <Html 
-          position={[isMobile ? 0.5 : 0.6, isMobile ? 0.25 : 0.35, 0]} 
+          position={[isMobile ? 0.45 : 0.5, isMobile ? 0.25 : 0.35, 0]} 
           center 
-          className="pointer-events-none w-48 sm:w-72 md:w-80" 
+          className="pointer-events-none w-48 sm:w-64 md:w-72" 
           style={{ transform: 'scale(1)', zIndex: 10 }}
           zIndexRange={[10, 0]}
         >

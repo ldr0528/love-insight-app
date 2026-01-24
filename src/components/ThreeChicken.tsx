@@ -144,9 +144,9 @@ function ChickenModel({ hovered, setHovered, message }: { hovered: boolean, setH
 
         {/* Chat Bubble - Fixed for desktop */}
         <Html 
-          position={[isMobile ? 0.5 : 0.6, isMobile ? 0.3 : 0.4, 0]} 
+          position={[isMobile ? 0.45 : 0.5, isMobile ? 0.3 : 0.4, 0]} 
           center 
-          className="pointer-events-none w-48 sm:w-72 md:w-80" 
+          className="pointer-events-none w-48 sm:w-64 md:w-72" 
           style={{ transform: 'scale(1)', zIndex: 10 }}
           zIndexRange={[10, 0]}
         >
