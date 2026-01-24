@@ -8,16 +8,16 @@ function DogModel({ hovered, setHovered, message }: { hovered: boolean, setHover
   const bodyRef = useRef<THREE.Group>(null);
   const tailRef = useRef<THREE.Group>(null);
 
-  // Materials
+  // Materials - Improved dog colors
   const furMaterial = useMemo(() => new THREE.MeshStandardMaterial({ 
-    color: '#D2691E', // Brown
-    roughness: 1, 
+    color: '#8B4513', // SaddleBrown - darker, more natural brown
+    roughness: 0.8, 
     metalness: 0.1
   }), []);
   
   const lightFurMaterial = useMemo(() => new THREE.MeshStandardMaterial({ 
-    color: '#F4A460', // Light Brown
-    roughness: 1, 
+    color: '#DEB887', // BurlyWood - lighter accent
+    roughness: 0.8, 
     metalness: 0.1
   }), []);
 
@@ -77,71 +77,77 @@ function DogModel({ hovered, setHovered, message }: { hovered: boolean, setHover
       scale={[isMobile ? 0.75 : 1.0, isMobile ? 0.75 : 1.0, isMobile ? 0.75 : 1.0]}
       position={[isMobile ? -0.3 : 0, -0.6, 0]}
     >
-      {/* Body */}
+      {/* Body - Adjusted shape */}
       <group ref={bodyRef}>
-        <Sphere args={[0.75, 64, 64]} scale={[1, 0.9, 1.1]}>
+        {/* Main Body */}
+        <Sphere args={[0.7, 64, 64]} scale={[1, 0.95, 1.1]}>
           <primitive object={furMaterial} />
         </Sphere>
-        <Sphere args={[0.65, 64, 64]} position={[0, -0.1, 0.2]} scale={[0.8, 0.85, 0.85]}>
+        {/* Belly Patch */}
+        <Sphere args={[0.6, 64, 64]} position={[0, -0.1, 0.25]} scale={[0.8, 0.9, 0.8]}>
           <primitive object={lightFurMaterial} />
         </Sphere>
       </group>
 
       {/* Head */}
       <group ref={headRef} position={[0, 0.75, 0.2]}>
-        <Sphere args={[0.6, 64, 64]} scale={[1, 0.95, 1]}>
+        {/* Main Head - Slightly boxier/rounder like a puppy */}
+        <Sphere args={[0.55, 64, 64]} scale={[1, 0.9, 1]}>
            <primitive object={furMaterial} />
         </Sphere>
 
-        {/* Floppy Ears - Rounded and floppier */}
-        <group position={[0.45, 0.1, 0]} rotation={[0, 0, -0.3]}>
-           <Sphere args={[0.18, 32, 32]} scale={[1, 1.8, 0.5]}>
+        {/* Ears - More dog-like, teardrop shape */}
+        <group position={[0.45, 0.2, 0]} rotation={[0, 0, -0.4]}>
+           {/* Outer Ear */}
+           <Sphere args={[0.15, 32, 32]} scale={[1, 2.2, 0.6]} position={[0, -0.1, 0]}>
              <primitive object={furMaterial} />
            </Sphere>
         </group>
-        <group position={[-0.45, 0.1, 0]} rotation={[0, 0, 0.3]}>
-           <Sphere args={[0.18, 32, 32]} scale={[1, 1.8, 0.5]}>
+        <group position={[-0.45, 0.2, 0]} rotation={[0, 0, 0.4]}>
+           {/* Outer Ear */}
+           <Sphere args={[0.15, 32, 32]} scale={[1, 2.2, 0.6]} position={[0, -0.1, 0]}>
              <primitive object={furMaterial} />
            </Sphere>
         </group>
 
-        {/* Eyes - Shiny with highlights */}
-        <Sphere args={[0.08, 64, 64]} position={[0.22, 0.1, 0.48]}>
+        {/* Eyes - Larger and cuter */}
+        <Sphere args={[0.085, 64, 64]} position={[0.2, 0.05, 0.45]}>
           <primitive object={eyeMaterial} />
         </Sphere>
-        <Sphere args={[0.08, 64, 64]} position={[-0.22, 0.1, 0.48]}>
+        <Sphere args={[0.085, 64, 64]} position={[-0.2, 0.05, 0.45]}>
           <primitive object={eyeMaterial} />
         </Sphere>
         {/* Eye Highlights */}
-        <Sphere args={[0.025, 32, 32]} position={[0.25, 0.14, 0.53]} material={new THREE.MeshBasicMaterial({ color: 'white' })} />
-        <Sphere args={[0.025, 32, 32]} position={[-0.19, 0.14, 0.53]} material={new THREE.MeshBasicMaterial({ color: 'white' })} />
+        <Sphere args={[0.025, 32, 32]} position={[0.23, 0.09, 0.5]} material={new THREE.MeshBasicMaterial({ color: 'white' })} />
+        <Sphere args={[0.025, 32, 32]} position={[-0.17, 0.09, 0.5]} material={new THREE.MeshBasicMaterial({ color: 'white' })} />
         
-        {/* Snout - More defined */}
-        <Sphere args={[0.25, 32, 32]} position={[0, -0.15, 0.5]} scale={[1.1, 0.8, 0.9]}>
-          <primitive object={lightFurMaterial} />
-        </Sphere>
-        <Sphere args={[0.08, 32, 32]} position={[0, -0.08, 0.7]}>
-          <primitive object={noseMaterial} />
-        </Sphere>
+        {/* Snout - Pronounced and lighter color */}
+        <group position={[0, -0.12, 0.5]}>
+          <Sphere args={[0.22, 32, 32]} scale={[1.2, 0.85, 1]}>
+            <primitive object={lightFurMaterial} />
+          </Sphere>
+          {/* Nose - Triangle shape */}
+          <Cone args={[0.08, 0.08, 32]} position={[0, 0.05, 0.2]} rotation={[0.5, 0, 0]} material={noseMaterial} />
+        </group>
 
         {/* Cheeks */}
-        <Sphere args={[0.15, 32, 32]} position={[0.3, -0.15, 0.4]} scale={[1, 0.6, 0.5]}>
+        <Sphere args={[0.12, 32, 32]} position={[0.28, -0.1, 0.35]} scale={[1, 0.6, 0.5]}>
              <meshStandardMaterial color="#ffb7b2" transparent opacity={0.2} roughness={1} />
         </Sphere>
-        <Sphere args={[0.15, 32, 32]} position={[-0.3, -0.15, 0.4]} scale={[1, 0.6, 0.5]}>
+        <Sphere args={[0.12, 32, 32]} position={[-0.28, -0.1, 0.35]} scale={[1, 0.6, 0.5]}>
              <meshStandardMaterial color="#ffb7b2" transparent opacity={0.2} roughness={1} />
         </Sphere>
 
-        {/* Chat Bubble */}
+        {/* Chat Bubble - Fixed for desktop width */}
         <Html 
-          position={[isMobile ? 0.5 : 0.55, isMobile ? 0.25 : 0.35, 0]} 
+          position={[isMobile ? 0.5 : 0.6, isMobile ? 0.25 : 0.35, 0]} 
           center 
-          className="pointer-events-none w-40 sm:w-64 md:w-72" 
-          style={{ transform: 'scale(1)', zIndex: 0 }}
-          zIndexRange={[0, 0]}
+          className="pointer-events-none w-48 sm:w-72 md:w-80" 
+          style={{ transform: 'scale(1)', zIndex: 10 }}
+          zIndexRange={[10, 0]}
         >
-          <div className="bg-white/95 backdrop-blur-sm px-3 py-2 md:px-5 md:py-4 rounded-2xl rounded-tl-none shadow-xl border border-orange-100 relative animate-in zoom-in duration-300 origin-top-left flex items-center min-h-[50px] md:min-h-[60px]">
-            <div className="text-amber-900/90 text-[10px] md:text-sm font-medium leading-relaxed text-left break-words whitespace-pre-wrap w-full">
+          <div className="bg-white/95 backdrop-blur-sm px-4 py-3 md:px-6 md:py-5 rounded-2xl rounded-tl-none shadow-xl border border-orange-100 relative animate-in zoom-in duration-300 origin-top-left flex items-center min-h-[50px] md:min-h-[60px]">
+            <div className="text-amber-900/90 text-xs md:text-sm font-medium leading-relaxed text-left break-words whitespace-pre-wrap w-full">
               {message}
             </div>
             {/* Arrow */}

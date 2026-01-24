@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Send, Sparkles, Store, Mic, MicOff, Cat, Dog, Bird, Check } from 'lucide-react';
+import { ArrowLeft, Send, Sparkles, Store, Mic, MicOff, Cat, Dog, Bird, Check, Egg } from 'lucide-react';
 import ThreeCat from '@/components/ThreeCat';
 import ThreeDog from '@/components/ThreeDog';
 import ThreeChicken from '@/components/ThreeChicken';
@@ -238,7 +238,7 @@ export default function DigitalPetShop() {
             >
               {selectedPetType === 'chicken' && <div className="absolute top-2 right-2 bg-yellow-500 text-white p-1 rounded-full"><Check size={12} /></div>}
               <div className="w-16 h-16 bg-yellow-50 rounded-full flex items-center justify-center text-yellow-600">
-                <Bird size={32} />
+                <Egg size={32} />
               </div>
               <span className="font-bold text-gray-800">小鸡</span>
             </button>
