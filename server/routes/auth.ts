@@ -1,8 +1,8 @@
 import { Router, type Request, type Response } from 'express';
-import User from '../models/User';
-import VerificationCode from '../models/VerificationCode';
-import connectDB from '../config/db';
-import { sendVerificationEmail } from '../services/email';
+import User from '../models/User.js';
+import VerificationCode from '../models/VerificationCode.js';
+import connectDB from '../config/db.js';
+import { sendVerificationEmail } from '../services/email.js';
 
 const router = Router();
 

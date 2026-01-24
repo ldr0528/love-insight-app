@@ -7,6 +7,7 @@ function DogModel({ hovered, setHovered, message }: { hovered: boolean, setHover
   const headRef = useRef<THREE.Group>(null);
   const bodyRef = useRef<THREE.Group>(null);
   const tailRef = useRef<THREE.Group>(null);
+  const portalRef = useRef(document.body);
 
   // Materials - Improved dog colors to match realistic puppy photo (Cream/Beige)
   const furMaterial = useMemo(() => new THREE.MeshStandardMaterial({ 
@@ -91,21 +92,33 @@ function DogModel({ hovered, setHovered, message }: { hovered: boolean, setHover
 
       {/* Head */}
       <group ref={headRef} position={[0, 0.75, 0.2]}>
-        {/* Main Head - Slightly boxier/rounder like a puppy */}
-        <Sphere args={[0.55, 64, 64]} scale={[1, 0.95, 1]}>
+        {/* Main Head - More dome-shaped, less sphere */}
+        <Sphere args={[0.55, 64, 64]} scale={[1, 1.1, 1.1]}>
            <primitive object={furMaterial} />
         </Sphere>
 
-        {/* Ears - Floppy and triangular (Golden Retriever puppy style) */}
-        <group position={[0.42, 0.1, 0.1]} rotation={[0, 0, -0.5]}>
-           <Sphere args={[0.16, 32, 32]} scale={[1, 2.0, 0.5]} position={[0, -0.15, 0]}>
+        {/* Ears - Much longer and floppy (Golden/Spaniel style) */}
+        <group position={[0.42, 0.2, 0]} rotation={[0, 0, -0.2]}>
+           {/* Base of ear */}
+           <Sphere args={[0.15, 32, 32]} position={[0, -0.1, 0]}>
              <primitive object={furMaterial} />
            </Sphere>
+           {/* Flap of ear - Drooping down */}
+           <mesh position={[0.1, -0.4, 0.1]} rotation={[0, 0, -0.2]} scale={[1, 1, 0.5]}>
+             <capsuleGeometry args={[0.15, 0.6, 4, 8]} />
+             <primitive object={furMaterial} />
+           </mesh>
         </group>
-        <group position={[-0.42, 0.1, 0.1]} rotation={[0, 0, 0.5]}>
-           <Sphere args={[0.16, 32, 32]} scale={[1, 2.0, 0.5]} position={[0, -0.15, 0]}>
+        <group position={[-0.42, 0.2, 0]} rotation={[0, 0, 0.2]}>
+           {/* Base of ear */}
+           <Sphere args={[0.15, 32, 32]} position={[0, -0.1, 0]}>
              <primitive object={furMaterial} />
            </Sphere>
+           {/* Flap of ear - Drooping down */}
+           <mesh position={[-0.1, -0.4, 0.1]} rotation={[0, 0, 0.2]} scale={[1, 1, 0.5]}>
+             <capsuleGeometry args={[0.15, 0.6, 4, 8]} />
+             <primitive object={furMaterial} />
+           </mesh>
         </group>
 
         {/* Eyes - Larger and cuter */}
@@ -119,13 +132,19 @@ function DogModel({ hovered, setHovered, message }: { hovered: boolean, setHover
         <Sphere args={[0.02, 32, 32]} position={[0.23, 0.08, 0.5]} material={new THREE.MeshBasicMaterial({ color: 'white' })} />
         <Sphere args={[0.02, 32, 32]} position={[-0.17, 0.08, 0.5]} material={new THREE.MeshBasicMaterial({ color: 'white' })} />
         
-        {/* Snout - More protruding (Dog vs Bear) */}
-        <group position={[0, -0.12, 0.55]}>
-          <Sphere args={[0.18, 32, 32]} scale={[1.1, 0.85, 1.2]}>
+        {/* Snout - Significantly elongated and distinct */}
+        <group position={[0, -0.15, 0.6]}>
+          {/* Bridge of nose */}
+          <mesh position={[0, 0.1, -0.1]} rotation={[0.2, 0, 0]}>
+             <boxGeometry args={[0.25, 0.2, 0.4]} />
+             <primitive object={lightFurMaterial} />
+          </mesh>
+          {/* Muzzle end */}
+          <Sphere args={[0.18, 32, 32]} position={[0, 0, 0.1]} scale={[1.2, 0.9, 1]}>
             <primitive object={lightFurMaterial} />
           </Sphere>
           {/* Nose - Triangle shape */}
-          <Cone args={[0.06, 0.06, 32]} position={[0, 0.05, 0.18]} rotation={[0.5, 0, 0]} material={new THREE.MeshStandardMaterial({ color: '#1a1a1a', roughness: 0.4 })} />
+          <Cone args={[0.07, 0.08, 32]} position={[0, 0.08, 0.25]} rotation={[0.5, 0, 0]} material={new THREE.MeshStandardMaterial({ color: '#1a1a1a', roughness: 0.4 })} />
         </group>
 
         {/* Cheeks - Subtle */}
@@ -136,13 +155,14 @@ function DogModel({ hovered, setHovered, message }: { hovered: boolean, setHover
              <meshStandardMaterial color="#ffb7b2" transparent opacity={0.15} roughness={1} />
         </Sphere>
 
-        {/* Chat Bubble - Adjusted position to prevent cutoff */}
+        {/* Chat Bubble - Portal to body to avoid clipping */}
         <Html 
-          position={[isMobile ? 0.45 : 0.5, isMobile ? 0.25 : 0.35, 0]} 
+          portal={portalRef}
+          position={[isMobile ? 0.35 : 0.45, isMobile ? 0.25 : 0.35, 0]} 
           center 
-          className="pointer-events-none w-48 sm:w-64 md:w-72" 
-          style={{ transform: 'scale(1)', zIndex: 10 }}
-          zIndexRange={[10, 0]}
+          className="pointer-events-none w-max max-w-[200px] sm:max-w-[300px] md:max-w-[350px]" 
+          style={{ transform: 'scale(1)', zIndex: 1000 }}
+          zIndexRange={[1000, 0]}
         >
           <div className="bg-white/95 backdrop-blur-sm px-4 py-3 md:px-6 md:py-5 rounded-2xl rounded-tl-none shadow-xl border border-orange-100 relative animate-in zoom-in duration-300 origin-top-left flex items-center min-h-[50px] md:min-h-[60px]">
             <div className="text-amber-900/90 text-xs md:text-sm font-medium leading-relaxed text-left break-words whitespace-pre-wrap w-full">

@@ -7,6 +7,7 @@ function ChickenModel({ hovered, setHovered, message }: { hovered: boolean, setH
   const headRef = useRef<THREE.Group>(null);
   const bodyRef = useRef<THREE.Group>(null);
   const wingsRef = useRef<THREE.Group>(null);
+  const portalRef = useRef(document.body);
 
   // Materials
   const featherMaterial = useMemo(() => new THREE.MeshStandardMaterial({ 
@@ -142,13 +143,14 @@ function ChickenModel({ hovered, setHovered, message }: { hovered: boolean, setH
            <Cone args={[0.05, 0.1, 8]} position={[-0.2, -0.08, 0.08]} rotation={[0.5, 0, 0]} material={beakMaterial} />
         </group>
 
-        {/* Chat Bubble - Fixed for desktop */}
+        {/* Chat Bubble - Portal to body to avoid clipping */}
         <Html 
+          portal={portalRef}
           position={[isMobile ? 0.45 : 0.5, isMobile ? 0.3 : 0.4, 0]} 
           center 
-          className="pointer-events-none w-48 sm:w-64 md:w-72" 
-          style={{ transform: 'scale(1)', zIndex: 10 }}
-          zIndexRange={[10, 0]}
+          className="pointer-events-none w-max max-w-[200px] sm:max-w-[300px] md:max-w-[350px]" 
+          style={{ transform: 'scale(1)', zIndex: 1000 }}
+          zIndexRange={[1000, 0]}
         >
           <div className="bg-white/95 backdrop-blur-sm px-4 py-3 md:px-6 md:py-5 rounded-2xl rounded-tl-none shadow-xl border border-orange-100 relative animate-in zoom-in duration-300 origin-top-left flex items-center min-h-[50px] md:min-h-[60px]">
             <div className="text-amber-900/90 text-xs md:text-sm font-medium leading-relaxed text-left break-words whitespace-pre-wrap w-full">
