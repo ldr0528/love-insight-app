@@ -1,10 +1,15 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Send, Sparkles, Store, Mic, MicOff } from 'lucide-react';
+import { ArrowLeft, Send, Sparkles, Store, Mic, MicOff, Cat, Dog, Bird, Check } from 'lucide-react';
 import ThreeCat from '@/components/ThreeCat';
+import ThreeDog from '@/components/ThreeDog';
+import ThreeChicken from '@/components/ThreeChicken';
+import { useAuthStore } from '@/store/useAuthStore';
+import toast from 'react-hot-toast';
 
-export default function WorryGrocery() {
+export default function DigitalPetShop() {
+  const { user, login } = useAuthStore();
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState<{ reply: string; quote: { content: string; source: string } } | null>(null);
@@ -12,8 +17,15 @@ export default function WorryGrocery() {
   const [showQuote, setShowQuote] = useState(false);
   const [isListening, setIsListening] = useState(false);
   
+  // Pet Selection State
+  const [selectedPetType, setSelectedPetType] = useState<'cat' | 'dog' | 'chicken' | null>(null);
+  const [petName, setPetName] = useState('');
+  const [isSubmittingPet, setIsSubmittingPet] = useState(false);
+
   const replyContainerRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
+
+  const hasPet = !!user?.petType;
 
   // Initialize Speech Recognition
   useEffect(() => {
@@ -47,9 +59,46 @@ export default function WorryGrocery() {
     }
   }, []);
 
+  const handleAdoptPet = async () => {
+    if (!selectedPetType) {
+      toast.error('请选择一只宠物');
+      return;
+    }
+    if (!petName.trim()) {
+      toast.error('请给宠物起个名字');
+      return;
+    }
+
+    setIsSubmittingPet(true);
+    try {
+      // Assuming mock-token-PHONE format for demo
+      const token = `mock-token-${user?.username}`; 
+      const res = await fetch('/api/auth/pet', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ petType: selectedPetType, petName: petName })
+      });
+      const data = await res.json();
+      
+      if (data.success) {
+        login(data.user); // Update local user store
+        toast.success('领养成功！');
+      } else {
+        toast.error(data.error || '领养失败');
+      }
+    } catch (e) {
+      toast.error('网络错误');
+    } finally {
+      setIsSubmittingPet(false);
+    }
+  };
+
   const toggleListening = () => {
     if (!recognitionRef.current) {
-      alert('您的浏览器不支持语音输入功能');
+      toast.error('您的浏览器不支持语音输入功能');
       return;
     }
 
@@ -78,7 +127,7 @@ export default function WorryGrocery() {
       const res = await fetch('/api/worry/consult', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: input }),
+        body: JSON.stringify({ content: input, petType: user?.petType, petName: user?.petName }),
       });
       
       const data = await res.json();
@@ -115,6 +164,114 @@ export default function WorryGrocery() {
     }
   }, [displayedReply, showQuote]);
 
+  const renderPet = (message: React.ReactNode) => {
+    switch (user?.petType) {
+      case 'dog':
+        return <ThreeDog message={message} />;
+      case 'chicken':
+        return <ThreeChicken message={message} />;
+      case 'cat':
+      default:
+        return <ThreeCat message={message} />;
+    }
+  };
+
+  if (!hasPet) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-orange-50 to-pink-50 flex flex-col font-sans">
+        <header className="p-4 flex items-center sticky top-0 bg-white/30 backdrop-blur-md z-10">
+          <Link to="/" className="p-2 rounded-full hover:bg-orange-100 transition-colors text-amber-800">
+            <ArrowLeft className="w-6 h-6" />
+          </Link>
+          <h1 className="ml-2 font-bold text-xl text-amber-900 flex items-center gap-2">
+            <Store className="w-5 h-5" /> 电子宠物店
+          </h1>
+        </header>
+
+        <main className="flex-1 max-w-2xl w-full mx-auto p-6 flex flex-col items-center justify-center animate-in fade-in slide-in-from-bottom-8 duration-700">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">欢迎来到电子宠物店</h2>
+            <p className="text-gray-600">请挑选一只属于你的专属宠物，它将永远陪伴你。</p>
+          </div>
+
+          <div className="grid grid-cols-3 gap-4 w-full mb-8">
+            {/* Cat Option */}
+            <button
+              onClick={() => setSelectedPetType('cat')}
+              className={`relative p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
+                selectedPetType === 'cat' 
+                  ? 'bg-orange-100 border-orange-500 shadow-md transform scale-105' 
+                  : 'bg-white border-gray-200 hover:border-orange-200'
+              }`}
+            >
+              {selectedPetType === 'cat' && <div className="absolute top-2 right-2 bg-orange-500 text-white p-1 rounded-full"><Check size={12} /></div>}
+              <div className="w-16 h-16 bg-orange-50 rounded-full flex items-center justify-center text-orange-600">
+                <Cat size={32} />
+              </div>
+              <span className="font-bold text-gray-800">小猫</span>
+            </button>
+
+            {/* Dog Option */}
+            <button
+              onClick={() => setSelectedPetType('dog')}
+              className={`relative p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
+                selectedPetType === 'dog' 
+                  ? 'bg-amber-100 border-amber-500 shadow-md transform scale-105' 
+                  : 'bg-white border-gray-200 hover:border-amber-200'
+              }`}
+            >
+              {selectedPetType === 'dog' && <div className="absolute top-2 right-2 bg-amber-500 text-white p-1 rounded-full"><Check size={12} /></div>}
+              <div className="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center text-amber-600">
+                <Dog size={32} />
+              </div>
+              <span className="font-bold text-gray-800">小狗</span>
+            </button>
+
+            {/* Chicken Option */}
+            <button
+              onClick={() => setSelectedPetType('chicken')}
+              className={`relative p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
+                selectedPetType === 'chicken' 
+                  ? 'bg-yellow-100 border-yellow-500 shadow-md transform scale-105' 
+                  : 'bg-white border-gray-200 hover:border-yellow-200'
+              }`}
+            >
+              {selectedPetType === 'chicken' && <div className="absolute top-2 right-2 bg-yellow-500 text-white p-1 rounded-full"><Check size={12} /></div>}
+              <div className="w-16 h-16 bg-yellow-50 rounded-full flex items-center justify-center text-yellow-600">
+                <Bird size={32} />
+              </div>
+              <span className="font-bold text-gray-800">小鸡</span>
+            </button>
+          </div>
+
+          <div className="w-full space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">给它起个名字</label>
+              <input
+                type="text"
+                value={petName}
+                onChange={(e) => setPetName(e.target.value)}
+                placeholder="例如：旺财、咪咪..."
+                className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+              />
+            </div>
+
+            <button
+              onClick={handleAdoptPet}
+              disabled={!selectedPetType || !petName.trim() || isSubmittingPet}
+              className="w-full py-3 bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:-translate-y-0.5 active:translate-y-0"
+            >
+              {isSubmittingPet ? '领养中...' : '确认领养'}
+            </button>
+            <p className="text-xs text-gray-400 text-center mt-2">
+              * 领养后无法更换宠物种类，请慎重选择
+            </p>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 to-pink-50 flex flex-col font-sans">
       {/* Header */}
@@ -123,20 +280,21 @@ export default function WorryGrocery() {
           <ArrowLeft className="w-6 h-6" />
         </Link>
         <h1 className="ml-2 font-bold text-xl text-amber-900 flex items-center gap-2">
-          <Store className="w-5 h-5" /> 电子宠物
+          <Store className="w-5 h-5" /> 电子宠物店
         </h1>
       </header>
 
       <main className="flex-1 max-w-2xl w-full mx-auto p-4 flex flex-col relative">
-        {/* Cat Area */}
+        {/* Pet Area */}
         <div className="flex flex-col items-center mb-2 mt-4 animate-in fade-in slide-in-from-top-8 duration-700 w-full z-10">
-          <ThreeCat 
-            message={loading 
-              ? "喵... 正在用心聆听..." 
+          <div className="relative">
+            {renderPet(loading 
+              ? "嗯... 正在思考..." 
               : response 
                 ? "我已经听到了你的心声..."
-                : "Hi，我是你的专属小喵，写下你的心事，我会送你一份礼物！"}
-          />
+                : `Hi，我是${user?.petName}，有什么心事都可以告诉我哦！`
+            )}
+          </div>
         </div>
 
         {/* Interaction Area - Conditional Flex Grow */}
@@ -144,7 +302,7 @@ export default function WorryGrocery() {
           {/* Result Display */}
           {response && (
             <div className="space-y-6 pb-20">
-              {/* Cat's Reply */}
+              {/* Pet's Reply */}
               <div className="bg-white/50 p-6 rounded-3xl border border-orange-50 shadow-sm">
                 <p className="text-gray-700 leading-7 whitespace-pre-wrap">
                   {displayedReply}
@@ -204,7 +362,7 @@ export default function WorryGrocery() {
               <textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="在这里写下你的烦恼..."
+                placeholder={`和${user?.petName || '它'}说说你的烦恼...`}
                 className="w-full p-4 pr-24 min-h-[80px] resize-none outline-none text-lg text-gray-800 bg-transparent placeholder:text-gray-400 placeholder:font-medium"
               />
               <div className="absolute bottom-3 right-3 flex gap-2">

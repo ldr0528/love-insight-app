@@ -30,8 +30,18 @@ export default function RechargePage() {
       <main className="flex-1 max-w-3xl w-full mx-auto p-4 md:p-6 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
         
         {/* Encouragement Message */}
-        <div className="bg-orange-100 text-orange-800 p-4 rounded-xl text-center font-medium shadow-sm">
-          网站制作不易，您的小小鼓励就是我们最大的动力 ❤️
+        <div className="relative overflow-hidden bg-gradient-to-r from-orange-100 via-amber-50 to-orange-100 p-5 rounded-2xl text-center shadow-sm border border-orange-200/50">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-300 via-red-300 to-orange-300 opacity-50"></div>
+          <div className="relative z-10 flex flex-col items-center gap-1">
+            <span className="text-orange-800 font-bold text-base md:text-lg tracking-wide flex items-center gap-2">
+              <span className="text-xl">✨</span> 网站制作不易 <span className="text-xl">✨</span>
+            </span>
+            <span className="text-orange-600/90 text-sm font-medium">
+              您的小小鼓励就是我们最大的动力 <span className="text-red-500 animate-pulse inline-block transform hover:scale-125 transition-transform">❤️</span>
+            </span>
+          </div>
+          <div className="absolute -bottom-4 -right-4 w-16 h-16 bg-orange-200 rounded-full opacity-20 blur-xl"></div>
+          <div className="absolute -top-4 -left-4 w-16 h-16 bg-red-200 rounded-full opacity-20 blur-xl"></div>
         </div>
 
         {/* VIP Plan Selection */}

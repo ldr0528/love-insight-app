@@ -25,17 +25,17 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex flex-col relative">
       {/* Top Navigation Bar */}
-      <nav className="absolute top-0 left-0 right-0 z-50 flex items-center justify-center p-4">
-        <div className="flex items-center gap-2 md:gap-4 bg-white/80 backdrop-blur-sm px-2 py-1.5 md:px-3 md:py-2 rounded-full shadow-sm border border-pink-100">
+      <nav className="absolute top-0 left-0 right-0 z-50 flex items-center justify-center p-3 md:p-4">
+        <div className="flex items-center gap-1 md:gap-4 bg-white/90 backdrop-blur-md px-1.5 py-1 md:px-3 md:py-2 rounded-full shadow-sm border border-pink-100 max-w-full overflow-x-auto scrollbar-hide">
           <Link 
             to="/contact"
-            className="flex items-center gap-1.5 md:gap-2 px-3 py-1.5 rounded-full text-gray-700 hover:bg-gray-100 transition-all"
+            className="flex-shrink-0 flex items-center gap-1 md:gap-2 px-2 py-1.5 md:px-3 rounded-full text-gray-700 hover:bg-gray-100 transition-all whitespace-nowrap"
           >
-            <MessageCircle size={18} />
-            <span className="text-sm font-medium">联系我们</span>
+            <MessageCircle size={16} className="md:w-[18px] md:h-[18px]" />
+            <span className="text-xs md:text-sm font-medium">联系我们</span>
           </Link>
 
-          <div className="w-px h-4 bg-gray-200"></div>
+          <div className="flex-shrink-0 w-px h-3 md:h-4 bg-gray-200"></div>
           
           <button 
             onClick={() => {
@@ -45,36 +45,36 @@ export default function Home() {
                 openAuthModal();
               }
             }}
-            className="flex items-center gap-1.5 md:gap-2 px-3 py-1.5 rounded-full text-white bg-gradient-to-r from-yellow-400 to-orange-500 shadow-sm hover:shadow-md hover:scale-105 transition-all"
+            className="flex-shrink-0 flex items-center gap-1 md:gap-2 px-2 py-1.5 md:px-3 rounded-full text-white bg-gradient-to-r from-yellow-400 to-orange-500 shadow-sm hover:shadow-md hover:scale-105 transition-all whitespace-nowrap"
           >
-            <Crown size={18} className="fill-current" />
-            <span className="text-sm font-medium">充值VIP</span>
+            <Crown size={16} className="fill-current md:w-[18px] md:h-[18px]" />
+            <span className="text-xs md:text-sm font-medium">充值VIP</span>
           </button>
 
-          <div className="w-px h-4 bg-gray-200"></div>
+          <div className="flex-shrink-0 w-px h-3 md:h-4 bg-gray-200"></div>
 
           {user ? (
-            <div className="flex items-center gap-2 pl-1">
-              <div className="relative w-7 h-7 md:w-8 md:h-8">
+            <div className="flex-shrink-0 flex items-center gap-1.5 pl-0.5 md:gap-2 md:pl-1">
+              <div className="relative w-6 h-6 md:w-8 md:h-8 flex-shrink-0">
                 <div className="w-full h-full bg-pink-100 rounded-full flex items-center justify-center text-pink-500 font-bold overflow-hidden">
                   {user.avatar ? (
                     <img src={user.avatar} alt="Avatar" className="w-full h-full object-cover" />
                   ) : (
-                    <User size={16} />
+                    <User size={14} className="md:w-[16px] md:h-[16px]" />
                   )}
                 </div>
                 {user.isVip && (
-                  <div className="absolute -top-1 -right-1 bg-yellow-400 rounded-full p-0.5 border border-white z-10">
-                    <Crown size={8} className="text-white fill-current" />
+                  <div className="absolute -top-0.5 -right-0.5 md:-top-1 md:-right-1 bg-yellow-400 rounded-full p-[1px] md:p-0.5 border border-white z-10">
+                    <Crown size={6} className="text-white fill-current md:w-[8px] md:h-[8px]" />
                   </div>
                 )}
               </div>
-              <div className="flex flex-col justify-center">
-                <span className="text-xs md:text-sm font-medium text-gray-700 leading-tight max-w-[80px] truncate">{user.nickname}</span>
+              <div className="flex flex-col justify-center min-w-0 max-w-[60px] md:max-w-[80px]">
+                <span className="text-[10px] md:text-sm font-medium text-gray-700 leading-tight truncate">{user.nickname}</span>
               </div>
               <button 
                 onClick={logout} 
-                className="text-xs text-gray-400 hover:text-pink-500 ml-1 px-2 py-1"
+                className="text-[10px] md:text-xs text-gray-400 hover:text-pink-500 px-1.5 py-1 whitespace-nowrap"
               >
                 退出
               </button>
@@ -82,10 +82,10 @@ export default function Home() {
           ) : (
             <button 
               onClick={openAuthModal}
-              className="flex items-center gap-1.5 md:gap-2 px-3 py-1.5 rounded-full text-gray-700 hover:bg-gray-100 transition-all"
+              className="flex-shrink-0 flex items-center gap-1 md:gap-2 px-2 py-1.5 md:px-3 rounded-full text-gray-700 hover:bg-gray-100 transition-all whitespace-nowrap"
             >
-              <User size={18} />
-              <span className="text-sm font-medium">登录 / 注册</span>
+              <User size={16} className="md:w-[18px] md:h-[18px]" />
+              <span className="text-xs md:text-sm font-medium">登录/注册</span>
             </button>
           )}
         </div>
@@ -141,7 +141,7 @@ export default function Home() {
                   {/* Signboard */}
                   <div className="absolute top-16 md:top-20 left-1/2 transform -translate-x-1/2 w-20 md:w-28 z-20">
                     <div className="bg-[#8e5431] text-[#fffbf0] text-[10px] md:text-xs font-bold text-center py-1 md:py-1.5 rounded shadow-sm border border-[#6d3e1d] tracking-wide whitespace-nowrap">
-                      电子宠物
+                      电子宠物店
                     </div>
                   </div>
 

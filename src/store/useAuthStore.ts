@@ -7,6 +7,8 @@ interface User {
   nickname: string;
   isVip?: boolean;
   avatar?: string;
+  petType?: 'cat' | 'dog' | 'chicken' | null;
+  petName?: string | null;
 }
 
 interface AuthState {

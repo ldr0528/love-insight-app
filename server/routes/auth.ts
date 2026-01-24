@@ -238,4 +238,37 @@ router.get('/me', async (req: Request, res: Response) => {
   }
 });
 
+// Update Pet Info
+router.post('/pet', async (req: Request, res: Response) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
+  }
+
+  const token = authHeader.split(' ')[1];
+  const phone = token.replace('mock-token-', '');
+  const { petType, petName } = req.body;
+
+  try {
+    await connectDB();
+    const user = await User.findOne({ phone });
+    
+    if (!user) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    user.petType = petType;
+    user.petName = petName;
+    await user.save();
+
+    const userObj = user.toObject();
+    const { password: _, ...userWithoutPassword } = userObj;
+    res.json({ success: true, user: userWithoutPassword });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 export default router;

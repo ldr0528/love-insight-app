@@ -16,20 +16,6 @@ export default function ContactUs() {
 
       <main className="flex-1 max-w-3xl w-full mx-auto p-6 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
         
-        {/* Banner */}
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-600 shadow-xl p-8 text-white text-center">
-          <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-          <Sparkles className="absolute top-4 left-4 w-8 h-8 text-yellow-300 animate-pulse" />
-          <Sparkles className="absolute bottom-4 right-4 w-6 h-6 text-yellow-300 animate-bounce" />
-          
-          <h2 className="relative z-10 text-2xl md:text-4xl font-extrabold mb-2 tracking-tight">
-            联系客服领取大力优惠！
-          </h2>
-          <p className="relative z-10 text-blue-100 font-medium">
-            限时福利派送中，添加好友即可获取
-          </p>
-        </div>
-
         {/* Content Section */}
         <div className="bg-white rounded-3xl p-8 shadow-lg border border-blue-50 space-y-8">
           

@@ -48,6 +48,15 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: '',
   },
+  petType: {
+    type: String,
+    enum: ['cat', 'dog', 'chicken', null],
+    default: null,
+  },
+  petName: {
+    type: String,
+    default: null,
+  },
   lastLoginAt: {
     type: Date,
     default: Date.now,
