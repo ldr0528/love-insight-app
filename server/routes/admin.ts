@@ -34,7 +34,7 @@ router.post('/users/:id/set-vip', async (req: Request, res: Response) => {
   
   try {
     await connectDB();
-    const user = await User.findOne({ id });
+    const user = await User.findById(id);
     if (user) {
       const wasVip = user.isVip;
       
@@ -67,7 +67,7 @@ router.post('/users/:id/toggle-vip', async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     await connectDB();
-    const user = await User.findOne({ id });
+    const user = await User.findById(id);
     if (user) {
       user.isVip = !user.isVip;
       await user.save();
@@ -86,7 +86,7 @@ router.post('/users/:id/toggle-blacklist', async (req: Request, res: Response) =
   const { id } = req.params;
   try {
     await connectDB();
-    const user = await User.findOne({ id });
+    const user = await User.findById(id);
     if (user) {
       user.isBlacklisted = !user.isBlacklisted;
       await user.save();
@@ -105,8 +105,8 @@ router.delete('/users/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     await connectDB();
-    const result = await User.deleteOne({ id });
-    if (result.deletedCount > 0) {
+    const result = await User.findByIdAndDelete(id);
+    if (result) {
       res.json({ success: true });
     } else {
       res.status(404).json({ success: false, message: 'User not found' });

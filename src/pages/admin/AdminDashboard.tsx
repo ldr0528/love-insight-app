@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Users, Crown, Trash2, LogOut, Search, User, Ban } from 'lucide-react';
 
 interface UserData {
+  _id: string;
   id: string;
   username: string;
   nickname: string;
@@ -48,25 +49,6 @@ export default function AdminDashboard() {
   const handleSetVip = async (type: 'weekly' | 'monthly' | 'permanent' | 'remove') => {
     if (!selectedUser) return;
     
-    let endpoint = `/api/admin/users/${selectedUser.id}/toggle-vip`;
-    // For simplicity, we might need a new endpoint or pass params to existing one
-    // But since backend toggle-vip is simple boolean toggle, let's assume we need to update backend first
-    // Actually, let's just use a direct update call if possible or stick to simple toggle for now if backend not ready
-    // Wait, I should implement the logic.
-    // Let's assume we can pass body to toggle-vip or create a new one.
-    // Since I can't easily change backend routes without context, let's look at previous turns.
-    // Ah, I can modify backend logic too if needed. But for now let's try to pass data.
-    
-    // Actually, I should probably just update the user directly if there was an update endpoint.
-    // Let's try to use the existing toggle-vip but maybe I should have created a set-vip endpoint.
-    // Let's create a new function `updateVipStatus` in this component and maybe mock the backend call 
-    // or assume the backend `toggle-vip` is simple.
-    // Wait, the user asked to "Set VIP also divided into two types".
-    // I should probably update the backend route to accept `vipType` or `expiresAt`.
-    
-    // Let's stick to what I can do here first. 
-    // I will mock the UI logic and assume I need to implement the backend change for `toggle-vip` to accept body.
-    
     let expiresAt = null;
     if (type === 'monthly') {
       const date = new Date();
@@ -79,11 +61,7 @@ export default function AdminDashboard() {
     }
     
     try {
-      // We need to send this to backend. 
-      // Current backend `toggle-vip` just toggles boolean. 
-      // I should ideally update backend `toggle-vip` to accept JSON body.
-      // Let's assume I will update backend in next step or I can send it now.
-      const res = await fetch(`/api/admin/users/${selectedUser.id}/set-vip`, {
+      const res = await fetch(`/api/admin/users/${selectedUser._id}/set-vip`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -94,7 +72,7 @@ export default function AdminDashboard() {
       
       const data = await res.json();
       if (data.success) {
-        setUsers(users.map(u => u.id === selectedUser.id ? { 
+        setUsers(users.map(u => u._id === selectedUser._id ? { 
           ...u, 
           isVip: type !== 'remove',
           vipExpiresAt: expiresAt 
@@ -111,10 +89,10 @@ export default function AdminDashboard() {
     if (!confirm(`Are you sure you want to ${action} this user?`)) return;
 
     try {
-      const res = await fetch(`/api/admin/users/${user.id}/toggle-blacklist`, { method: 'POST' });
+      const res = await fetch(`/api/admin/users/${user._id}/toggle-blacklist`, { method: 'POST' });
       const data = await res.json();
       if (data.success) {
-        setUsers(users.map(u => u.id === user.id ? { ...u, isBlacklisted: !u.isBlacklisted } : u));
+        setUsers(users.map(u => u._id === user._id ? { ...u, isBlacklisted: !u.isBlacklisted } : u));
       } else {
         alert(data.message || 'Operation failed');
       }
@@ -129,7 +107,7 @@ export default function AdminDashboard() {
       const res = await fetch(`/api/admin/users/${id}`, { method: 'DELETE' });
       const data = await res.json();
       if (data.success) {
-        setUsers(users.filter(u => u.id !== id));
+        setUsers(users.filter(u => u._id !== id));
       }
     } catch (error) {
       alert('Delete failed');
@@ -222,7 +200,7 @@ export default function AdminDashboard() {
                   </tr>
                 ) : (
                   filteredUsers.map(user => (
-                    <tr key={user.id} className={`hover:bg-gray-50 transition-colors ${user.isBlacklisted ? 'bg-gray-50' : ''}`}>
+                    <tr key={user._id} className={`hover:bg-gray-50 transition-colors ${user.isBlacklisted ? 'bg-gray-50' : ''}`}>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <div className={`w-10 h-10 rounded-full flex items-center justify-center ${user.isBlacklisted ? 'bg-red-100 text-red-500' : 'bg-gray-100 text-gray-500'}`}>
@@ -290,7 +268,7 @@ export default function AdminDashboard() {
                             <Ban size={16} />
                           </button>
                           <button 
-                            onClick={() => deleteUser(user.id)}
+                            onClick={() => deleteUser(user._id)}
                             className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
                             title="Delete User"
                           >

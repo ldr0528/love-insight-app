@@ -172,7 +172,7 @@ router.post('/register', async (req: Request, res: Response) => {
 
     // Register: Create new user
     const user = await User.create({
-      id: phone.slice(-4), // Use last 4 digits as short ID
+      id: Date.now().toString(36) + Math.random().toString(36).substring(2, 5), // Unique ID
       username,
       password, // In production, hash this!
       nickname: `用户${phone.slice(-4)}`,
