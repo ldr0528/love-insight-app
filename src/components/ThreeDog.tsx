@@ -1,6 +1,6 @@
 import React, { useRef, useState, useMemo, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Sphere, Cylinder, Float, ContactShadows, useCursor, Html } from '@react-three/drei';
+import { Sphere, Cylinder, Float, ContactShadows, useCursor, Html, Cone } from '@react-three/drei';
 import * as THREE from 'three';
 
 function DogModel({ hovered, setHovered, message }: { hovered: boolean, setHovered: (h: boolean) => void, message: React.ReactNode }) {
@@ -25,13 +25,20 @@ function DogModel({ hovered, setHovered, message }: { hovered: boolean, setHover
     color: '#000000', 
     roughness: 0.1, 
     metalness: 0.5,
-    clearcoat: 1
+    clearcoat: 1,
+    clearcoatRoughness: 0.1
   }), []);
   
   const noseMaterial = useMemo(() => new THREE.MeshStandardMaterial({ 
     color: '#3e2723', 
     roughness: 0.4,
     metalness: 0.1
+  }), []);
+
+  const pinkSkin = useMemo(() => new THREE.MeshStandardMaterial({ 
+    color: '#ffb7b2', 
+    roughness: 0.5,
+    metalness: 0
   }), []);
 
   const [isMobile, setIsMobile] = useState(false);
@@ -86,39 +93,48 @@ function DogModel({ hovered, setHovered, message }: { hovered: boolean, setHover
            <primitive object={furMaterial} />
         </Sphere>
 
-        {/* Floppy Ears */}
-        <group position={[0.45, 0.2, 0]} rotation={[0, 0, -0.5]}>
-          <mesh>
-             <boxGeometry args={[0.2, 0.5, 0.1]} />
+        {/* Floppy Ears - Rounded and floppier */}
+        <group position={[0.45, 0.1, 0]} rotation={[0, 0, -0.3]}>
+           <Sphere args={[0.18, 32, 32]} scale={[1, 1.8, 0.5]}>
              <primitive object={furMaterial} />
-          </mesh>
+           </Sphere>
         </group>
-        <group position={[-0.45, 0.2, 0]} rotation={[0, 0, 0.5]}>
-           <mesh>
-             <boxGeometry args={[0.2, 0.5, 0.1]} />
+        <group position={[-0.45, 0.1, 0]} rotation={[0, 0, 0.3]}>
+           <Sphere args={[0.18, 32, 32]} scale={[1, 1.8, 0.5]}>
              <primitive object={furMaterial} />
-           </mesh>
+           </Sphere>
         </group>
 
-        {/* Eyes */}
+        {/* Eyes - Shiny with highlights */}
         <Sphere args={[0.08, 64, 64]} position={[0.22, 0.1, 0.48]}>
           <primitive object={eyeMaterial} />
         </Sphere>
         <Sphere args={[0.08, 64, 64]} position={[-0.22, 0.1, 0.48]}>
           <primitive object={eyeMaterial} />
         </Sphere>
+        {/* Eye Highlights */}
+        <Sphere args={[0.025, 32, 32]} position={[0.25, 0.14, 0.53]} material={new THREE.MeshBasicMaterial({ color: 'white' })} />
+        <Sphere args={[0.025, 32, 32]} position={[-0.19, 0.14, 0.53]} material={new THREE.MeshBasicMaterial({ color: 'white' })} />
         
-        {/* Snout */}
-        <Sphere args={[0.25, 32, 32]} position={[0, -0.15, 0.5]} scale={[1, 0.8, 0.8]}>
+        {/* Snout - More defined */}
+        <Sphere args={[0.25, 32, 32]} position={[0, -0.15, 0.5]} scale={[1.1, 0.8, 0.9]}>
           <primitive object={lightFurMaterial} />
         </Sphere>
-        <Sphere args={[0.06, 32, 32]} position={[0, -0.05, 0.68]}>
+        <Sphere args={[0.08, 32, 32]} position={[0, -0.08, 0.7]}>
           <primitive object={noseMaterial} />
+        </Sphere>
+
+        {/* Cheeks */}
+        <Sphere args={[0.15, 32, 32]} position={[0.3, -0.15, 0.4]} scale={[1, 0.6, 0.5]}>
+             <meshStandardMaterial color="#ffb7b2" transparent opacity={0.2} roughness={1} />
+        </Sphere>
+        <Sphere args={[0.15, 32, 32]} position={[-0.3, -0.15, 0.4]} scale={[1, 0.6, 0.5]}>
+             <meshStandardMaterial color="#ffb7b2" transparent opacity={0.2} roughness={1} />
         </Sphere>
 
         {/* Chat Bubble */}
         <Html 
-          position={[isMobile ? 0.5 : 0.6, isMobile ? 0.25 : 0.35, 0]} 
+          position={[isMobile ? 0.5 : 0.55, isMobile ? 0.25 : 0.35, 0]} 
           center 
           className="pointer-events-none w-40 sm:w-64 md:w-72" 
           style={{ transform: 'scale(1)', zIndex: 0 }}
@@ -128,15 +144,16 @@ function DogModel({ hovered, setHovered, message }: { hovered: boolean, setHover
             <div className="text-amber-900/90 text-[10px] md:text-sm font-medium leading-relaxed text-left break-words whitespace-pre-wrap w-full">
               {message}
             </div>
-            <div className="absolute top-3 md:top-4 -left-2 w-0 h-0 border-t-[6px] md:border-t-[8px] border-t-transparent border-r-[8px] md:border-r-[10px] border-r-white/95 border-b-[6px] md:border-b-[8px] border-b-transparent"></div>
+            {/* Arrow */}
+            <div className="absolute top-3 md:top-4 -left-2 w-0 h-0 border-t-[6px] md:border-t-[8px] border-t-transparent border-r-[8px] md:border-r-[10px] border-r-white/95 border-b-[6px] md:border-b-[8px] border-b-transparent transform rotate-0" style={{ filter: 'drop-shadow(-1px 0px 1px rgba(0,0,0,0.05))' }}></div>
           </div>
         </Html>
       </group>
 
-      {/* Tail */}
-      <group ref={tailRef} position={[0, 0, -0.7]}>
-        <mesh position={[0, 0.2, 0]} rotation={[0.5, 0, 0]}>
-          <cylinderGeometry args={[0.08, 0.05, 0.6, 32]} />
+      {/* Tail - Waggier */}
+      <group ref={tailRef} position={[0, -0.2, -0.6]}>
+        <mesh position={[0, 0.3, 0]} rotation={[0.5, 0, 0]}>
+          <capsuleGeometry args={[0.08, 0.6, 4, 8]} />
           <primitive object={furMaterial} />
         </mesh>
       </group>
