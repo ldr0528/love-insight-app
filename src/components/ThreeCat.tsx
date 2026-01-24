@@ -154,12 +154,12 @@ function CatModel({ hovered, setHovered, message }: { hovered: boolean, setHover
         <Html 
           position={[isMobile ? 0.5 : 0.6, isMobile ? 0.25 : 0.35, 0]} 
           center 
-          className="pointer-events-none w-40 sm:w-64 md:w-72" 
-          style={{ transform: 'scale(1)', zIndex: 0 }}
-          zIndexRange={[0, 0]}
+          className="pointer-events-none w-48 sm:w-72 md:w-80" 
+          style={{ transform: 'scale(1)', zIndex: 10 }}
+          zIndexRange={[10, 0]}
         >
-          <div className="bg-white/95 backdrop-blur-sm px-3 py-2 md:px-5 md:py-4 rounded-2xl rounded-tl-none shadow-xl border border-orange-100 relative animate-in zoom-in duration-300 origin-top-left flex items-center min-h-[50px] md:min-h-[60px]">
-            <div className="text-amber-900/90 text-[10px] md:text-sm font-medium leading-relaxed text-left break-words whitespace-pre-wrap w-full">
+          <div className="bg-white/95 backdrop-blur-sm px-4 py-3 md:px-6 md:py-5 rounded-2xl rounded-tl-none shadow-xl border border-orange-100 relative animate-in zoom-in duration-300 origin-top-left flex items-center min-h-[50px] md:min-h-[60px]">
+            <div className="text-amber-900/90 text-xs md:text-sm font-medium leading-relaxed text-left break-words whitespace-pre-wrap w-full">
               {message}
             </div>
             {/* Arrow pointing to mouth */}

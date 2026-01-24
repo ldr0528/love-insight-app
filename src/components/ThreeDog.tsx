@@ -8,17 +8,17 @@ function DogModel({ hovered, setHovered, message }: { hovered: boolean, setHover
   const bodyRef = useRef<THREE.Group>(null);
   const tailRef = useRef<THREE.Group>(null);
 
-  // Materials - Improved dog colors
+  // Materials - Improved dog colors to match realistic puppy photo (Cream/Beige)
   const furMaterial = useMemo(() => new THREE.MeshStandardMaterial({ 
-    color: '#8B4513', // SaddleBrown - darker, more natural brown
-    roughness: 0.8, 
-    metalness: 0.1
+    color: '#f0e0c9', // Champagne/Cream color
+    roughness: 1, 
+    metalness: 0
   }), []);
   
   const lightFurMaterial = useMemo(() => new THREE.MeshStandardMaterial({ 
-    color: '#DEB887', // BurlyWood - lighter accent
-    roughness: 0.8, 
-    metalness: 0.1
+    color: '#ffffff', // White for muzzle, paws, belly
+    roughness: 1, 
+    metalness: 0
   }), []);
 
   const eyeMaterial = useMemo(() => new THREE.MeshPhysicalMaterial({ 
@@ -92,50 +92,50 @@ function DogModel({ hovered, setHovered, message }: { hovered: boolean, setHover
       {/* Head */}
       <group ref={headRef} position={[0, 0.75, 0.2]}>
         {/* Main Head - Slightly boxier/rounder like a puppy */}
-        <Sphere args={[0.55, 64, 64]} scale={[1, 0.9, 1]}>
+        <Sphere args={[0.55, 64, 64]} scale={[1, 0.95, 1]}>
            <primitive object={furMaterial} />
         </Sphere>
 
         {/* Ears - More dog-like, teardrop shape */}
-        <group position={[0.45, 0.2, 0]} rotation={[0, 0, -0.4]}>
-           {/* Outer Ear */}
-           <Sphere args={[0.15, 32, 32]} scale={[1, 2.2, 0.6]} position={[0, -0.1, 0]}>
+        <group position={[0.45, 0.2, 0]} rotation={[0, 0, -0.6]}>
+           {/* Outer Ear - Fluffier and folded */}
+           <Sphere args={[0.16, 32, 32]} scale={[1, 1.8, 0.5]} position={[0, -0.1, 0]}>
              <primitive object={furMaterial} />
            </Sphere>
         </group>
-        <group position={[-0.45, 0.2, 0]} rotation={[0, 0, 0.4]}>
-           {/* Outer Ear */}
-           <Sphere args={[0.15, 32, 32]} scale={[1, 2.2, 0.6]} position={[0, -0.1, 0]}>
+        <group position={[-0.45, 0.2, 0]} rotation={[0, 0, 0.6]}>
+           {/* Outer Ear - Fluffier and folded */}
+           <Sphere args={[0.16, 32, 32]} scale={[1, 1.8, 0.5]} position={[0, -0.1, 0]}>
              <primitive object={furMaterial} />
            </Sphere>
         </group>
 
         {/* Eyes - Larger and cuter */}
-        <Sphere args={[0.085, 64, 64]} position={[0.2, 0.05, 0.45]}>
+        <Sphere args={[0.075, 64, 64]} position={[0.2, 0.05, 0.45]}>
           <primitive object={eyeMaterial} />
         </Sphere>
-        <Sphere args={[0.085, 64, 64]} position={[-0.2, 0.05, 0.45]}>
+        <Sphere args={[0.075, 64, 64]} position={[-0.2, 0.05, 0.45]}>
           <primitive object={eyeMaterial} />
         </Sphere>
         {/* Eye Highlights */}
-        <Sphere args={[0.025, 32, 32]} position={[0.23, 0.09, 0.5]} material={new THREE.MeshBasicMaterial({ color: 'white' })} />
-        <Sphere args={[0.025, 32, 32]} position={[-0.17, 0.09, 0.5]} material={new THREE.MeshBasicMaterial({ color: 'white' })} />
+        <Sphere args={[0.02, 32, 32]} position={[0.23, 0.08, 0.5]} material={new THREE.MeshBasicMaterial({ color: 'white' })} />
+        <Sphere args={[0.02, 32, 32]} position={[-0.17, 0.08, 0.5]} material={new THREE.MeshBasicMaterial({ color: 'white' })} />
         
         {/* Snout - Pronounced and lighter color */}
         <group position={[0, -0.12, 0.5]}>
-          <Sphere args={[0.22, 32, 32]} scale={[1.2, 0.85, 1]}>
+          <Sphere args={[0.2, 32, 32]} scale={[1.1, 0.8, 0.9]}>
             <primitive object={lightFurMaterial} />
           </Sphere>
           {/* Nose - Triangle shape */}
-          <Cone args={[0.08, 0.08, 32]} position={[0, 0.05, 0.2]} rotation={[0.5, 0, 0]} material={noseMaterial} />
+          <Cone args={[0.06, 0.06, 32]} position={[0, 0.05, 0.18]} rotation={[0.5, 0, 0]} material={new THREE.MeshStandardMaterial({ color: '#1a1a1a', roughness: 0.4 })} />
         </group>
 
-        {/* Cheeks */}
+        {/* Cheeks - Subtle */}
         <Sphere args={[0.12, 32, 32]} position={[0.28, -0.1, 0.35]} scale={[1, 0.6, 0.5]}>
-             <meshStandardMaterial color="#ffb7b2" transparent opacity={0.2} roughness={1} />
+             <meshStandardMaterial color="#ffb7b2" transparent opacity={0.15} roughness={1} />
         </Sphere>
         <Sphere args={[0.12, 32, 32]} position={[-0.28, -0.1, 0.35]} scale={[1, 0.6, 0.5]}>
-             <meshStandardMaterial color="#ffb7b2" transparent opacity={0.2} roughness={1} />
+             <meshStandardMaterial color="#ffb7b2" transparent opacity={0.15} roughness={1} />
         </Sphere>
 
         {/* Chat Bubble - Fixed for desktop width */}
