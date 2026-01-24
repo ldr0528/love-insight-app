@@ -157,7 +157,7 @@ export default function RechargePage() {
             </p>
             <div className="rounded-xl overflow-hidden border border-gray-200">
               <img 
-                src="/images/VIP-step2.png" 
+                src="/images/VIP-step2.jpg" 
                 alt="Step 2 Example" 
                 className="w-full h-auto"
               />
