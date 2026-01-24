@@ -24,74 +24,72 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex flex-col relative">
-      {/* Contact Us Button (Top Left) */}
-      <div className="absolute top-4 left-4 z-50 flex items-center gap-2">
-        <Link 
-          to="/contact"
-          className="flex items-center gap-2 px-3 py-1.5 h-[42px] bg-white/80 backdrop-blur-sm text-gray-700 rounded-full font-medium shadow-sm border border-pink-100 hover:bg-white hover:text-pink-600 hover:shadow-md transition-all text-sm"
-        >
-          <MessageCircle size={18} />
-          <span>联系我们</span>
-        </Link>
-        
-        <button 
-          onClick={() => {
-            if (user) {
-              window.location.href = '/recharge';
-            } else {
-              openAuthModal();
-            }
-          }}
-          className="flex items-center gap-2 px-3 py-1.5 h-[42px] bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-full font-medium shadow-sm border border-yellow-200 hover:shadow-md hover:scale-105 transition-all text-sm"
-        >
-          <Crown size={18} className="fill-current" />
-          <span>充值VIP</span>
-        </button>
-      </div>
+      {/* Top Navigation Bar */}
+      <nav className="absolute top-0 left-0 right-0 z-50 flex items-center justify-center p-4">
+        <div className="flex items-center gap-2 md:gap-4 bg-white/80 backdrop-blur-sm px-2 py-1.5 md:px-3 md:py-2 rounded-full shadow-sm border border-pink-100">
+          <Link 
+            to="/contact"
+            className="flex items-center gap-1.5 md:gap-2 px-3 py-1.5 rounded-full text-gray-700 hover:bg-gray-100 transition-all"
+          >
+            <MessageCircle size={18} />
+            <span className="text-sm font-medium">联系我们</span>
+          </Link>
 
-      {/* Header / Auth Button */}
-      <header className="w-full p-4 flex justify-end items-center z-20 absolute top-0 right-0">
-        {user ? (
-          <div className="flex items-center gap-2 h-[42px] bg-white/80 backdrop-blur-sm px-2 pr-4 rounded-full shadow-sm border border-pink-100 hover:shadow-md transition-all">
-            <div className="relative w-8 h-8">
-              <div className="w-full h-full bg-pink-100 rounded-full flex items-center justify-center text-pink-500 font-bold overflow-hidden">
-                {user.avatar ? (
-                  <img src={user.avatar} alt="Avatar" className="w-full h-full object-cover" />
-                ) : (
-                  <User size={16} />
+          <div className="w-px h-4 bg-gray-200"></div>
+          
+          <button 
+            onClick={() => {
+              if (user) {
+                window.location.href = '/recharge';
+              } else {
+                openAuthModal();
+              }
+            }}
+            className="flex items-center gap-1.5 md:gap-2 px-3 py-1.5 rounded-full text-white bg-gradient-to-r from-yellow-400 to-orange-500 shadow-sm hover:shadow-md hover:scale-105 transition-all"
+          >
+            <Crown size={18} className="fill-current" />
+            <span className="text-sm font-medium">充值VIP</span>
+          </button>
+
+          <div className="w-px h-4 bg-gray-200"></div>
+
+          {user ? (
+            <div className="flex items-center gap-2 pl-1">
+              <div className="relative w-7 h-7 md:w-8 md:h-8">
+                <div className="w-full h-full bg-pink-100 rounded-full flex items-center justify-center text-pink-500 font-bold overflow-hidden">
+                  {user.avatar ? (
+                    <img src={user.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                  ) : (
+                    <User size={16} />
+                  )}
+                </div>
+                {user.isVip && (
+                  <div className="absolute -top-1 -right-1 bg-yellow-400 rounded-full p-0.5 border border-white z-10">
+                    <Crown size={8} className="text-white fill-current" />
+                  </div>
                 )}
               </div>
-              {user.isVip && (
-                <div className="absolute -top-1 -right-1 bg-yellow-400 rounded-full p-0.5 border border-white z-10">
-                  <Crown size={8} className="text-white fill-current" />
-                </div>
-              )}
+              <div className="flex flex-col justify-center">
+                <span className="text-xs md:text-sm font-medium text-gray-700 leading-tight max-w-[80px] truncate">{user.nickname}</span>
+              </div>
+              <button 
+                onClick={logout} 
+                className="text-xs text-gray-400 hover:text-pink-500 ml-1 px-2 py-1"
+              >
+                退出
+              </button>
             </div>
-            <div className="flex flex-col justify-center">
-              <span className="text-sm font-medium text-gray-700 leading-tight">{user.nickname}</span>
-              {user.isVip && (
-                <span className="text-[10px] font-bold text-yellow-500 flex items-center gap-0.5 leading-tight">
-                  <Crown size={8} className="fill-current" /> VIP会员
-                </span>
-              )}
-            </div>
+          ) : (
             <button 
-              onClick={logout} 
-              className="text-xs text-gray-400 hover:text-pink-500 ml-2 border-l border-gray-200 pl-3 h-5 flex items-center"
+              onClick={openAuthModal}
+              className="flex items-center gap-1.5 md:gap-2 px-3 py-1.5 rounded-full text-gray-700 hover:bg-gray-100 transition-all"
             >
-              退出
+              <User size={18} />
+              <span className="text-sm font-medium">登录 / 注册</span>
             </button>
-          </div>
-        ) : (
-          <button 
-            onClick={openAuthModal}
-            className="flex items-center gap-2 px-5 py-2.5 h-[42px] bg-white/80 backdrop-blur-sm text-gray-700 rounded-full font-medium shadow-sm border border-pink-100 hover:bg-white hover:text-pink-600 hover:shadow-md transition-all"
-          >
-            <User size={18} />
-            <span>登录 / 注册</span>
-          </button>
-        )}
-      </header>
+          )}
+        </div>
+      </nav>
 
       <main className="flex-grow flex flex-col items-center justify-center p-4 pt-20 max-w-4xl w-full mx-auto space-y-12">
         {/* Hero Section */}
