@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useAuthStore } from "@/store/useAuthStore";
 import { Sparkles, Calendar, CheckCircle2, Trophy, ArrowRight, Zap, Cat, Star, Heart, Cloud } from 'lucide-react';
 
 // Mock Data Library
@@ -65,6 +66,7 @@ const LUCKY_COLORS = [
 ];
 
 export default function DailyCheckIn() {
+  const { user } = useAuthStore();
   const [checkedIn, setCheckedIn] = useState(false);
   const [streak, setStreak] = useState(0);
   const [todaySign, setTodaySign] = useState<any>(null);
@@ -72,10 +74,12 @@ export default function DailyCheckIn() {
   const [isRevealed, setIsRevealed] = useState(false);
 
   useEffect(() => {
-    // Load state from local storage
-    const lastDate = localStorage.getItem('lastCheckInDate');
-    const storedStreak = parseInt(localStorage.getItem('checkInStreak') || '0');
-    const storedSign = localStorage.getItem('todaySign');
+    if (!user) return;
+    
+    // Load state from local storage with user-specific keys
+    const lastDate = localStorage.getItem(`lastCheckInDate_${user.id}`);
+    const storedStreak = parseInt(localStorage.getItem(`checkInStreak_${user.id}`) || '0');
+    const storedSign = localStorage.getItem(`todaySign_${user.id}`);
     
     const today = new Date().toISOString().split('T')[0];
 
@@ -94,10 +98,13 @@ export default function DailyCheckIn() {
       } else {
         setStreak(0); // Reset streak if broken
       }
+      setCheckedIn(false); // Reset check-in state for new day
+      setTodaySign(null);
     }
-  }, []);
+  }, [user]);
 
   const handleCheckIn = () => {
+    if (!user) return;
     setShowAnimation(true);
     
     // Simulate API delay / Animation
@@ -117,9 +124,9 @@ export default function DailyCheckIn() {
       
       const newStreak = streak + 1;
       
-      localStorage.setItem('lastCheckInDate', today);
-      localStorage.setItem('checkInStreak', newStreak.toString());
-      localStorage.setItem('todaySign', JSON.stringify(fullSign));
+      localStorage.setItem(`lastCheckInDate_${user.id}`, today);
+      localStorage.setItem(`checkInStreak_${user.id}`, newStreak.toString());
+      localStorage.setItem(`todaySign_${user.id}`, JSON.stringify(fullSign));
       
       setCheckedIn(true);
       setStreak(newStreak);

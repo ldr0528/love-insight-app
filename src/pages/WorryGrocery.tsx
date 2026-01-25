@@ -65,19 +65,26 @@ export default function DigitalPetShop() {
   }, []);
 
   // Function to reset pet choice (for testing/user request)
-  const handleResetPet = () => {
-    // In a real app, this might need an API call to reset the user's pet in the DB
-    // For now, we just clear the local state to show the selection screen again
-    // To make it persistent, we should add an API endpoint or update the existing one.
-    // Let's assume we just want to allow re-selection in the UI for now.
-    // Ideally, we should update the user object in the store to clear petType.
-    
-    // We can "hack" it by updating the local user object via login() with null values,
-    // but the backend should support clearing it.
-    // For this task "User can re-select pet", I will add a button to clear the current pet state.
+  const handleResetPet = async () => {
+    // Optimistically update local state
     const updatedUser = { ...user!, petType: null, petName: null };
     // @ts-ignore - Allowing nulls for reset
     login(updatedUser);
+
+    // Also update backend to persist the reset
+    try {
+      const token = `mock-token-${user?.username}`; 
+      await fetch('/api/auth/pet', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ petType: null, petName: null })
+      });
+    } catch (e) {
+      console.error("Failed to reset pet on server", e);
+    }
   };
 
   // Initialize Speech Recognition
