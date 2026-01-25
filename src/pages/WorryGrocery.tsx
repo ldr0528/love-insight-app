@@ -19,7 +19,7 @@ export default function DigitalPetShop() {
   const [isListening, setIsListening] = useState(false);
   
   // Pet Selection State
-  const [selectedPetType, setSelectedPetType] = useState<'cat' | 'dog' | 'chicken' | 'rabbit' | 'panda' | 'hamster' | 'koala' | null>(null);
+  const [selectedPetType, setSelectedPetType] = useState<'cat' | 'dog' | 'chicken' | 'rabbit' | 'panda' | 'hamster' | 'koala' | 'fox' | 'lion' | null>(null);
   const [petName, setPetName] = useState('');
   const [isSubmittingPet, setIsSubmittingPet] = useState(false);
 
@@ -195,6 +195,10 @@ export default function DigitalPetShop() {
         return <ThreePet imageSrc="/images/pets/hamster.png" altText="Hamster" message={message} />;
       case 'koala':
         return <ThreePet imageSrc="/images/pets/koala.png" altText="Koala" message={message} />;
+      case 'fox':
+        return <ThreePet imageSrc="/images/pets/fox.png" altText="Fox" message={message} />;
+      case 'lion':
+        return <ThreePet imageSrc="/images/pets/lion.png" altText="Lion" message={message} />;
       case 'cat':
       default:
         return <ThreeCat message={message} />;
@@ -305,7 +309,7 @@ export default function DigitalPetShop() {
             </button>
 
              {/* Koala Option */}
-             <button
+            <button
               onClick={() => setSelectedPetType('koala')}
               className={`relative p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
                 selectedPetType === 'koala' 
@@ -316,6 +320,34 @@ export default function DigitalPetShop() {
               {selectedPetType === 'koala' && <div className="absolute top-2 right-2 bg-gray-500 text-white p-1 rounded-full"><Check size={12} /></div>}
               <img src="/images/pets/koala.png" alt="Koala" className="w-16 h-16 object-contain" />
               <span className="font-bold text-gray-800">考拉</span>
+            </button>
+
+            {/* Fox Option */}
+            <button
+              onClick={() => setSelectedPetType('fox')}
+              className={`relative p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
+                selectedPetType === 'fox' 
+                  ? 'bg-orange-100 border-orange-600 shadow-md transform scale-105' 
+                  : 'bg-white border-gray-200 hover:border-orange-600'
+              }`}
+            >
+              {selectedPetType === 'fox' && <div className="absolute top-2 right-2 bg-orange-600 text-white p-1 rounded-full"><Check size={12} /></div>}
+              <img src="/images/pets/fox.png" alt="Fox" className="w-16 h-16 object-contain" />
+              <span className="font-bold text-gray-800">狐狸</span>
+            </button>
+
+            {/* Lion Option */}
+            <button
+              onClick={() => setSelectedPetType('lion')}
+              className={`relative p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
+                selectedPetType === 'lion' 
+                  ? 'bg-yellow-100 border-yellow-600 shadow-md transform scale-105' 
+                  : 'bg-white border-gray-200 hover:border-yellow-600'
+              }`}
+            >
+              {selectedPetType === 'lion' && <div className="absolute top-2 right-2 bg-yellow-600 text-white p-1 rounded-full"><Check size={12} /></div>}
+              <img src="/images/pets/lion.png" alt="Lion" className="w-16 h-16 object-contain" />
+              <span className="font-bold text-gray-800">狮子</span>
             </button>
           </div>
 

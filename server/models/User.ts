@@ -12,7 +12,7 @@ export interface IUser extends Document {
   isBlacklisted: boolean;
   joinDate: string;
   avatar: string;
-  petType: 'cat' | 'dog' | 'chicken' | 'rabbit' | 'panda' | 'hamster' | 'koala' | null;
+  petType: 'cat' | 'dog' | 'chicken' | 'rabbit' | 'panda' | 'hamster' | 'koala' | 'fox' | 'lion' | null;
   petName: string | null;
   lastLoginAt: Date;
   createdAt: Date;
@@ -69,7 +69,7 @@ const userSchema = new mongoose.Schema({
   },
   petType: {
     type: String,
-    enum: ['cat', 'dog', 'chicken', 'rabbit', 'panda', 'hamster', 'koala', null],
+    enum: ['cat', 'dog', 'chicken', 'rabbit', 'panda', 'hamster', 'koala', 'fox', 'lion', null],
     default: null,
   },
   petName: {
