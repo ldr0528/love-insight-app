@@ -303,9 +303,16 @@ export default function Home() {
           </Link>
 
           {/* Compatibility Explorer */}
-          <Link to="/compatibility" className="hidden group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-cyan-50 overflow-hidden flex flex-col h-full">
+          <div className="relative group bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-cyan-50 overflow-hidden flex flex-col h-full">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
               <Feather className="w-24 h-24 text-cyan-500" />
+            </div>
+            {/* VIP Badge */}
+            <div className="absolute top-4 right-4 z-20">
+              <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-sm flex items-center gap-1">
+                <Crown size={12} fill="currentColor" />
+                VIP
+              </div>
             </div>
             <div className="relative z-10 flex flex-col h-full justify-center">
               <div className="w-12 h-12 bg-cyan-100 rounded-xl flex items-center justify-center text-cyan-600 mb-4">
@@ -315,11 +322,23 @@ export default function Home() {
               <p className="text-gray-500 text-sm mb-6 flex-grow">
                 输入双方信息，AI 深度解析前世今生与性格契合度，并赠予专属定情古诗。
               </p>
-              <span className="inline-flex items-center text-cyan-600 font-bold group-hover:gap-2 transition-all">
-                开启缘分测试 <ArrowRight className="w-4 h-4 ml-1" />
-              </span>
+              
+              <button 
+                onClick={() => {
+                  if (!user) {
+                    openAuthModal();
+                  } else if (!user.isVip) {
+                    window.location.href = '/recharge';
+                  } else {
+                    window.location.href = '/compatibility';
+                  }
+                }}
+                className="inline-flex items-center text-cyan-600 font-bold group-hover:gap-2 transition-all text-left"
+              >
+                {user?.isVip ? '开启缘分测试' : '解锁缘分测试'} <ArrowRight className="w-4 h-4 ml-1" />
+              </button>
             </div>
-          </Link>
+          </div>
         </div>
         
         {/* Stats */}
