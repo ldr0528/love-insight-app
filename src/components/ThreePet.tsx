@@ -21,7 +21,7 @@ const ThreePet: React.FC<ThreePetProps> = memo(({ imageSrc, altText, message }) 
        </div>
 
       {/* Pet Image */}
-      <div className="relative w-56 h-56 md:w-72 md:h-72 transition-transform hover:scale-105 duration-300 cursor-pointer">
+      <div className="relative w-40 h-40 md:w-56 md:h-56 transition-transform hover:scale-105 duration-300 cursor-pointer">
         <img
           src={imageSrc}
           alt={altText}
@@ -31,7 +31,7 @@ const ThreePet: React.FC<ThreePetProps> = memo(({ imageSrc, altText, message }) 
         />
         
         {/* Simple shadow effect */}
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-40 h-6 bg-black/5 blur-xl rounded-full" />
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-28 h-4 bg-black/5 blur-xl rounded-full" />
       </div>
     </div>
   );
