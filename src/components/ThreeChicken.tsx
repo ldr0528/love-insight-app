@@ -1,166 +1,60 @@
-import React, { useRef, useState, useMemo, useEffect } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Sphere, Cone, Float, ContactShadows, useCursor, Html, Cylinder } from '@react-three/drei';
-import * as THREE from 'three';
+import React, { useState } from 'react';
 
-function ChickenModel({ hovered, setHovered }: { hovered: boolean, setHovered: (h: boolean) => void }) {
-  const headRef = useRef<THREE.Group>(null);
-  const bodyRef = useRef<THREE.Group>(null);
-  const wingsRef = useRef<THREE.Group>(null);
-
-  // Materials
-  const featherMaterial = useMemo(() => new THREE.MeshStandardMaterial({ 
-    color: '#FFEB3B', // Brighter Yellow
-    roughness: 0.8, 
-    metalness: 0
-  }), []);
-  
-  const beakMaterial = useMemo(() => new THREE.MeshStandardMaterial({ 
-    color: '#FF9800', // Orange Gold
-    roughness: 0.4, 
-    metalness: 0.1
-  }), []);
-
-  const combMaterial = useMemo(() => new THREE.MeshStandardMaterial({ 
-    color: '#D32F2F', // Deep Red
-    roughness: 0.6,
-    metalness: 0
-  }), []);
-
-  const eyeMaterial = useMemo(() => new THREE.MeshPhysicalMaterial({ 
-    color: '#000000', 
-    roughness: 0.1, 
-    metalness: 0.5,
-    clearcoat: 1,
-    clearcoatRoughness: 0.1
-  }), []);
-  
-  const blushMaterial = useMemo(() => new THREE.MeshStandardMaterial({ 
-    color: '#FFB7B2', 
-    roughness: 1, 
-    metalness: 0,
-    transparent: true,
-    opacity: 0.4
-  }), []);
-
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  useFrame((state) => {
-    if (!bodyRef.current || !wingsRef.current) return;
-    const time = state.clock.elapsedTime;
-    
-    // Bobbing
-    bodyRef.current.position.y = Math.sin(time * 4) * 0.05;
-    
-    // Wings flapping
-    wingsRef.current.rotation.z = Math.sin(time * 10) * 0.1;
-    
-    // Mouse follow
-    const mouseX = state.mouse.x * 0.3;
-    const mouseY = state.mouse.y * 0.3;
-    bodyRef.current.rotation.y = THREE.MathUtils.lerp(bodyRef.current.rotation.y, mouseX, 0.1);
-    bodyRef.current.rotation.x = THREE.MathUtils.lerp(bodyRef.current.rotation.x, -mouseY * 0.5, 0.1);
-  });
-
-  return (
-    <group 
-      onPointerOver={() => setHovered(true)} 
-      onPointerOut={() => setHovered(false)}
-      scale={[isMobile ? 0.8 : 1.1, isMobile ? 0.8 : 1.1, isMobile ? 0.8 : 1.1]}
-      position={[isMobile ? -0.3 : 0, -0.4, 0]}
-    >
-      <group ref={bodyRef}>
-        {/* Body - Rounder and cuter */}
-        <Sphere args={[0.75, 64, 64]} scale={[1, 1.05, 1]}>
-          <primitive object={featherMaterial} />
-        </Sphere>
-
-        {/* Comb (Red thing on top) - Simplified cute version */}
-        <group position={[0, 0.72, 0]}>
-          <Sphere args={[0.12, 32, 32]} position={[0, 0, 0.1]} scale={[0.8, 1, 1]}>
-            <primitive object={combMaterial} />
-          </Sphere>
-          <Sphere args={[0.15, 32, 32]} position={[0, 0.05, 0]}>
-            <primitive object={combMaterial} />
-          </Sphere>
-          <Sphere args={[0.1, 32, 32]} position={[0, -0.02, -0.15]} scale={[0.8, 1, 1]}>
-            <primitive object={combMaterial} />
-          </Sphere>
-        </group>
-
-        {/* Eyes - Larger and sparkly */}
-        <Sphere args={[0.07, 32, 32]} position={[0.22, 0.15, 0.6]}>
-          <primitive object={eyeMaterial} />
-        </Sphere>
-        <Sphere args={[0.07, 32, 32]} position={[-0.22, 0.15, 0.6]}>
-          <primitive object={eyeMaterial} />
-        </Sphere>
-        {/* Eye Highlights */}
-        <Sphere args={[0.02, 32, 32]} position={[0.25, 0.18, 0.65]} material={new THREE.MeshBasicMaterial({ color: 'white' })} />
-        <Sphere args={[0.02, 32, 32]} position={[-0.19, 0.18, 0.65]} material={new THREE.MeshBasicMaterial({ color: 'white' })} />
-
-        {/* Blush */}
-        <Sphere args={[0.12, 32, 32]} position={[0.3, 0.05, 0.55]} scale={[1, 0.6, 0.2]}>
-          <primitive object={blushMaterial} />
-        </Sphere>
-        <Sphere args={[0.12, 32, 32]} position={[-0.3, 0.05, 0.55]} scale={[1, 0.6, 0.2]}>
-          <primitive object={blushMaterial} />
-        </Sphere>
-
-        {/* Beak - Cute triangle */}
-        <Cone args={[0.08, 0.15, 32]} position={[0, 0.05, 0.72]} rotation={[1.57, 0, 0]}>
-          <primitive object={beakMaterial} />
-        </Cone>
-
-        {/* Wings - Fluffier */}
-        <group ref={wingsRef}>
-          <group position={[0.65, -0.1, 0]} rotation={[0, 0, -0.3]}>
-             <Sphere args={[0.35, 32, 32]} scale={[0.4, 1, 0.8]}>
-               <primitive object={featherMaterial} />
-             </Sphere>
-          </group>
-          <group position={[-0.65, -0.1, 0]} rotation={[0, 0, 0.3]}>
-             <Sphere args={[0.35, 32, 32]} scale={[0.4, 1, 0.8]}>
-               <primitive object={featherMaterial} />
-             </Sphere>
-          </group>
-        </group>
-
-        {/* Feet - Stubby and cute */}
-        <group position={[0, -0.7, 0]}>
-           <Cylinder args={[0.03, 0.03, 0.15]} position={[0.2, 0, 0]} material={beakMaterial} />
-           <Cylinder args={[0.03, 0.03, 0.15]} position={[-0.2, 0, 0]} material={beakMaterial} />
-           {/* Toes */}
-           <Cone args={[0.05, 0.1, 8]} position={[0.2, -0.08, 0.08]} rotation={[0.5, 0, 0]} material={beakMaterial} />
-           <Cone args={[0.05, 0.1, 8]} position={[-0.2, -0.08, 0.08]} rotation={[0.5, 0, 0]} material={beakMaterial} />
-        </group>
-      </group>
-    </group>
-  );
-}
-
-export default function ThreeChicken() {
+export default function ThreeChicken({ message }: { message?: React.ReactNode }) {
   const [hovered, setHovered] = useState(false);
-  useCursor(hovered);
 
   return (
-    <div className="w-full h-96 relative -mt-8 -mb-12">
-      <Canvas shadows camera={{ position: [0, 1, 5], fov: 40 }} dpr={[1, 2]} gl={{ alpha: true }}>
-        <ambientLight intensity={0.8} />
-        <spotLight position={[5, 10, 5]} angle={0.5} penumbra={1} intensity={0.8} castShadow />
-        <pointLight position={[-5, 5, -5]} intensity={0.5} color="#FFFACD" />
-        <Float speed={2} rotationIntensity={0.2} floatIntensity={0.2}>
-          <ChickenModel hovered={hovered} setHovered={setHovered} />
-        </Float>
-        <ContactShadows position={[0, -1.4, 0]} opacity={0.4} scale={10} blur={2} far={4} color="#DAA520" />
-      </Canvas>
+    <div 
+      className="relative flex items-center justify-center -mt-8 -mb-12 h-96 w-full"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {/* Custom Cute SVG Chicken */}
+      <svg 
+        viewBox="0 0 200 200" 
+        className={`w-48 h-48 md:w-64 md:h-64 transition-transform duration-300 ${hovered ? 'scale-110' : 'scale-100'}`}
+        style={{ filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.1))' }}
+      >
+        {/* Legs */}
+        <line x1="85" y1="160" x2="85" y2="180" stroke="#FF9800" strokeWidth="4" />
+        <line x1="115" y1="160" x2="115" y2="180" stroke="#FF9800" strokeWidth="4" />
+        <path d="M85 180 L 75 185 M 85 180 L 85 188 M 85 180 L 95 185" stroke="#FF9800" strokeWidth="4" strokeLinecap="round" />
+        <path d="M115 180 L 105 185 M 115 180 L 115 188 M 115 180 L 125 185" stroke="#FF9800" strokeWidth="4" strokeLinecap="round" />
+
+        {/* Body */}
+        <circle cx="100" cy="110" r="60" fill="#FFF59D" />
+        <path d="M40 110 Q 30 110 35 130 Q 50 140 60 130" fill="#FDD835" /> {/* Wing L */}
+        <path d="M160 110 Q 170 110 165 130 Q 150 140 140 130" fill="#FDD835" /> {/* Wing R */}
+        
+        {/* Belly */}
+        <ellipse cx="100" cy="140" rx="35" ry="25" fill="#FFF9C4" />
+
+        {/* Comb (Top) */}
+        <path d="M85 60 Q 90 45 100 60 Q 110 45 115 60" fill="#FF5252" stroke="#FF5252" strokeWidth="5" strokeLinejoin="round" />
+
+        {/* Eyes */}
+        <circle cx="80" cy="100" r="5" fill="#333" />
+        <circle cx="120" cy="100" r="5" fill="#333" />
+        <circle cx="82" cy="98" r="2" fill="white" />
+        <circle cx="122" cy="98" r="2" fill="white" />
+
+        {/* Cheeks */}
+        <circle cx="65" cy="115" r="8" fill="#FFAB91" opacity="0.5" />
+        <circle cx="135" cy="115" r="8" fill="#FFAB91" opacity="0.5" />
+
+        {/* Beak */}
+        <path d="M92 108 L 108 108 L 100 118 Z" fill="#FF9800" stroke="#F57C00" strokeWidth="1" strokeLinejoin="round" />
+      </svg>
+      
+      {/* Chat Bubble */}
+      <div className="absolute top-10 md:top-12 md:right-[55%] z-50 pointer-events-none w-max max-w-[200px] sm:max-w-[300px] md:max-w-[350px]">
+        <div className="bg-white/95 backdrop-blur-sm px-4 py-3 md:px-6 md:py-5 rounded-2xl rounded-br-none shadow-xl border border-orange-100 relative animate-in zoom-in duration-300 origin-bottom-right flex items-center min-h-[50px] md:min-h-[60px]">
+          <div className="text-amber-900/90 text-xs md:text-sm font-medium leading-relaxed text-left break-words whitespace-pre-wrap w-full">
+            {message}
+          </div>
+          <div className="absolute -bottom-2 right-6 w-0 h-0 border-l-[8px] border-r-[8px] border-t-[8px] border-l-transparent border-r-transparent border-t-white/95"></div>
+        </div>
+      </div>
     </div>
   );
 }

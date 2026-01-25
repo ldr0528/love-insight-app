@@ -1,192 +1,65 @@
-import React, { useRef, useState, useMemo, useEffect } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Sphere, Cone, Cylinder, Float, ContactShadows, useCursor, Html } from '@react-three/drei';
-import * as THREE from 'three';
+import React, { useState } from 'react';
 
-function CatModel({ hovered, setHovered }: { hovered: boolean, setHovered: (h: boolean) => void }) {
-  const headRef = useRef<THREE.Group>(null);
-  const bodyRef = useRef<THREE.Group>(null);
-  const tailRef = useRef<THREE.Group>(null);
-
-  // Materials - Enhanced for realism
-  const greyFur = useMemo(() => new THREE.MeshStandardMaterial({ 
-    color: '#9a9a9a', 
-    roughness: 1, 
-    metalness: 0.1,
-  }), []);
-  
-  const darkGreyFur = useMemo(() => new THREE.MeshStandardMaterial({ 
-    color: '#606060', 
-    roughness: 1, 
-    metalness: 0.1
-  }), []);
-
-  const pinkSkin = useMemo(() => new THREE.MeshStandardMaterial({ 
-    color: '#ffb7b2', 
-    roughness: 0.5,
-    metalness: 0
-  }), []);
-  
-  const eyeMaterial = useMemo(() => new THREE.MeshPhysicalMaterial({ 
-    color: '#000000', 
-    roughness: 0.1, 
-    metalness: 0.5,
-    clearcoat: 1,
-    clearcoatRoughness: 0.1
-  }), []);
-  
-  const noseMaterial = useMemo(() => new THREE.MeshStandardMaterial({ 
-    color: '#ff8a80', 
-    roughness: 0.4,
-    metalness: 0.1
-  }), []);
-
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  useFrame((state) => {
-    if (!headRef.current || !bodyRef.current || !tailRef.current) return;
-    
-    const time = state.clock.elapsedTime;
-    
-    // Head bobbing and following mouse slightly
-    headRef.current.position.y = 0.6 + Math.sin(time * 2) * 0.02;
-    
-    // Mouse interaction for head rotation
-    const mouseX = state.mouse.x * 0.5;
-    const mouseY = state.mouse.y * 0.5;
-    headRef.current.rotation.y = THREE.MathUtils.lerp(headRef.current.rotation.y, mouseX, 0.1);
-    headRef.current.rotation.x = THREE.MathUtils.lerp(headRef.current.rotation.x, -mouseY * 0.5, 0.1);
-
-    // Tail wagging
-    tailRef.current.rotation.z = Math.sin(time * 5) * 0.2;
-    tailRef.current.rotation.y = Math.cos(time * 3) * 0.2;
-    
-    // Body breathing
-    if (bodyRef.current) {
-        bodyRef.current.scale.x = 1 + Math.sin(time * 3) * 0.02;
-        bodyRef.current.scale.z = 1 + Math.sin(time * 3) * 0.02;
-    }
-  });
-
-  return (
-    <group 
-      onPointerOver={() => setHovered(true)} 
-      onPointerOut={() => setHovered(false)}
-      scale={[isMobile ? 0.75 : 1.0, isMobile ? 0.75 : 1.0, isMobile ? 0.75 : 1.0]} // Scale down on mobile
-      position={[isMobile ? -0.3 : 0, -0.6, 0]}
-    >
-      {/* Body - Slightly adjusted shape for cuteness */}
-      <group ref={bodyRef} position={[0, 0, 0]}>
-        <Sphere args={[0.7, 64, 64]} position={[0, 0, 0]} scale={[1, 0.95, 0.95]}>
-          <primitive object={greyFur} />
-        </Sphere>
-        {/* Belly Patch */}
-        <Sphere args={[0.6, 64, 64]} position={[0, 0, 0.15]} scale={[0.8, 0.85, 0.85]}>
-          <meshStandardMaterial color="#c0c0c0" roughness={1} />
-        </Sphere>
-      </group>
-
-      {/* Head Group */}
-      <group ref={headRef} position={[0, 0.65, 0.1]}>
-        {/* Main Head */}
-        <Sphere args={[0.55, 64, 64]} scale={[1, 0.9, 0.9]}>
-           <primitive object={greyFur} />
-        </Sphere>
-
-        {/* Ears - Cat shape but with soft rounded tips (Truncated Cones) */}
-        <group position={[0.35, 0.45, 0]} rotation={[0, 0, -0.2]}>
-          {/* Outer Ear */}
-          <mesh>
-             <cylinderGeometry args={[0.03, 0.18, 0.35, 64]} />
-             <primitive object={greyFur} />
-          </mesh>
-          {/* Inner Ear */}
-          <mesh position={[0, -0.02, 0.08]}>
-             <cylinderGeometry args={[0.02, 0.12, 0.25, 64]} />
-             <primitive object={pinkSkin} />
-          </mesh>
-        </group>
-        <group position={[-0.35, 0.45, 0]} rotation={[0, 0, 0.2]}>
-           {/* Outer Ear */}
-           <mesh>
-             <cylinderGeometry args={[0.03, 0.18, 0.35, 64]} />
-             <primitive object={greyFur} />
-           </mesh>
-           {/* Inner Ear */}
-           <mesh position={[0, -0.02, 0.08]}>
-             <cylinderGeometry args={[0.02, 0.12, 0.25, 64]} />
-             <primitive object={pinkSkin} />
-           </mesh>
-        </group>
-
-        {/* Eyes - Deep and shiny */}
-        <Sphere args={[0.07, 64, 64]} position={[0.2, 0.05, 0.42]}>
-          <primitive object={eyeMaterial} />
-        </Sphere>
-        <Sphere args={[0.07, 64, 64]} position={[-0.2, 0.05, 0.42]}>
-          <primitive object={eyeMaterial} />
-        </Sphere>
-        {/* Eye Highlights */}
-        <Sphere args={[0.025, 32, 32]} position={[0.23, 0.09, 0.47]} material={new THREE.MeshBasicMaterial({ color: 'white' })} />
-        <Sphere args={[0.025, 32, 32]} position={[-0.17, 0.09, 0.47]} material={new THREE.MeshBasicMaterial({ color: 'white' })} />
-
-        {/* Nose - Rounded triangle */}
-        <Sphere args={[0.035, 32, 32]} position={[0, -0.05, 0.5]} scale={[1, 0.7, 0.5]}>
-          <primitive object={noseMaterial} />
-        </Sphere>
-
-        {/* Cheeks - Softer blush */}
-        <Sphere args={[0.12, 32, 32]} position={[0.3, -0.05, 0.35]} scale={[1, 0.6, 0.5]}>
-             <meshStandardMaterial color="#ffb7b2" transparent opacity={0.3} roughness={1} />
-        </Sphere>
-        <Sphere args={[0.12, 32, 32]} position={[-0.3, -0.05, 0.35]} scale={[1, 0.6, 0.5]}>
-             <meshStandardMaterial color="#ffb7b2" transparent opacity={0.3} roughness={1} />
-        </Sphere>
-      </group>
-
-      {/* Tail */}
-      <group ref={tailRef} position={[0, -0.2, -0.6]}>
-        <mesh position={[0, 0.3, 0]} rotation={[0.5, 0, 0]}>
-          <capsuleGeometry args={[0.12, 0.7, 4, 8]} />
-          <primitive object={greyFur} />
-        </mesh>
-      </group>
-
-      {/* Paws */}
-      <Sphere args={[0.18, 32, 32]} position={[0.3, -0.6, 0.4]} scale={[1, 0.7, 1]}>
-        <primitive object={darkGreyFur} />
-      </Sphere>
-      <Sphere args={[0.18, 32, 32]} position={[-0.3, -0.6, 0.4]} scale={[1, 0.7, 1]}>
-        <primitive object={darkGreyFur} />
-      </Sphere>
-    </group>
-  );
-}
-
-export default function ThreeCat() {
+export default function ThreeCat({ message }: { message?: React.ReactNode }) {
   const [hovered, setHovered] = useState(false);
-  useCursor(hovered);
 
   return (
-    <div className="w-full h-96 relative -mt-8 -mb-12"> {/* Increased height and negative margins to allow overflow */}
-      <Canvas shadows camera={{ position: [0, 1, 5], fov: 40 }} dpr={[1, 2]} gl={{ alpha: true }}>
-        <ambientLight intensity={0.7} />
-        <spotLight position={[5, 10, 5]} angle={0.5} penumbra={1} intensity={0.8} castShadow />
-        <pointLight position={[-5, 5, -5]} intensity={0.5} color="#ffb7b2" />
+    <div 
+      className="relative flex items-center justify-center -mt-8 -mb-12 h-96 w-full"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {/* Custom Cute SVG Cat */}
+      <svg 
+        viewBox="0 0 200 200" 
+        className={`w-48 h-48 md:w-64 md:h-64 transition-transform duration-300 ${hovered ? 'scale-110' : 'scale-100'}`}
+        style={{ filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.1))' }}
+      >
+        {/* Tail */}
+        <path d="M140 150 Q 170 140 170 110 Q 170 80 150 90" stroke="#9E9E9E" strokeWidth="12" fill="none" strokeLinecap="round" className="animate-pulse" />
         
-        <Float speed={2} rotationIntensity={0.2} floatIntensity={0.2}>
-          <CatModel hovered={hovered} setHovered={setHovered} />
-        </Float>
+        {/* Body */}
+        <ellipse cx="100" cy="140" rx="60" ry="45" fill="#E0E0E0" />
+        <ellipse cx="100" cy="140" rx="35" ry="30" fill="#F5F5F5" /> {/* Belly */}
+
+        {/* Ears */}
+        <path d="M65 70 L 45 30 L 85 50 Z" fill="#E0E0E0" stroke="#E0E0E0" strokeWidth="5" strokeLinejoin="round" />
+        <path d="M135 70 L 155 30 L 115 50 Z" fill="#E0E0E0" stroke="#E0E0E0" strokeWidth="5" strokeLinejoin="round" />
+        <path d="M65 70 L 52 45 L 75 58 Z" fill="#FFAB91" /> {/* Inner Ear L */}
+        <path d="M135 70 L 148 45 L 125 58 Z" fill="#FFAB91" /> {/* Inner Ear R */}
+
+        {/* Head */}
+        <circle cx="100" cy="85" r="50" fill="#E0E0E0" />
         
-        <ContactShadows position={[0, -1.4, 0]} opacity={0.4} scale={10} blur={2} far={4} color="#e6a57e" />
-      </Canvas>
+        {/* Eyes */}
+        <circle cx="80" cy="80" r="6" fill="#333" />
+        <circle cx="120" cy="80" r="6" fill="#333" />
+        <circle cx="82" cy="78" r="2" fill="white" />
+        <circle cx="122" cy="78" r="2" fill="white" />
+
+        {/* Cheeks */}
+        <circle cx="70" cy="95" r="6" fill="#FFAB91" opacity="0.6" />
+        <circle cx="130" cy="95" r="6" fill="#FFAB91" opacity="0.6" />
+
+        {/* Nose & Mouth */}
+        <path d="M96 90 L 104 90 L 100 96 Z" fill="#FFAB91" />
+        <path d="M100 96 Q 90 105 85 98" stroke="#333" strokeWidth="2" fill="none" />
+        <path d="M100 96 Q 110 105 115 98" stroke="#333" strokeWidth="2" fill="none" />
+
+        {/* Paws */}
+        <ellipse cx="70" cy="170" rx="12" ry="8" fill="#F5F5F5" />
+        <ellipse cx="130" cy="170" rx="12" ry="8" fill="#F5F5F5" />
+      </svg>
+      
+      {/* Chat Bubble */}
+      <div className="absolute top-10 md:top-12 md:right-[55%] z-50 pointer-events-none w-max max-w-[200px] sm:max-w-[300px] md:max-w-[350px]">
+        <div className="bg-white/95 backdrop-blur-sm px-4 py-3 md:px-6 md:py-5 rounded-2xl rounded-br-none shadow-xl border border-orange-100 relative animate-in zoom-in duration-300 origin-bottom-right flex items-center min-h-[50px] md:min-h-[60px]">
+          <div className="text-amber-900/90 text-xs md:text-sm font-medium leading-relaxed text-left break-words whitespace-pre-wrap w-full">
+            {message}
+          </div>
+          <div className="absolute -bottom-2 right-6 w-0 h-0 border-l-[8px] border-r-[8px] border-t-[8px] border-l-transparent border-r-transparent border-t-white/95"></div>
+        </div>
+      </div>
     </div>
   );
 }
