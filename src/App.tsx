@@ -8,6 +8,7 @@ import LoveCoach from "@/pages/LoveCoach";
 import NamingMaster from "@/pages/NamingMaster";
 import Compatibility from "@/pages/Compatibility";
 import WorryGrocery from "@/pages/WorryGrocery";
+import DreamInterpretation from "@/pages/DreamInterpretation";
 import SimpleAuthModal from "@/components/auth/SimpleAuthModal";
 import AdminLogin from "@/pages/admin/AdminLogin";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
@@ -70,6 +71,7 @@ export default function App() {
         <Route path="/naming" element={<NamingMaster />} />
         <Route path="/compatibility" element={<Compatibility />} />
         <Route path="/worry-grocery" element={<WorryGrocery />} />
+        <Route path="/dream" element={<DreamInterpretation />} />
         
         {/* Other Routes */}
         <Route path="/contact" element={<ContactUs />} />

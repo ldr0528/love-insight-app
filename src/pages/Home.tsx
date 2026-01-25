@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Compass, ArrowRight, Brain, Hand, Heart, Target, PenTool, Feather, User, Crown, Store, Cat, Sparkles, PawPrint, MessageCircle } from 'lucide-react';
+import { Compass, ArrowRight, Brain, Hand, Heart, Target, PenTool, Feather, User, Crown, Store, Cat, Sparkles, PawPrint, MessageCircle, CloudMoon } from 'lucide-react';
 import FortuneTube from '@/components/FortuneTube';
 import { useAuthStore } from '@/store/useAuthStore';
 
@@ -241,6 +241,25 @@ export default function Home() {
               </p>
               <span className="inline-flex items-center text-orange-600 font-bold group-hover:gap-2 transition-all">
                 单独测手相 <ArrowRight className="w-4 h-4 ml-1" />
+              </span>
+            </div>
+          </Link>
+
+          {/* Dream Interpretation */}
+          <Link to="/dream" className="group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-purple-50 overflow-hidden flex flex-col h-full">
+            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+              <CloudMoon className="w-24 h-24 text-purple-500" />
+            </div>
+            <div className="relative z-10 flex flex-col h-full justify-center">
+              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center text-purple-600 mb-4">
+                <CloudMoon className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">周公解梦</h3>
+              <p className="text-gray-500 text-sm mb-6 flex-grow">
+                通过梦境解析你的真实心理年龄、适配职业，以及内心深处渴望成为的人。
+              </p>
+              <span className="inline-flex items-center text-purple-600 font-bold group-hover:gap-2 transition-all">
+                开启梦境解析 <ArrowRight className="w-4 h-4 ml-1" />
               </span>
             </div>
           </Link>

@@ -20,6 +20,7 @@ import namingRoutes from './routes/naming.js'
 import compatibilityRoutes from './routes/compatibility.js'
 import adminRoutes from './routes/admin.js'
 import worryRoutes from './routes/worry.js'
+import dreamRoutes from './routes/dream.js'
 
 // for esm mode
 const __filename = fileURLToPath(import.meta.url)
@@ -48,6 +49,7 @@ app.use('/api/naming', namingRoutes)
 app.use('/api/compatibility', compatibilityRoutes)
 app.use('/api/admin', adminRoutes)
 app.use('/api/worry', worryRoutes)
+app.use('/api/dream', dreamRoutes)
 
 /**
  * health
