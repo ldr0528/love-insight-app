@@ -1,10 +1,11 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Send, Sparkles, Store, Mic, MicOff, Cat, Dog, Bird, Check, Egg } from 'lucide-react';
+import { ArrowLeft, Send, Sparkles, Store, Mic, MicOff, Check } from 'lucide-react';
 import ThreeCat from '@/components/ThreeCat';
 import ThreeDog from '@/components/ThreeDog';
 import ThreeChicken from '@/components/ThreeChicken';
+import ThreePet from '@/components/ThreePet';
 import { useAuthStore } from '@/store/useAuthStore';
 import toast from 'react-hot-toast';
 
@@ -18,7 +19,7 @@ export default function DigitalPetShop() {
   const [isListening, setIsListening] = useState(false);
   
   // Pet Selection State
-  const [selectedPetType, setSelectedPetType] = useState<'cat' | 'dog' | 'chicken' | null>(null);
+  const [selectedPetType, setSelectedPetType] = useState<'cat' | 'dog' | 'chicken' | 'rabbit' | 'panda' | 'hamster' | 'koala' | null>(null);
   const [petName, setPetName] = useState('');
   const [isSubmittingPet, setIsSubmittingPet] = useState(false);
 
@@ -186,6 +187,14 @@ export default function DigitalPetShop() {
         return <ThreeDog message={message} />;
       case 'chicken':
         return <ThreeChicken message={message} />;
+      case 'rabbit':
+        return <ThreePet imageSrc="/images/pets/rabbit.png" altText="Rabbit" message={message} />;
+      case 'panda':
+        return <ThreePet imageSrc="/images/pets/panda.png" altText="Panda" message={message} />;
+      case 'hamster':
+        return <ThreePet imageSrc="/images/pets/hamster.png" altText="Hamster" message={message} />;
+      case 'koala':
+        return <ThreePet imageSrc="/images/pets/koala.png" altText="Koala" message={message} />;
       case 'cat':
       default:
         return <ThreeCat message={message} />;
@@ -221,9 +230,7 @@ export default function DigitalPetShop() {
               }`}
             >
               {selectedPetType === 'cat' && <div className="absolute top-2 right-2 bg-orange-500 text-white p-1 rounded-full"><Check size={12} /></div>}
-              <div className="w-16 h-16 bg-orange-50 rounded-full flex items-center justify-center text-orange-600">
-                <Cat size={32} />
-              </div>
+              <img src="/images/pets/cat.png" alt="Cat" className="w-16 h-16 object-contain" />
               <span className="font-bold text-gray-800">小猫</span>
             </button>
 
@@ -237,9 +244,7 @@ export default function DigitalPetShop() {
               }`}
             >
               {selectedPetType === 'dog' && <div className="absolute top-2 right-2 bg-amber-500 text-white p-1 rounded-full"><Check size={12} /></div>}
-              <div className="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center text-amber-600">
-                <Dog size={32} />
-              </div>
+              <img src="/images/pets/dog.png" alt="Dog" className="w-16 h-16 object-contain" />
               <span className="font-bold text-gray-800">小狗</span>
             </button>
 
@@ -253,10 +258,64 @@ export default function DigitalPetShop() {
               }`}
             >
               {selectedPetType === 'chicken' && <div className="absolute top-2 right-2 bg-yellow-500 text-white p-1 rounded-full"><Check size={12} /></div>}
-              <div className="w-16 h-16 bg-yellow-50 rounded-full flex items-center justify-center text-yellow-600">
-                <Egg size={32} />
-              </div>
+              <img src="/images/pets/chicken.png" alt="Chicken" className="w-16 h-16 object-contain" />
               <span className="font-bold text-gray-800">小鸡</span>
+            </button>
+
+            {/* Rabbit Option */}
+            <button
+              onClick={() => setSelectedPetType('rabbit')}
+              className={`relative p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
+                selectedPetType === 'rabbit' 
+                  ? 'bg-pink-100 border-pink-500 shadow-md transform scale-105' 
+                  : 'bg-white border-gray-200 hover:border-pink-200'
+              }`}
+            >
+              {selectedPetType === 'rabbit' && <div className="absolute top-2 right-2 bg-pink-500 text-white p-1 rounded-full"><Check size={12} /></div>}
+              <img src="/images/pets/rabbit.png" alt="Rabbit" className="w-16 h-16 object-contain" />
+              <span className="font-bold text-gray-800">小兔</span>
+            </button>
+
+            {/* Panda Option */}
+            <button
+              onClick={() => setSelectedPetType('panda')}
+              className={`relative p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
+                selectedPetType === 'panda' 
+                  ? 'bg-green-100 border-green-500 shadow-md transform scale-105' 
+                  : 'bg-white border-gray-200 hover:border-green-200'
+              }`}
+            >
+              {selectedPetType === 'panda' && <div className="absolute top-2 right-2 bg-green-500 text-white p-1 rounded-full"><Check size={12} /></div>}
+              <img src="/images/pets/panda.png" alt="Panda" className="w-16 h-16 object-contain" />
+              <span className="font-bold text-gray-800">熊猫</span>
+            </button>
+
+            {/* Hamster Option */}
+            <button
+              onClick={() => setSelectedPetType('hamster')}
+              className={`relative p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
+                selectedPetType === 'hamster' 
+                  ? 'bg-blue-100 border-blue-500 shadow-md transform scale-105' 
+                  : 'bg-white border-gray-200 hover:border-blue-200'
+              }`}
+            >
+              {selectedPetType === 'hamster' && <div className="absolute top-2 right-2 bg-blue-500 text-white p-1 rounded-full"><Check size={12} /></div>}
+              <img src="/images/pets/hamster.png" alt="Hamster" className="w-16 h-16 object-contain" />
+              <span className="font-bold text-gray-800">仓鼠</span>
+            </button>
+
+             {/* Koala Option */}
+             <button
+              onClick={() => setSelectedPetType('koala')}
+              className={`relative p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
+                selectedPetType === 'koala' 
+                  ? 'bg-gray-100 border-gray-500 shadow-md transform scale-105' 
+                  : 'bg-white border-gray-200 hover:border-gray-200'
+              }`}
+            >
+              {selectedPetType === 'koala' && <div className="absolute top-2 right-2 bg-gray-500 text-white p-1 rounded-full"><Check size={12} /></div>}
+              <img src="/images/pets/koala.png" alt="Koala" className="w-16 h-16 object-contain" />
+              <span className="font-bold text-gray-800">考拉</span>
             </button>
           </div>
 

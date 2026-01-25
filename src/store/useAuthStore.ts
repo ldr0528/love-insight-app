@@ -7,7 +7,7 @@ interface User {
   nickname: string;
   isVip?: boolean;
   avatar?: string;
-  petType?: 'cat' | 'dog' | 'chicken' | null;
+  petType?: 'cat' | 'dog' | 'chicken' | 'rabbit' | 'panda' | 'hamster' | 'koala' | null;
   petName?: string | null;
 }
 
