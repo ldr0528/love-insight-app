@@ -12,52 +12,52 @@ interface Question {
 const questions: Question[] = [
   {
     id: 1,
-    text: "在梦中，你独自走进了一片森林，这里的光线是怎样的？",
+    text: "如果今晚你会做一个梦，你最希望梦见什么场景？",
     options: [
-      { label: "清晨的阳光，透过树叶洒下斑驳光影", value: "sunlight" },
-      { label: "幽暗神秘，只有微弱的月光", value: "moonlight" },
-      { label: "迷雾缭绕，看不清远方", value: "foggy" },
-      { label: "色彩斑斓，像童话世界一样发光", value: "colorful" }
+      { label: "在云端飞行，俯瞰大地", value: "flying" },
+      { label: "回到童年的老房子，和家人吃饭", value: "childhood" },
+      { label: "在深海潜水，周围是发光的鱼群", value: "deepsea" },
+      { label: "站在舞台中央，掌声雷动", value: "stage" }
     ]
   },
   {
     id: 2,
-    text: "忽然，你发现前方有一座建筑，它看起来是：",
+    text: "梦里你正在被某种东西追赶，你觉得那是什么？",
     options: [
-      { label: "一座古老而庄严的城堡", value: "castle" },
-      { label: "一间温馨的小木屋", value: "cabin" },
-      { label: "一座充满科技感的未来高塔", value: "tower" },
-      { label: "一片废墟遗迹", value: "ruins" }
+      { label: "看不清脸的黑影", value: "shadow" },
+      { label: "巨大的时钟，滴答作响", value: "clock" },
+      { label: "一大堆未完成的工作/作业", value: "work" },
+      { label: "一只凶猛但熟悉的野兽", value: "beast" }
     ]
   },
   {
     id: 3,
-    text: "你走进建筑，在桌上发现了一样东西，你会拿起：",
+    text: "梦境中出现了一扇门，你推开后发现竟然是：",
     options: [
-      { label: "一本泛黄的厚重古书", value: "book" },
-      { label: "一把锋利的宝剑", value: "sword" },
-      { label: "一面映照出不同面孔的镜子", value: "mirror" },
-      { label: "一颗散发温暖光芒的水晶球", value: "crystal" }
+      { label: "一片无边无际的沙漠", value: "desert" },
+      { label: "繁华喧闹的都市街头", value: "city" },
+      { label: "静谧的图书馆，书架高耸入云", value: "library" },
+      { label: "满是糖果和玩具的游乐园", value: "park" }
     ]
   },
   {
     id: 4,
-    text: "此时，身后传来一个声音，你直觉那是：",
+    text: "梦里你获得了一种超能力，你会选择：",
     options: [
-      { label: "多年未见的老友", value: "friend" },
-      { label: "儿时的自己", value: "child" },
-      { label: "一位智慧的长者", value: "elder" },
-      { label: "一只会说话的动物", value: "animal" }
+      { label: "读心术，听见别人的心声", value: "mindreading" },
+      { label: "隐身术，不被任何人发现", value: "invisibility" },
+      { label: "瞬间移动，去任何想去的地方", value: "teleport" },
+      { label: "时间倒流，改变过去的遗憾", value: "timeback" }
     ]
   },
   {
     id: 5,
-    text: "梦境即将结束，你必须带走一样东西回到现实，你选择：",
+    text: "醒来时，你记得梦里最后一种感觉是：",
     options: [
-      { label: "关于未来的预言", value: "knowledge" },
-      { label: "无尽的财富", value: "wealth" },
-      { label: "一段珍贵的回忆", value: "memory" },
-      { label: "一种神奇的能力", value: "power" }
+      { label: "怅然若失，不想醒来", value: "lost" },
+      { label: "充满力量，跃跃欲试", value: "energetic" },
+      { label: "松了一口气，庆幸只是梦", value: "relief" },
+      { label: "平静温暖，嘴角带笑", value: "peaceful" }
     ]
   }
 ];
