@@ -3,6 +3,25 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, CloudMoon, Sparkles, ChevronRight, Moon } from 'lucide-react';
 import toast from 'react-hot-toast';
 
+const Whale = (props: any) => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    width="24" 
+    height="24" 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round"
+    {...props}
+  >
+    <path d="M2 20a10 10 0 0 1 10-10c5 0 8 2 10 8a10 10 0 0 1-10 10 10 10 0 0 1-10-8Z" />
+    <path d="M12 2v4" />
+    <path d="M22 18s-2-2-4-2-4 2-4 2" />
+  </svg>
+);
+
 interface Question {
   id: number;
   text: string;
@@ -22,6 +41,16 @@ const questions: Question[] = [
   },
   {
     id: 2,
+    text: "梦里的天气通常是什么样的？",
+    options: [
+      { label: "温暖的午后阳光", value: "sunny" },
+      { label: "狂风暴雨，电闪雷鸣", value: "storm" },
+      { label: "阴沉压抑的乌云", value: "cloudy" },
+      { label: "漫天飞雪，寂静无声", value: "snow" }
+    ]
+  },
+  {
+    id: 3,
     text: "梦里你正在被某种东西追赶，你觉得那是什么？",
     options: [
       { label: "看不清脸的黑影", value: "shadow" },
@@ -31,7 +60,7 @@ const questions: Question[] = [
     ]
   },
   {
-    id: 3,
+    id: 4,
     text: "梦境中出现了一扇门，你推开后发现竟然是：",
     options: [
       { label: "一片无边无际的沙漠", value: "desert" },
@@ -41,7 +70,27 @@ const questions: Question[] = [
     ]
   },
   {
-    id: 4,
+    id: 5,
+    text: "梦里有一个看不清脸的人递给你一样东西，那是：",
+    options: [
+      { label: "一把陈旧的钥匙", value: "key" },
+      { label: "一封没有字的信", value: "letter" },
+      { label: "一朵永不凋谢的花", value: "flower" },
+      { label: "一块破碎的怀表", value: "watch" }
+    ]
+  },
+  {
+    id: 6,
+    text: "在梦里，你发现自己变成了一种动物，你觉得是：",
+    options: [
+      { label: "翱翔天际的鹰", value: "eagle" },
+      { label: "自由自在的猫", value: "cat" },
+      { label: "深海孤独的鲸", value: "whale" },
+      { label: "森林之王狮子", value: "lion" }
+    ]
+  },
+  {
+    id: 7,
     text: "梦里你获得了一种超能力，你会选择：",
     options: [
       { label: "读心术，听见别人的心声", value: "mindreading" },
@@ -51,7 +100,77 @@ const questions: Question[] = [
     ]
   },
   {
-    id: 5,
+    id: 8,
+    text: "梦里你来到一条河边，河水是：",
+    options: [
+      { label: "清澈见底，游鱼可数", value: "clear" },
+      { label: "湍急浑浊，咆哮奔腾", value: "turbid" },
+      { label: "静止不动，像一面镜子", value: "still" },
+      { label: "五彩斑斓，像流动的油彩", value: "colorful_river" }
+    ]
+  },
+  {
+    id: 9,
+    text: "你在梦中捡到了一把钥匙，你觉得它能打开：",
+    options: [
+      { label: "家里的旧衣柜", value: "wardrobe" },
+      { label: "通往另一个世界的门", value: "portal" },
+      { label: "一个埋藏地下的宝箱", value: "chest" },
+      { label: "你自己心房的锁", value: "heart" }
+    ]
+  },
+  {
+    id: 10,
+    text: "梦里出现了一面镜子，但镜子里照出的不是你，而是：",
+    options: [
+      { label: "一只盯着你看的猫", value: "cat_mirror" },
+      { label: "一个苍老陌生的人", value: "stranger" },
+      { label: "空无一物，只有背景", value: "empty" },
+      { label: "你小时候的样子", value: "young" }
+    ]
+  },
+  {
+    id: 11,
+    text: "梦中你必须走过一座桥，这座桥是：",
+    options: [
+      { label: "摇摇欲坠的独木桥", value: "plank" },
+      { label: "宏伟壮观的石拱桥", value: "stone" },
+      { label: "看不见尽头的玻璃桥", value: "glass" },
+      { label: "由彩虹构成的幻影桥", value: "rainbow" }
+    ]
+  },
+  {
+    id: 12,
+    text: "忽然，天空下起了一场雨，雨滴竟然是：",
+    options: [
+      { label: "五颜六色的糖果", value: "candy" },
+      { label: "冰冷的刀片", value: "blade" },
+      { label: "燃烧的火苗", value: "fire" },
+      { label: "发光的星星碎片", value: "star" }
+    ]
+  },
+  {
+    id: 13,
+    text: "梦里你正在准备一场表演，但上台前你发现：",
+    options: [
+      { label: "你忘记了所有的台词", value: "forgot" },
+      { label: "你没有穿演出服", value: "naked" },
+      { label: "台下空无一人", value: "empty_seat" },
+      { label: "你变成了一个木偶", value: "puppet" }
+    ]
+  },
+  {
+    id: 14,
+    text: "梦境的最后，有人问了你一个问题，你还没回答就醒了，那个问题是：",
+    options: [
+      { label: "“你快乐吗？”", value: "happy" },
+      { label: "“你要去哪里？”", value: "where" },
+      { label: "“你是谁？”", value: "who" },
+      { label: "“你忘记了什么？”", value: "forget" }
+    ]
+  },
+  {
+    id: 15,
     text: "醒来时，你记得梦里最后一种感觉是：",
     options: [
       { label: "怅然若失，不想醒来", value: "lost" },
@@ -185,28 +304,38 @@ export default function DreamInterpretation() {
         </h1>
       </header>
 
-      <main className="flex-1 flex flex-col items-center justify-center p-6">
+      <main className="flex-1 flex flex-col items-center justify-center p-6 relative">
         {!started ? (
-          <div className="max-w-md w-full text-center space-y-8 animate-in fade-in zoom-in duration-500">
+          <div className="max-w-md w-full text-center space-y-8 animate-in fade-in zoom-in duration-500 relative z-10">
             <div className="relative inline-block">
-              <div className="absolute inset-0 bg-purple-500 blur-3xl opacity-30 animate-pulse"></div>
-              <CloudMoon className="w-32 h-32 text-purple-200 relative z-10 mx-auto" />
+              <div className="absolute inset-0 bg-blue-500 blur-3xl opacity-30 animate-pulse"></div>
+              {/* Big Blue Whale Illustration */}
+              <div className="relative w-48 h-48 mx-auto mb-4 animate-[float_6s_ease-in-out_infinite]">
+                 <Whale className="w-full h-full text-blue-300 drop-shadow-[0_0_15px_rgba(147,197,253,0.5)]" strokeWidth={1} />
+                 <div className="absolute -top-4 right-10 w-4 h-4 bg-white rounded-full opacity-60 animate-[ping_3s_linear_infinite]"></div>
+                 <div className="absolute top-10 -left-4 w-2 h-2 bg-blue-200 rounded-full opacity-40 animate-bounce"></div>
+              </div>
             </div>
             
             <div className="space-y-4">
-              <h2 className="text-3xl font-bold">探索潜意识的迷宫</h2>
-              <p className="text-purple-200/80 leading-relaxed">
-                梦是潜意识的信使。通过构建你的专属梦境，
-                我们将为你揭示真实的心理年龄、最契合的职业方向，
-                以及你灵魂深处真正渴望成为的样子。
+              <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-200 to-purple-200">
+                探索潜意识的深海
+              </h2>
+              <p className="text-blue-100/80 leading-relaxed font-light">
+                梦境如同深海，藏着你未曾察觉的真实自我。
+                跟随这只引路鲸，潜入 15 层梦境深处，
+                找回那个被遗忘的自己。
               </p>
             </div>
 
             <button
               onClick={handleStart}
-              className="group relative inline-flex items-center gap-2 px-8 py-4 bg-white text-purple-900 rounded-full font-bold text-lg shadow-[0_0_20px_rgba(168,85,247,0.5)] hover:shadow-[0_0_30px_rgba(168,85,247,0.7)] transition-all hover:-translate-y-1"
+              className="group relative inline-flex items-center gap-2 px-10 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-full font-bold text-lg shadow-[0_0_20px_rgba(59,130,246,0.5)] hover:shadow-[0_0_30px_rgba(59,130,246,0.7)] transition-all hover:-translate-y-1 overflow-hidden"
             >
-              开始入梦 <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              <span className="relative z-10 flex items-center gap-2">
+                潜入梦境 <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </span>
+              <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
             </button>
           </div>
         ) : loading ? (
