@@ -62,9 +62,9 @@ router.post('/analyze', async (req: Request, res: Response): Promise<void> => {
       console.warn('Failed to parse AI JSON, using fallback')
       result = {
         psychologicalAge: 25,
-        career: "心灵捕手",
-        dreamPersona: "追光者",
-        analysis: "你的梦境显示出你内心深处对自由的渴望，虽然表面平静，但潜意识里藏着巨大的能量。"
+        career: "Soul Catcher",
+        dreamPersona: "Chaser of Light",
+        analysis: "Your dream reveals a deep longing for freedom. Although you appear calm on the surface, there is immense energy hidden within your subconscious."
       }
     }
 
