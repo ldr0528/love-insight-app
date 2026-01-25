@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, CloudMoon, Sparkles, ChevronRight, Moon } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-const Whale = (props: any) => (
+const Whale = (props: React.SVGProps<SVGSVGElement>) => (
   <svg 
     xmlns="http://www.w3.org/2000/svg" 
     width="24" 
@@ -186,7 +186,12 @@ export default function DreamInterpretation() {
   const [currentQIndex, setCurrentQIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<{
+    psychologicalAge: number;
+    career: string;
+    dreamPersona: string;
+    analysis: string;
+  } | null>(null);
 
   const handleStart = () => {
     setStarted(true);

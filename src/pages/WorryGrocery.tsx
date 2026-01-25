@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Send, Sparkles, Store, Mic, MicOff, Check } from 'lucide-react';
-import ThreePet from '../components/ThreePet';
+import ThreePet from '@/components/ThreePet';
 import { useAuthStore, PetType } from '@/store/useAuthStore';
 import toast from 'react-hot-toast';
 

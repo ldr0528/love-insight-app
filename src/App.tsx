@@ -12,7 +12,6 @@ import DreamInterpretation from "@/pages/DreamInterpretation";
 import SimpleAuthModal from "@/components/auth/SimpleAuthModal";
 import AdminLogin from "@/pages/admin/AdminLogin";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
-import RequireAuth from "@/components/auth/RequireAuth";
 import ContactUs from "@/pages/ContactUs";
 import RechargePage from "@/pages/RechargePage";
 import { useAuthStore } from "@/store/useAuthStore";
