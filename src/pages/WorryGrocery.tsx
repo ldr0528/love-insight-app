@@ -47,6 +47,26 @@ export default function DigitalPetShop() {
 
   const hasPet = !!user?.petType;
 
+  // Preload pet images to improve user experience
+  useEffect(() => {
+    const images = [
+      '/images/pets/cat.png',
+      '/images/pets/dog.png',
+      '/images/pets/chicken.png',
+      '/images/pets/rabbit.png',
+      '/images/pets/panda.png',
+      '/images/pets/hamster.png',
+      '/images/pets/koala.png',
+      '/images/pets/fox.png',
+      '/images/pets/lion.png'
+    ];
+    
+    images.forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
+
   // Function to reset pet choice (for testing/user request)
   const handleResetPet = () => {
     // In a real app, this might need an API call to reset the user's pet in the DB
