@@ -12,7 +12,8 @@ export default function ThreeDog({ message }: { message?: React.ReactNode }) {
       <img 
         src="/images/pets/dog.png" 
         alt="Dog" 
-        className={`w-48 h-48 md:w-64 md:h-64 object-contain transition-transform duration-300 ${hovered ? 'scale-110' : 'scale-100'}`}
+        decoding="async"
+        className={`w-48 h-48 md:w-64 md:h-64 object-contain transition-transform duration-300 will-change-transform transform-gpu ${hovered ? 'scale-110' : 'scale-100'}`}
         style={{ filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.1))' }}
       />
       
