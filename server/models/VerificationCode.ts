@@ -1,11 +1,4 @@
-import mongoose, { Document } from 'mongoose';
-
-export interface IVerificationCode extends Document {
-  email: string;
-  code: string;
-  createdAt: Date;
-  lastSent: Date;
-}
+import mongoose from 'mongoose';
 
 const verificationCodeSchema = new mongoose.Schema({
   email: {
@@ -28,4 +21,4 @@ const verificationCodeSchema = new mongoose.Schema({
   }
 });
 
-export default mongoose.models.VerificationCode as mongoose.Model<IVerificationCode> || mongoose.model<IVerificationCode>('VerificationCode', verificationCodeSchema);
+export default mongoose.models.VerificationCode || mongoose.model('VerificationCode', verificationCodeSchema);

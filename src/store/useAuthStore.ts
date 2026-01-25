@@ -1,13 +1,15 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+export type PetType = 'cat' | 'dog' | 'chicken' | 'rabbit' | 'panda' | 'hamster' | 'koala' | 'fox' | 'lion';
+
 interface User {
   id: string;
   username: string; // LinXXXX
   nickname: string;
   isVip?: boolean;
   avatar?: string;
-  petType?: 'cat' | 'dog' | 'chicken' | 'rabbit' | 'panda' | 'hamster' | 'koala' | 'fox' | 'lion' | null;
+  petType?: PetType | null;
   petName?: string | null;
 }
 

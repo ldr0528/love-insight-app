@@ -2,8 +2,8 @@
 import { useState, useEffect, useRef, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Send, Sparkles, Store, Mic, MicOff, Check } from 'lucide-react';
-import ThreePet from '@/components/ThreePet';
-import { useAuthStore } from '@/store/useAuthStore';
+import ThreePet from '../components/ThreePet';
+import { useAuthStore, PetType } from '@/store/useAuthStore';
 import toast from 'react-hot-toast';
 
 // Memoize Pet Buttons to prevent unnecessary re-renders and image flickering
@@ -38,7 +38,7 @@ export default function DigitalPetShop() {
   const [isListening, setIsListening] = useState(false);
   
   // Pet Selection State
-  const [selectedPetType, setSelectedPetType] = useState<'cat' | 'dog' | 'chicken' | 'rabbit' | 'panda' | 'hamster' | 'koala' | 'fox' | 'lion' | null>(null);
+  const [selectedPetType, setSelectedPetType] = useState<PetType | null>(null);
   const [petName, setPetName] = useState('');
   const [isSubmittingPet, setIsSubmittingPet] = useState(false);
 
