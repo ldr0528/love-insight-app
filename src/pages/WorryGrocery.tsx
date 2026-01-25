@@ -216,7 +216,7 @@ export default function DigitalPetShop() {
         <main className="flex-1 max-w-2xl w-full mx-auto p-6 flex flex-col items-center justify-center animate-in fade-in slide-in-from-bottom-8 duration-700">
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold text-gray-800 mb-2">欢迎来到电子宠物店</h2>
-            <p className="text-gray-600">请挑选一只属于你的专属宠物，它将永远陪伴你。</p>
+            <p className="text-gray-600">请挑选一只属于你的专属宠物。</p>
           </div>
 
           <div className="grid grid-cols-3 gap-4 w-full mb-8">
@@ -338,9 +338,6 @@ export default function DigitalPetShop() {
             >
               {isSubmittingPet ? '领养中...' : '确认领养'}
             </button>
-            <p className="text-xs text-gray-400 text-center mt-2">
-              * 领养后无法更换宠物种类，请慎重选择
-            </p>
           </div>
         </main>
       </div>
