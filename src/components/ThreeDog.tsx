@@ -3,11 +3,10 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { Sphere, Cylinder, Float, ContactShadows, useCursor, Html, Cone } from '@react-three/drei';
 import * as THREE from 'three';
 
-function DogModel({ hovered, setHovered, message }: { hovered: boolean, setHovered: (h: boolean) => void, message: React.ReactNode }) {
+function DogModel({ hovered, setHovered }: { hovered: boolean, setHovered: (h: boolean) => void }) {
   const headRef = useRef<THREE.Group>(null);
   const bodyRef = useRef<THREE.Group>(null);
   const tailRef = useRef<THREE.Group>(null);
-  const portalRef = useRef(document.body);
 
   // Materials - Improved dog colors to match realistic puppy photo (Cream/Beige)
   const furMaterial = useMemo(() => new THREE.MeshStandardMaterial({ 
@@ -154,24 +153,6 @@ function DogModel({ hovered, setHovered, message }: { hovered: boolean, setHover
         <Sphere args={[0.12, 32, 32]} position={[-0.28, -0.1, 0.35]} scale={[1, 0.6, 0.5]}>
              <meshStandardMaterial color="#ffb7b2" transparent opacity={0.15} roughness={1} />
         </Sphere>
-
-        {/* Chat Bubble - Portal to body to avoid clipping */}
-        <Html 
-          portal={portalRef}
-          position={[isMobile ? 0.35 : 0.45, isMobile ? 0.25 : 0.35, 0]} 
-          center 
-          className="pointer-events-none w-max max-w-[200px] sm:max-w-[300px] md:max-w-[350px]" 
-          style={{ transform: 'scale(1)', zIndex: 1000 }}
-          zIndexRange={[1000, 0]}
-        >
-          <div className="bg-white/95 backdrop-blur-sm px-4 py-3 md:px-6 md:py-5 rounded-2xl rounded-tl-none shadow-xl border border-orange-100 relative animate-in zoom-in duration-300 origin-top-left flex items-center min-h-[50px] md:min-h-[60px]">
-            <div className="text-amber-900/90 text-xs md:text-sm font-medium leading-relaxed text-left break-words whitespace-pre-wrap w-full">
-              {message}
-            </div>
-            {/* Arrow */}
-            <div className="absolute top-3 md:top-4 -left-2 w-0 h-0 border-t-[6px] md:border-t-[8px] border-t-transparent border-r-[8px] md:border-r-[10px] border-r-white/95 border-b-[6px] md:border-b-[8px] border-b-transparent transform rotate-0" style={{ filter: 'drop-shadow(-1px 0px 1px rgba(0,0,0,0.05))' }}></div>
-          </div>
-        </Html>
       </group>
 
       {/* Tail - Waggier */}
@@ -193,7 +174,7 @@ function DogModel({ hovered, setHovered, message }: { hovered: boolean, setHover
   );
 }
 
-export default function ThreeDog({ message }: { message?: React.ReactNode }) {
+export default function ThreeDog() {
   const [hovered, setHovered] = useState(false);
   useCursor(hovered);
 
@@ -204,7 +185,7 @@ export default function ThreeDog({ message }: { message?: React.ReactNode }) {
         <spotLight position={[5, 10, 5]} angle={0.5} penumbra={1} intensity={0.8} castShadow />
         <pointLight position={[-5, 5, -5]} intensity={0.5} color="#F4A460" />
         <Float speed={2} rotationIntensity={0.2} floatIntensity={0.2}>
-          <DogModel hovered={hovered} setHovered={setHovered} message={message} />
+          <DogModel hovered={hovered} setHovered={setHovered} />
         </Float>
         <ContactShadows position={[0, -1.4, 0]} opacity={0.4} scale={10} blur={2} far={4} color="#8B4513" />
       </Canvas>

@@ -1,4 +1,23 @@
-import mongoose from 'mongoose';
+import mongoose, { Document } from 'mongoose';
+
+export interface IUser extends Document {
+  id: string;
+  username: string;
+  password?: string;
+  nickname: string;
+  phone: string;
+  email?: string;
+  isVip: boolean;
+  vipExpiresAt?: Date | null;
+  isBlacklisted: boolean;
+  joinDate: string;
+  avatar: string;
+  petType: 'cat' | 'dog' | 'chicken' | null;
+  petName: string | null;
+  lastLoginAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 const userSchema = new mongoose.Schema({
   id: {
@@ -65,6 +84,6 @@ const userSchema = new mongoose.Schema({
   timestamps: true,
 });
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model<IUser>('User', userSchema);
 
 export default User;

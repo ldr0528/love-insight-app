@@ -164,15 +164,15 @@ export default function DigitalPetShop() {
     }
   }, [displayedReply, showQuote]);
 
-  const renderPet = (message: React.ReactNode) => {
+  const renderPet = () => {
     switch (user?.petType) {
       case 'dog':
-        return <ThreeDog message={message} />;
+        return <ThreeDog />;
       case 'chicken':
-        return <ThreeChicken message={message} />;
+        return <ThreeChicken />;
       case 'cat':
       default:
-        return <ThreeCat message={message} />;
+        return <ThreeCat />;
     }
   };
 
@@ -287,13 +287,30 @@ export default function DigitalPetShop() {
       <main className="flex-1 max-w-2xl w-full mx-auto p-4 flex flex-col relative">
         {/* Pet Area */}
         <div className="flex flex-col items-center mb-2 mt-4 animate-in fade-in slide-in-from-top-8 duration-700 w-full z-10">
-          <div className="relative">
-            {renderPet(loading 
-              ? "嗯... 正在思考..." 
-              : response 
-                ? "我已经听到了你的心声..."
-                : `Hi，我是${user?.petName}，有什么心事都可以告诉我哦！`
-            )}
+          <div className="relative w-full max-w-3xl mx-auto flex flex-col md:flex-row items-center justify-center">
+            {/* Speech Bubble */}
+            <div className="relative z-20 mb-[-60px] md:mb-0 md:mr-[-50px] md:mt-[-50px]">
+              <div className="bg-white/95 backdrop-blur-sm px-4 py-3 md:px-6 md:py-5 rounded-2xl rounded-br-none md:rounded-br-2xl md:rounded-tr-none shadow-xl border border-orange-100 relative animate-in zoom-in duration-300 origin-bottom md:origin-right min-w-[200px] max-w-[280px]">
+                <div className="text-amber-900/90 text-xs md:text-sm font-medium leading-relaxed text-left break-words whitespace-pre-wrap">
+                  {loading 
+                    ? "嗯... 正在思考..." 
+                    : response 
+                      ? "我已经听到了你的心声..."
+                      : `Hi，我是${user?.petName || '旺财'}，有什么心事都可以告诉我哦！`
+                  }
+                </div>
+                {/* Arrow - Bottom Right for Mobile, Right for Desktop */}
+                <div className="absolute -bottom-2 right-8 md:top-1/2 md:-translate-y-1/2 md:-right-2 md:bottom-auto w-0 h-0 
+                  border-l-[8px] border-r-[8px] border-t-[8px] border-l-transparent border-r-transparent border-t-white/95
+                  md:border-t-[8px] md:border-b-[8px] md:border-l-[10px] md:border-t-transparent md:border-b-transparent md:border-l-white/95">
+                </div>
+              </div>
+            </div>
+
+            {/* Pet Model */}
+            <div className="w-full md:w-[500px] flex-shrink-0 pointer-events-none md:pointer-events-auto">
+              {renderPet()}
+            </div>
           </div>
         </div>
 
