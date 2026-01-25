@@ -346,10 +346,10 @@ export default function DigitalPetShop() {
             {/* Pet Model - Bubble is now handled inside the 3D component */}
             <div className="w-full md:w-[500px] flex-shrink-0">
               {renderPet(loading 
-                ? "嗯... 正在思考..." 
+                ? "嗯... 正在思考... 🤔" 
                 : response 
-                  ? "我已经听到了你的心声..."
-                  : `Hi，我是${user?.petName || '旺财'}，有什么心事都可以告诉我哦！`
+                  ? "我已经听到了你的心声... 👂✨"
+                  : `Hi，我是${user?.petName || '旺财'}，有什么心事都可以告诉我哦！🐾`
               )}
             </div>
           </div>
