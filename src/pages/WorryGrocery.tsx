@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Send, Sparkles, Store, Mic, MicOff, Check } from 'lucide-react';
 import ThreeCat from '@/components/ThreeCat';
@@ -8,6 +8,28 @@ import ThreeChicken from '@/components/ThreeChicken';
 import ThreePet from '@/components/ThreePet';
 import { useAuthStore } from '@/store/useAuthStore';
 import toast from 'react-hot-toast';
+
+// Memoize Pet Buttons to prevent unnecessary re-renders and image flickering
+const PetOptionButton = memo(({ type, selectedType, onSelect, imgSrc, label, colorClass, borderColorClass, iconColorClass }: any) => (
+  <button
+    onClick={() => onSelect(type)}
+    className={`relative p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
+      selectedType === type 
+        ? `${colorClass} ${borderColorClass} shadow-md transform scale-105` 
+        : `bg-white border-gray-200 hover:${borderColorClass.replace('border-', 'hover:border-')}`
+    }`}
+  >
+    {selectedType === type && <div className={`absolute top-2 right-2 ${iconColorClass} text-white p-1 rounded-full`}><Check size={12} /></div>}
+    <img 
+      src={imgSrc} 
+      alt={label} 
+      className="w-16 h-16 object-contain will-change-transform" 
+      decoding="async" 
+      loading="eager" 
+    />
+    <span className="font-bold text-gray-800">{label}</span>
+  </button>
+));
 
 export default function DigitalPetShop() {
   const { user, login } = useAuthStore();
@@ -224,131 +246,51 @@ export default function DigitalPetShop() {
           </div>
 
           <div className="grid grid-cols-3 gap-4 w-full mb-8">
-            {/* Cat Option */}
-            <button
-              onClick={() => setSelectedPetType('cat')}
-              className={`relative p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
-                selectedPetType === 'cat' 
-                  ? 'bg-orange-100 border-orange-500 shadow-md transform scale-105' 
-                  : 'bg-white border-gray-200 hover:border-orange-200'
-              }`}
-            >
-              {selectedPetType === 'cat' && <div className="absolute top-2 right-2 bg-orange-500 text-white p-1 rounded-full"><Check size={12} /></div>}
-              <img src="/images/pets/cat.png" alt="Cat" className="w-16 h-16 object-contain" />
-              <span className="font-bold text-gray-800">小猫</span>
-            </button>
-
-            {/* Dog Option */}
-            <button
-              onClick={() => setSelectedPetType('dog')}
-              className={`relative p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
-                selectedPetType === 'dog' 
-                  ? 'bg-amber-100 border-amber-500 shadow-md transform scale-105' 
-                  : 'bg-white border-gray-200 hover:border-amber-200'
-              }`}
-            >
-              {selectedPetType === 'dog' && <div className="absolute top-2 right-2 bg-amber-500 text-white p-1 rounded-full"><Check size={12} /></div>}
-              <img src="/images/pets/dog.png" alt="Dog" className="w-16 h-16 object-contain" />
-              <span className="font-bold text-gray-800">小狗</span>
-            </button>
-
-            {/* Chicken Option */}
-            <button
-              onClick={() => setSelectedPetType('chicken')}
-              className={`relative p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
-                selectedPetType === 'chicken' 
-                  ? 'bg-yellow-100 border-yellow-500 shadow-md transform scale-105' 
-                  : 'bg-white border-gray-200 hover:border-yellow-200'
-              }`}
-            >
-              {selectedPetType === 'chicken' && <div className="absolute top-2 right-2 bg-yellow-500 text-white p-1 rounded-full"><Check size={12} /></div>}
-              <img src="/images/pets/chicken.png" alt="Chicken" className="w-16 h-16 object-contain" />
-              <span className="font-bold text-gray-800">小鸡</span>
-            </button>
-
-            {/* Rabbit Option */}
-            <button
-              onClick={() => setSelectedPetType('rabbit')}
-              className={`relative p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
-                selectedPetType === 'rabbit' 
-                  ? 'bg-pink-100 border-pink-500 shadow-md transform scale-105' 
-                  : 'bg-white border-gray-200 hover:border-pink-200'
-              }`}
-            >
-              {selectedPetType === 'rabbit' && <div className="absolute top-2 right-2 bg-pink-500 text-white p-1 rounded-full"><Check size={12} /></div>}
-              <img src="/images/pets/rabbit.png" alt="Rabbit" className="w-16 h-16 object-contain" />
-              <span className="font-bold text-gray-800">小兔</span>
-            </button>
-
-            {/* Panda Option */}
-            <button
-              onClick={() => setSelectedPetType('panda')}
-              className={`relative p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
-                selectedPetType === 'panda' 
-                  ? 'bg-green-100 border-green-500 shadow-md transform scale-105' 
-                  : 'bg-white border-gray-200 hover:border-green-200'
-              }`}
-            >
-              {selectedPetType === 'panda' && <div className="absolute top-2 right-2 bg-green-500 text-white p-1 rounded-full"><Check size={12} /></div>}
-              <img src="/images/pets/panda.png" alt="Panda" className="w-16 h-16 object-contain" />
-              <span className="font-bold text-gray-800">熊猫</span>
-            </button>
-
-            {/* Hamster Option */}
-            <button
-              onClick={() => setSelectedPetType('hamster')}
-              className={`relative p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
-                selectedPetType === 'hamster' 
-                  ? 'bg-blue-100 border-blue-500 shadow-md transform scale-105' 
-                  : 'bg-white border-gray-200 hover:border-blue-200'
-              }`}
-            >
-              {selectedPetType === 'hamster' && <div className="absolute top-2 right-2 bg-blue-500 text-white p-1 rounded-full"><Check size={12} /></div>}
-              <img src="/images/pets/hamster.png" alt="Hamster" className="w-16 h-16 object-contain" />
-              <span className="font-bold text-gray-800">仓鼠</span>
-            </button>
-
-             {/* Koala Option */}
-            <button
-              onClick={() => setSelectedPetType('koala')}
-              className={`relative p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
-                selectedPetType === 'koala' 
-                  ? 'bg-gray-100 border-gray-500 shadow-md transform scale-105' 
-                  : 'bg-white border-gray-200 hover:border-gray-200'
-              }`}
-            >
-              {selectedPetType === 'koala' && <div className="absolute top-2 right-2 bg-gray-500 text-white p-1 rounded-full"><Check size={12} /></div>}
-              <img src="/images/pets/koala.png" alt="Koala" className="w-16 h-16 object-contain" />
-              <span className="font-bold text-gray-800">考拉</span>
-            </button>
-
-            {/* Fox Option */}
-            <button
-              onClick={() => setSelectedPetType('fox')}
-              className={`relative p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
-                selectedPetType === 'fox' 
-                  ? 'bg-orange-100 border-orange-600 shadow-md transform scale-105' 
-                  : 'bg-white border-gray-200 hover:border-orange-600'
-              }`}
-            >
-              {selectedPetType === 'fox' && <div className="absolute top-2 right-2 bg-orange-600 text-white p-1 rounded-full"><Check size={12} /></div>}
-              <img src="/images/pets/fox.png" alt="Fox" className="w-16 h-16 object-contain" />
-              <span className="font-bold text-gray-800">狐狸</span>
-            </button>
-
-            {/* Lion Option */}
-            <button
-              onClick={() => setSelectedPetType('lion')}
-              className={`relative p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
-                selectedPetType === 'lion' 
-                  ? 'bg-yellow-100 border-yellow-600 shadow-md transform scale-105' 
-                  : 'bg-white border-gray-200 hover:border-yellow-600'
-              }`}
-            >
-              {selectedPetType === 'lion' && <div className="absolute top-2 right-2 bg-yellow-600 text-white p-1 rounded-full"><Check size={12} /></div>}
-              <img src="/images/pets/lion.png" alt="Lion" className="w-16 h-16 object-contain" />
-              <span className="font-bold text-gray-800">狮子</span>
-            </button>
+            <PetOptionButton 
+              type="cat" selectedType={selectedPetType} onSelect={setSelectedPetType}
+              imgSrc="/images/pets/cat.png" label="小猫"
+              colorClass="bg-orange-100" borderColorClass="border-orange-500" iconColorClass="bg-orange-500"
+            />
+            <PetOptionButton 
+              type="dog" selectedType={selectedPetType} onSelect={setSelectedPetType}
+              imgSrc="/images/pets/dog.png" label="小狗"
+              colorClass="bg-amber-100" borderColorClass="border-amber-500" iconColorClass="bg-amber-500"
+            />
+            <PetOptionButton 
+              type="chicken" selectedType={selectedPetType} onSelect={setSelectedPetType}
+              imgSrc="/images/pets/chicken.png" label="小鸡"
+              colorClass="bg-yellow-100" borderColorClass="border-yellow-500" iconColorClass="bg-yellow-500"
+            />
+            <PetOptionButton 
+              type="rabbit" selectedType={selectedPetType} onSelect={setSelectedPetType}
+              imgSrc="/images/pets/rabbit.png" label="小兔"
+              colorClass="bg-pink-100" borderColorClass="border-pink-500" iconColorClass="bg-pink-500"
+            />
+            <PetOptionButton 
+              type="panda" selectedType={selectedPetType} onSelect={setSelectedPetType}
+              imgSrc="/images/pets/panda.png" label="熊猫"
+              colorClass="bg-green-100" borderColorClass="border-green-500" iconColorClass="bg-green-500"
+            />
+            <PetOptionButton 
+              type="hamster" selectedType={selectedPetType} onSelect={setSelectedPetType}
+              imgSrc="/images/pets/hamster.png" label="仓鼠"
+              colorClass="bg-blue-100" borderColorClass="border-blue-500" iconColorClass="bg-blue-500"
+            />
+            <PetOptionButton 
+              type="koala" selectedType={selectedPetType} onSelect={setSelectedPetType}
+              imgSrc="/images/pets/koala.png" label="考拉"
+              colorClass="bg-gray-100" borderColorClass="border-gray-500" iconColorClass="bg-gray-500"
+            />
+            <PetOptionButton 
+              type="fox" selectedType={selectedPetType} onSelect={setSelectedPetType}
+              imgSrc="/images/pets/fox.png" label="狐狸"
+              colorClass="bg-orange-100" borderColorClass="border-orange-600" iconColorClass="bg-orange-600"
+            />
+            <PetOptionButton 
+              type="lion" selectedType={selectedPetType} onSelect={setSelectedPetType}
+              imgSrc="/images/pets/lion.png" label="狮子"
+              colorClass="bg-yellow-100" borderColorClass="border-yellow-600" iconColorClass="bg-yellow-600"
+            />
           </div>
 
           <div className="w-full space-y-4">
