@@ -4,21 +4,95 @@ import { ArrowLeft, CloudMoon, Sparkles, ChevronRight, Moon } from 'lucide-react
 import toast from 'react-hot-toast';
 
 const Whale = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    width="24" 
-    height="24" 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round"
+  <svg
+    viewBox="0 0 800 600"
+    xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
-    <path d="M2 20a10 10 0 0 1 10-10c5 0 8 2 10 8a10 10 0 0 1-10 10 10 10 0 0 1-10-8Z" />
-    <path d="M12 2v4" />
-    <path d="M22 18s-2-2-4-2-4 2-4 2" />
+    <defs>
+      <linearGradient id="whaleBodyGradient" x1="0%" y1="50%" x2="100%" y2="50%">
+        <stop offset="0%" stopColor="#4F46E5" />
+        <stop offset="50%" stopColor="#7C3AED" />
+        <stop offset="100%" stopColor="#C084FC" />
+      </linearGradient>
+
+      <linearGradient id="bellyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stopColor="#E0E7FF" stopOpacity="0.1" />
+        <stop offset="100%" stopColor="#E0E7FF" stopOpacity="0.4" />
+      </linearGradient>
+
+      <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+        <feMerge>
+          <feMergeNode in="coloredBlur" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+    </defs>
+
+    <g fill="#FFF" fillOpacity="0.6">
+      <circle cx="100" cy="100" r="2" className="animate-pulse" />
+      <circle cx="700" cy="150" r="3" className="animate-pulse" style={{ animationDelay: '1s' }} />
+      <circle cx="500" cy="50" r="1.5" className="animate-pulse" style={{ animationDelay: '2s' }} />
+      <path d="M600 80 L602 85 L607 87 L602 89 L600 94 L598 89 L593 87 L598 85 Z" fill="#FCD34D" className="animate-[spin_4s_linear_infinite]" />
+    </g>
+
+    <g className="animate-[float_6s_ease-in-out_infinite]">
+      
+      <path
+        d="M680 280 Q 750 220 780 180 Q 740 250 720 290 Q 760 320 790 350 Q 720 330 680 300"
+        fill="url(#whaleBodyGradient)"
+        opacity="0.9"
+      />
+
+      <path
+        d="M150 300 
+           C 150 180, 350 150, 500 180 
+           C 650 210, 700 250, 680 300
+           C 660 380, 500 420, 350 380
+           C 200 340, 150 300, 150 300 Z"
+        fill="url(#whaleBodyGradient)"
+        filter="url(#glow)"
+      />
+
+      <path
+        d="M180 320
+           C 250 360, 450 390, 620 330
+           C 580 380, 400 400, 220 360 Z"
+        fill="url(#bellyGradient)"
+      />
+
+      <path
+        d="M400 320
+           C 380 380, 320 420, 280 400
+           C 320 380, 360 350, 400 320"
+        fill="#6D28D9" 
+        opacity="0.8"
+      />
+
+      <path
+        d="M260 280 Q 270 275 280 280"
+        stroke="white"
+        strokeWidth="3"
+        strokeLinecap="round"
+        fill="none"
+        opacity="0.8"
+      />
+
+      <g transform="translate(280, 180)">
+        <circle cx="0" cy="0" r="4" fill="white" opacity="0.4" className="animate-[ping_3s_linear_infinite]" />
+        <circle cx="15" cy="-20" r="6" fill="white" opacity="0.3" className="animate-[ping_4s_linear_infinite]" style={{ animationDelay: '1s' }} />
+        <circle cx="-10" cy="-35" r="3" fill="white" opacity="0.2" className="animate-[ping_2s_linear_infinite]" style={{ animationDelay: '0.5s' }} />
+      </g>
+      
+      <g stroke="white" strokeWidth="1" strokeOpacity="0.4" fill="white">
+        <circle cx="350" cy="250" r="1.5" />
+        <circle cx="400" cy="220" r="1.5" />
+        <circle cx="450" cy="240" r="1.5" />
+        <line x1="350" y1="250" x2="400" y2="220" />
+        <line x1="400" y1="220" x2="450" y2="240" />
+      </g>
+    </g>
   </svg>
 );
 
