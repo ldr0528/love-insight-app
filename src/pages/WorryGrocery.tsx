@@ -27,6 +27,22 @@ export default function DigitalPetShop() {
 
   const hasPet = !!user?.petType;
 
+  // Function to reset pet choice (for testing/user request)
+  const handleResetPet = () => {
+    // In a real app, this might need an API call to reset the user's pet in the DB
+    // For now, we just clear the local state to show the selection screen again
+    // To make it persistent, we should add an API endpoint or update the existing one.
+    // Let's assume we just want to allow re-selection in the UI for now.
+    // Ideally, we should update the user object in the store to clear petType.
+    
+    // We can "hack" it by updating the local user object via login() with null values,
+    // but the backend should support clearing it.
+    // For this task "User can re-select pet", I will add a button to clear the current pet state.
+    const updatedUser = { ...user!, petType: null, petName: null };
+    // @ts-ignore - Allowing nulls for reset
+    login(updatedUser);
+  };
+
   // Initialize Speech Recognition
   useEffect(() => {
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
@@ -287,7 +303,16 @@ export default function DigitalPetShop() {
       <main className="flex-1 max-w-2xl w-full mx-auto p-4 flex flex-col relative">
         {/* Pet Area */}
         <div className="flex flex-col items-center mb-2 mt-4 animate-in fade-in slide-in-from-top-8 duration-700 w-full z-10">
-          <div className="relative w-full max-w-3xl mx-auto flex flex-col md:flex-row items-center justify-center">
+          <div className="relative w-full max-w-3xl mx-auto flex flex-col md:flex-row items-center justify-center group">
+            {/* Re-select Pet Button (Hidden by default, shown on hover) */}
+            <button 
+              onClick={handleResetPet}
+              className="absolute top-0 right-0 md:right-10 z-50 bg-white/80 hover:bg-white text-gray-500 hover:text-orange-500 p-2 rounded-full shadow-sm backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100"
+              title="重新选择宠物"
+            >
+              <Sparkles size={16} />
+            </button>
+
             {/* Pet Model - Bubble is now handled inside the 3D component */}
             <div className="w-full md:w-[500px] flex-shrink-0">
               {renderPet(loading 
