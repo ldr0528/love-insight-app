@@ -9,6 +9,15 @@ interface ThreePetProps {
 const ThreePet: React.FC<ThreePetProps> = memo(({ imageSrc, altText, message }) => {
   return (
     <div className="relative flex flex-col items-center justify-center w-full h-full min-h-[300px]">
+       <style>{`
+         @keyframes pet-float {
+           0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+           50% { transform: translateY(-12px) rotate(2deg) scale(1.02); }
+         }
+         .animate-pet-float {
+           animation: pet-float 3.5s ease-in-out infinite;
+         }
+       `}</style>
        {/* Bubble for message */}
        <div className={`mb-6 transition-all duration-500 transform ${message ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
         {message && (
@@ -21,7 +30,7 @@ const ThreePet: React.FC<ThreePetProps> = memo(({ imageSrc, altText, message }) 
        </div>
 
       {/* Pet Image */}
-      <div className="relative w-56 h-56 md:w-72 md:h-72 transition-transform hover:scale-105 duration-300 cursor-pointer">
+      <div className="relative w-56 h-56 md:w-72 md:h-72 transition-transform hover:scale-105 duration-300 cursor-pointer animate-pet-float">
         <img
           src={imageSrc}
           alt={altText}
