@@ -203,24 +203,24 @@ export default function DigitalPetShop() {
   const renderPet = (message: React.ReactNode) => {
     switch (user?.petType) {
       case 'dog':
-        return <ThreePet imageSrc="/images/pets/dog.webp" altText="Dog" message={message} />;
+        return <ThreePet imageSrc="/images/pets/dog.gif" altText="Dog" message={message} />;
       case 'chicken':
-        return <ThreePet imageSrc="/images/pets/chicken.webp" altText="Chicken" message={message} />;
+        return <ThreePet imageSrc="/images/pets/chicken.gif" altText="Chicken" message={message} />;
       case 'rabbit':
-        return <ThreePet imageSrc="/images/pets/rabbit.webp" altText="Rabbit" message={message} />;
+        return <ThreePet imageSrc="/images/pets/rabbit.gif" altText="Rabbit" message={message} />;
       case 'panda':
-        return <ThreePet imageSrc="/images/pets/panda.webp" altText="Panda" message={message} />;
+        return <ThreePet imageSrc="/images/pets/panda.gif" altText="Panda" message={message} />;
       case 'hamster':
-        return <ThreePet imageSrc="/images/pets/hamster.webp" altText="Hamster" message={message} />;
+        return <ThreePet imageSrc="/images/pets/hamster.gif" altText="Hamster" message={message} />;
       case 'koala':
-        return <ThreePet imageSrc="/images/pets/koala.webp" altText="Koala" message={message} />;
+        return <ThreePet imageSrc="/images/pets/koala.gif" altText="Koala" message={message} />;
       case 'fox':
-        return <ThreePet imageSrc="/images/pets/fox.webp" altText="Fox" message={message} />;
+        return <ThreePet imageSrc="/images/pets/fox.gif" altText="Fox" message={message} />;
       case 'lion':
-        return <ThreePet imageSrc="/images/pets/lion.webp" altText="Lion" message={message} />;
+        return <ThreePet imageSrc="/images/pets/lion.gif" altText="Lion" message={message} />;
       case 'cat':
       default:
-        return <ThreePet imageSrc="/images/pets/cat.webp" altText="Cat" message={message} />;
+        return <ThreePet imageSrc="/images/pets/cat.gif" altText="Cat" message={message} />;
     }
   };
 
@@ -245,47 +245,47 @@ export default function DigitalPetShop() {
           <div className="grid grid-cols-3 gap-4 w-full mb-8">
             <PetOptionButton 
               type="cat" selectedType={selectedPetType} onSelect={setSelectedPetType}
-              imgSrc="/images/pets/cat.webp" label="小猫"
+              imgSrc="/images/pets/cat.gif" label="小猫"
               colorClass="bg-orange-100" borderColorClass="border-orange-500" iconColorClass="bg-orange-500"
             />
             <PetOptionButton 
               type="dog" selectedType={selectedPetType} onSelect={setSelectedPetType}
-              imgSrc="/images/pets/dog.webp" label="小狗"
+              imgSrc="/images/pets/dog.gif" label="小狗"
               colorClass="bg-amber-100" borderColorClass="border-amber-500" iconColorClass="bg-amber-500"
             />
             <PetOptionButton 
               type="chicken" selectedType={selectedPetType} onSelect={setSelectedPetType}
-              imgSrc="/images/pets/chicken.webp" label="小鸡"
+              imgSrc="/images/pets/chicken.gif" label="小鸡"
               colorClass="bg-yellow-100" borderColorClass="border-yellow-500" iconColorClass="bg-yellow-500"
             />
             <PetOptionButton 
               type="rabbit" selectedType={selectedPetType} onSelect={setSelectedPetType}
-              imgSrc="/images/pets/rabbit.webp" label="小兔"
+              imgSrc="/images/pets/rabbit.gif" label="小兔"
               colorClass="bg-pink-100" borderColorClass="border-pink-500" iconColorClass="bg-pink-500"
             />
             <PetOptionButton 
               type="panda" selectedType={selectedPetType} onSelect={setSelectedPetType}
-              imgSrc="/images/pets/panda.webp" label="熊猫"
+              imgSrc="/images/pets/panda.gif" label="熊猫"
               colorClass="bg-green-100" borderColorClass="border-green-500" iconColorClass="bg-green-500"
             />
             <PetOptionButton 
               type="hamster" selectedType={selectedPetType} onSelect={setSelectedPetType}
-              imgSrc="/images/pets/hamster.webp" label="仓鼠"
+              imgSrc="/images/pets/hamster.gif" label="仓鼠"
               colorClass="bg-blue-100" borderColorClass="border-blue-500" iconColorClass="bg-blue-500"
             />
             <PetOptionButton 
               type="koala" selectedType={selectedPetType} onSelect={setSelectedPetType}
-              imgSrc="/images/pets/koala.webp" label="考拉"
+              imgSrc="/images/pets/koala.gif" label="考拉"
               colorClass="bg-gray-100" borderColorClass="border-gray-500" iconColorClass="bg-gray-500"
             />
             <PetOptionButton 
               type="fox" selectedType={selectedPetType} onSelect={setSelectedPetType}
-              imgSrc="/images/pets/fox.webp" label="狐狸"
+              imgSrc="/images/pets/fox.gif" label="狐狸"
               colorClass="bg-orange-100" borderColorClass="border-orange-600" iconColorClass="bg-orange-600"
             />
             <PetOptionButton 
               type="lion" selectedType={selectedPetType} onSelect={setSelectedPetType}
-              imgSrc="/images/pets/lion.webp" label="狮子"
+              imgSrc="/images/pets/lion.gif" label="狮子"
               colorClass="bg-yellow-100" borderColorClass="border-yellow-600" iconColorClass="bg-yellow-600"
             />
           </div>
