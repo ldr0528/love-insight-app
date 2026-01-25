@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export type PetType = 'cat' | 'dog' | 'chicken' | 'rabbit' | 'panda' | 'hamster' | 'koala' | 'fox' | 'lion';
+export type PetType = 'cat' | 'dog' | 'chicken' | 'rabbit' | 'hamster' | 'fox';
 
 interface User {
   id: string;
