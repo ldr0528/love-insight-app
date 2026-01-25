@@ -252,6 +252,56 @@ const questions: Question[] = [
       { label: "松了一口气，庆幸只是梦", value: "relief" },
       { label: "平静温暖，嘴角带笑", value: "peaceful" }
     ]
+  },
+  {
+    id: 16,
+    text: "梦里你听到了一种声音，一直回荡在耳边，那是：",
+    options: [
+      { label: "悠扬的笛声", value: "flute" },
+      { label: "嘈杂的电流声", value: "noise" },
+      { label: "某人的低语", value: "whisper" },
+      { label: "海浪拍打礁石的声音", value: "waves" }
+    ]
+  },
+  {
+    id: 17,
+    text: "你发现家里多了一个从未见过的房间，里面放着：",
+    options: [
+      { label: "一架落满灰尘的钢琴", value: "piano" },
+      { label: "满墙的奇怪面具", value: "masks" },
+      { label: "无数的镜子", value: "mirrors" },
+      { label: "一张舒适的旧沙发", value: "sofa" }
+    ]
+  },
+  {
+    id: 18,
+    text: "梦里你必须丢弃一样东西才能前行，你会丢掉：",
+    options: [
+      { label: "沉重的背包", value: "backpack" },
+      { label: "昂贵的首饰", value: "jewelry" },
+      { label: "模糊的照片", value: "photo" },
+      { label: "手里的地图", value: "map" }
+    ]
+  },
+  {
+    id: 19,
+    text: "你走进一片森林，树上结的果实竟然是：",
+    options: [
+      { label: "发光的灯泡", value: "bulb" },
+      { label: "滴答作响的时钟", value: "clock_fruit" },
+      { label: "透明的水晶球", value: "crystal" },
+      { label: "鲜红的心脏", value: "heart_fruit" }
+    ]
+  },
+  {
+    id: 20,
+    text: "梦境即将结束，你眼前出现了一道光，这道光是：",
+    options: [
+      { label: "刺眼的白光", value: "white_light" },
+      { label: "柔和的金光", value: "gold_light" },
+      { label: "幽冷的蓝光", value: "blue_light" },
+      { label: "温暖的橙光", value: "orange_light" }
+    ]
   }
 ];
 
