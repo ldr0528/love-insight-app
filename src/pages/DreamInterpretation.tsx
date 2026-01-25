@@ -336,13 +336,13 @@ export default function DreamInterpretation() {
                    <p className="text-2xl font-bold text-white">{result.psychologicalAge}岁</p>
                  </div>
                  <div className="bg-black/20 p-4 rounded-xl border border-white/10">
-                   <p className="text-purple-300 text-sm mb-1">灵魂适配职业</p>
-                   <p className="text-xl font-bold text-white truncate" title={result.career}>{result.career}</p>
-                 </div>
-                 <div className="bg-black/20 p-4 rounded-xl border border-white/10">
-                   <p className="text-purple-300 text-sm mb-1">潜意识梦想</p>
-                   <p className="text-xl font-bold text-white truncate" title={result.dreamPersona}>{result.dreamPersona}</p>
-                 </div>
+                  <p className="text-purple-300 text-sm mb-1">灵魂适配职业</p>
+                  <p className="text-xl font-bold text-white break-words" title={result.career}>{result.career}</p>
+                </div>
+                <div className="bg-black/20 p-4 rounded-xl border border-white/10">
+                  <p className="text-purple-300 text-sm mb-1">潜意识梦想</p>
+                  <p className="text-xl font-bold text-white break-words" title={result.dreamPersona}>{result.dreamPersona}</p>
+                </div>
                </div>
 
                <div className="bg-white/5 rounded-2xl p-6 text-left border border-white/10">
