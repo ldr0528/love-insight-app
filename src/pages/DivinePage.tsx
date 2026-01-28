@@ -274,29 +274,42 @@ export default function DivinePage() {
                         <div className="absolute bottom-2 right-2 text-slate-700"><Star className="w-4 h-4" /></div>
                     </div>
 
-                    {/* Interpretation */}
-                    <div className="space-y-3">
+                    {/* Interpretation - VIP Gated */}
+                    <div className="space-y-3 relative">
                         <h3 className="text-yellow-500 font-bold text-sm flex items-center gap-2">
                             <Zap className="w-4 h-4" /> 天机解语
                         </h3>
-                        <p className="text-slate-300 text-sm leading-relaxed text-justify">
-                            {result.interpretation}
-                        </p>
+                        
+                        {user?.isVip ? (
+                            <p className="text-slate-300 text-sm leading-relaxed text-justify animate-in fade-in">
+                                {result.interpretation}
+                            </p>
+                        ) : (
+                            <div className="relative rounded-lg overflow-hidden">
+                                <p className="text-slate-300 text-sm leading-relaxed text-justify blur-sm select-none opacity-50">
+                                    此卦象显示目前的局势正在发生微妙的变化。虽然表面上看...
+                                    (此处包含300字深度解析，涉及具体的行动建议与转机预判)
+                                </p>
+                                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-transparent to-slate-900/90">
+                                    <button 
+                                        onClick={() => window.location.href = '/recharge'}
+                                        className="px-6 py-2 rounded-full bg-gradient-to-r from-yellow-500 to-amber-600 text-slate-900 font-bold text-sm shadow-lg hover:scale-105 transition-all flex items-center gap-2"
+                                    >
+                                        <Lock className="w-4 h-4" /> 解锁深度解析
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     {/* Actions */}
                     <div className="mt-8 flex gap-4">
                         <button 
                             onClick={() => setStep('input')}
-                            className="flex-1 py-3 rounded-xl bg-slate-800 text-slate-300 font-bold text-sm hover:bg-slate-700 transition-all flex items-center justify-center gap-2"
+                            className="w-full py-3 rounded-xl bg-slate-800 text-slate-300 font-bold text-sm hover:bg-slate-700 transition-all flex items-center justify-center gap-2"
                         >
                             <RefreshCw className="w-4 h-4" /> 再测一事
                         </button>
-                        {!user?.isVip && (
-                            <button className="flex-1 py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-amber-600 text-slate-900 font-bold text-sm hover:shadow-lg hover:shadow-yellow-500/20 transition-all flex items-center justify-center gap-2">
-                                <Lock className="w-4 h-4" /> 解锁深度解析
-                            </button>
-                        )}
                     </div>
                 </div>
             </div>
