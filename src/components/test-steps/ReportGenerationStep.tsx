@@ -354,7 +354,7 @@ export default function ReportGenerationStep() {
       <div className="flex flex-col items-center justify-center min-h-[50vh] text-indigo-800">
         <Loader2 className="w-16 h-16 animate-spin mb-6 text-indigo-500" />
         <h3 className="text-xl font-bold animate-pulse">正在连接宇宙能量...</h3>
-        <p className="text-sm text-indigo-400 mt-2">正在推演{fortuneType === 'weekly' ? '本周' : fortuneType === 'monthly' ? '本月' : '年度'}运势数据</p>
+        <p className="text-sm text-indigo-400 mt-2">正在推演{fortuneType === 'monthly' ? '本月' : '年度'}运势数据</p>
       </div>
     );
   }
@@ -401,7 +401,7 @@ export default function ReportGenerationStep() {
                     </div>
                     <div className="relative z-10 text-center">
                         <div className="inline-block px-3 py-1 bg-white/20 rounded-full text-xs mb-4 backdrop-blur-md">
-                            {fortuneType === 'weekly' ? '本周运势' : fortuneType === 'monthly' ? '本月运势' : '年度运势'} · 专属分析
+                            {fortuneType === 'monthly' ? '本月运势' : '年度运势'} · 专属分析
                         </div>
                         <h1 className="text-3xl font-bold mb-2">{report.headline}</h1>
                         <div className="flex justify-center items-end gap-2 mt-6">
