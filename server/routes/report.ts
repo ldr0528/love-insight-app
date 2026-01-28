@@ -376,14 +376,32 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
 
     // Divine Oracle Fallback
     if (user_profile.report_type === 'divine_oracle') {
-        mockResponse.headline = "第一签 · 上上 · 潜龙勿用";
-        mockResponse.summary = [
-            "吉凶本是心中念，风雨过后见彩虹。",
-            "此签主时机未到，但前景光明，只需耐心积淀。"
+        // Randomly select a fallback sign to avoid repetition when AI fails
+        const fallbacks = [
+            {
+                headline: "第一签 · 上上 · 潜龙勿用",
+                summary: ["吉凶本是心中念，风雨过后见彩虹。", "此签主时机未到，但前景光明，只需耐心积淀。"],
+                content: "你现在所求之事，如同埋在土里的种子。虽然表面看似无动静，实则正在扎根。切勿操之过急，拔苗助长。保持现状，充实自我，待春雷一响，必将破土而出。"
+            },
+            {
+                headline: "第十五签 · 中吉 · 枯木逢春",
+                summary: ["枯木逢春色更鲜，花开结子喜连绵。", "困境即将过去，新的生机正在萌芽。"],
+                content: "过去的低谷期已经接近尾声。你所担心的事情会迎来转机，就像枯木重新发芽一样。这时候最需要的是保持信心，积极寻找新的机会，不要被过去的失败所束缚。"
+            },
+            {
+                headline: "第三十二签 · 中平 · 渔人得利",
+                summary: ["蚌鹬相持事可疑，渔人得利不须欺。", "与其相争，不如退一步海阔天空。"],
+                content: "当前局势复杂，可能有竞争对手或利益冲突。建议不要正面硬刚，也不要卷入无谓的纷争。保持中立，观察局势变化，等待最佳时机出手，方能坐收渔利。"
+            }
         ];
+        
+        const randomSign = fallbacks[Math.floor(Math.random() * fallbacks.length)];
+
+        mockResponse.headline = randomSign.headline;
+        mockResponse.summary = randomSign.summary;
         mockResponse.fortune_score = 85;
         (mockResponse as any).content_sections = [
-            { title: "天机解语", content: "你现在所求之事，如同埋在土里的种子。虽然表面看似无动静，实则正在扎根。切勿操之过急，拔苗助长。保持现状，充实自我，待春雷一响，必将破土而出。" }
+            { title: "天机解语", content: randomSign.content }
         ];
         
         // Cleanup
