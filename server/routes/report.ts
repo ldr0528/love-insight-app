@@ -294,6 +294,23 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
             };
         }
 
+        // --- Validation for Fortune Reports ---
+        if (req.body.ui_context?.report_type?.startsWith('fortune_')) {
+            if (!reportData.taboos) {
+                reportData.taboos = { do: [], avoid: [] };
+            }
+            if (!reportData.taboos.do) reportData.taboos.do = ["顺其自然", "保持乐观", "早睡早起"];
+            if (!reportData.taboos.avoid) reportData.taboos.avoid = ["冲动决策", "熬夜", "暴饮暴食"];
+            
+            if (!reportData.content_sections || !Array.isArray(reportData.content_sections)) {
+                reportData.content_sections = [
+                    { title: "综合运势", content: reportData.summary?.[0] || "运势平稳，静待花开。" },
+                    { title: "事业学业", content: "保持专注，效率会逐渐提升。" },
+                    { title: "情感人际", content: "多与人交流，会有意外收获。" }
+                ];
+            }
+        }
+
         // Save to cache
         reportCache[cacheKey] = reportData
         
