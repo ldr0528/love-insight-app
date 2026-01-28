@@ -46,6 +46,18 @@ const getSchemaForReportType = (type: string) => {
     }`;
   }
 
+  // Divine Oracle Schema
+  if (type === 'divine_oracle') {
+      return `{
+        "headline": "string (e.g. 第十五签 · 上上签)",
+        "summary": ["string (Poem/Sign Text)", "string (Short interpretation)"],
+        "fortune_score": 90,
+        "content_sections": [
+            { "title": "天机解语", "content": "string (Detailed advice based on the question)" }
+        ]
+      }`;
+  }
+
   // Fortune Inn Schemas
   if (type === 'fortune_monthly' || type === 'fortune_yearly') {
       return `{
@@ -193,6 +205,22 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
       - **scripts**: 实战话术库（3-5句），可以直接复制粘贴发给对方的话。
       - **warnings**: 避雷警示（3-5点），绝对不能做的事。
       `
+    } else if (reportType === 'divine_oracle') {
+        const question = user_profile.question || "未透露";
+        systemPrompt = `你是「灵犀指引」的赛博神算子。你精通周易六爻、塔罗占卜与现代心理学。
+        用户正心中默念一个问题：“${question}”。
+        
+        你的任务是：
+        1. **起卦**：根据当前时间与用户问题的能量场，随机推演一个卦象或灵签（可以是传统观音灵签，也可以是易经卦象）。
+        2. **断语**：给出吉凶判断（上上签/中吉/下下签等）。
+        3. **解惑**：结合卦辞与现代生活，为用户提供具体、有哲理且治愈的指引。
+
+        **输出要求**：
+        - headline: 必须是格式化的签文标题，如“第三十二签 · 中平 · 渔人得利”。
+        - summary[0]: 签诗（四句诗）。
+        - summary[1]: 简短的直观解释（如：此卦主先难后易...）。
+        - content_sections[0].content: 针对用户问题“${question}”的深度解读，语气要神秘而充满智慧，切中要害。
+        `;
     } else if (reportType === 'palm') {
       systemPrompt = `你是「灵犀指引」的手相大师。你的任务是根据用户上传的手相特征（感情线、智慧线、生命线、金星丘），生成一份**深度手相命运解读报告**。
       
@@ -332,6 +360,24 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
         mockResponse.headline = "独行者的浪漫：你正在等待一个能读懂沉默的人"
     } else if (user_profile.relationship_stage === 'breakup_recovery') {
         mockResponse.headline = "重生之旅：每一次破碎都是为了重塑更完整的自己"
+    }
+
+    // Divine Oracle Fallback
+    if (user_profile.report_type === 'divine_oracle') {
+        mockResponse.headline = "第一签 · 上上 · 潜龙勿用";
+        mockResponse.summary = [
+            "吉凶本是心中念，风雨过后见彩虹。",
+            "此签主时机未到，但前景光明，只需耐心积淀。"
+        ];
+        mockResponse.fortune_score = 85;
+        (mockResponse as any).content_sections = [
+            { title: "天机解语", content: "你现在所求之事，如同埋在土里的种子。虽然表面看似无动静，实则正在扎根。切勿操之过急，拔苗助长。保持现状，充实自我，待春雷一响，必将破土而出。" }
+        ];
+        
+        // Cleanup
+        delete (mockResponse as any).attraction_profile;
+        delete (mockResponse as any).action_plan;
+        delete (mockResponse as any).weekly_focus;
     }
 
     // Hand Palm specific fallback

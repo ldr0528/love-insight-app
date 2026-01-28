@@ -321,7 +321,25 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Compatibility Explorer */}
+          {/* Divine Oracle */}
+          <Link to="/divine" className="group relative bg-slate-900 rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-slate-700 overflow-hidden flex flex-col h-full">
+            <div className="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-30 transition-opacity">
+              <Sparkles className="w-24 h-24 text-yellow-400" />
+            </div>
+            <div className="relative z-10 flex flex-col h-full justify-center text-white">
+              <div className="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center text-yellow-400 mb-4 border border-slate-600">
+                <Compass className="w-6 h-6 animate-spin-slow" />
+              </div>
+              <h3 className="text-xl font-bold text-yellow-400 mb-2">神算子</h3>
+              <p className="text-slate-300 text-sm mb-6 flex-grow">
+                心中若有惑，天机自会应。针对具体问题（如面试、感情）的一事一测，即时解惑。
+              </p>
+              <span className="inline-flex items-center text-yellow-400 font-bold group-hover:gap-2 transition-all">
+                心诚则灵 <ArrowRight className="w-4 h-4 ml-1" />
+              </span>
+            </div>
+          </Link>
+            {/* Compatibility Explorer */}
           <div className="relative group bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-cyan-50 overflow-hidden flex flex-col h-full">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
               <Feather className="w-24 h-24 text-cyan-500" />
