@@ -1,13 +1,42 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/useAuthStore';
-import { Compass, Sparkles, Send, RefreshCw, Lock, ChevronLeft, Loader2, Star, Zap } from 'lucide-react';
+import { Compass, Sparkles, Send, RefreshCw, Lock, ChevronLeft, Loader2, Star, Zap, Share2, Download, X } from 'lucide-react';
+import html2canvas from 'html2canvas';
 
 interface DivineResult {
   sign: string; // e.g., "第十五签 · 上上签"
   judgment: '吉' | '平' | '凶';
   poem: string; // 签诗
   interpretation: string; // AI 解读
+}
+
+// Share Modal Component
+function ShareModal({ image, onClose }: { image: string; onClose: () => void }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200" onClick={onClose}>
+      <div className="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col relative animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
+         <button 
+          onClick={onClose}
+          className="absolute top-3 right-3 p-1 rounded-full bg-black/20 hover:bg-black/40 text-slate-400 transition-colors z-10"
+        >
+          <X className="w-5 h-5" />
+        </button>
+        <div className="p-4 text-center border-b border-slate-800">
+          <h3 className="text-lg font-bold text-yellow-400">保存签文</h3>
+          <p className="text-xs text-slate-400 mt-1">长按图片保存，或分享给好友</p>
+        </div>
+        <div className="p-4 bg-slate-950/50 max-h-[60vh] overflow-y-auto flex justify-center">
+            <img src={image} alt="Divine Share" className="w-full h-auto rounded-lg shadow-sm border border-slate-800" />
+        </div>
+        <div className="p-4 border-t border-slate-800 bg-slate-900 flex justify-center">
+             <a href={image} download="divine-oracle.png" className="flex items-center gap-2 px-6 py-2 bg-yellow-500 text-slate-900 rounded-full font-bold text-sm shadow-lg hover:bg-yellow-400 transition-all">
+                <Download className="w-4 h-4" /> 保存图片
+             </a>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default function DivinePage() {
@@ -18,8 +47,34 @@ export default function DivinePage() {
   const [result, setResult] = useState<DivineResult | null>(null);
   const [error, setError] = useState('');
   
+  // Share state
+  const [shareImage, setShareImage] = useState<string | null>(null);
+  const [isGeneratingShare, setIsGeneratingShare] = useState(false);
+  const resultRef = useRef<HTMLDivElement>(null);
+
   // Animation refs
   const compassRef = useRef<HTMLDivElement>(null);
+
+  const handleShare = async () => {
+    if (!resultRef.current) return;
+    setIsGeneratingShare(true);
+    try {
+      // Small delay to ensure clean render
+      await new Promise(resolve => setTimeout(resolve, 100));
+      const canvas = await html2canvas(resultRef.current, {
+        useCORS: true,
+        scale: 2,
+        backgroundColor: '#0f172a', // slate-900
+        logging: false,
+      });
+      const image = canvas.toDataURL('image/png');
+      setShareImage(image);
+    } catch (err) {
+      console.error("Share generation failed", err);
+    } finally {
+      setIsGeneratingShare(false);
+    }
+  };
 
   const handleStartDivine = async () => {
     if (!question.trim()) return;
@@ -177,7 +232,21 @@ export default function DivinePage() {
         {/* Step 3: Result */}
         {step === 'result' && result && (
             <div className="w-full max-w-md z-10 animate-in fade-in slide-in-from-bottom-10 duration-700">
-                <div className="bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-8 relative overflow-hidden shadow-2xl">
+                {shareImage && (
+                    <ShareModal image={shareImage} onClose={() => setShareImage(null)} />
+                )}
+
+                {/* Share FAB */}
+                <button
+                    onClick={handleShare}
+                    disabled={isGeneratingShare}
+                    className="fixed bottom-8 right-6 z-40 bg-yellow-500 text-slate-900 p-3 rounded-full shadow-xl hover:bg-yellow-400 transition-all hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 pr-5"
+                >
+                    {isGeneratingShare ? <Loader2 className="w-5 h-5 animate-spin" /> : <Share2 className="w-5 h-5" />}
+                    <span className="font-bold text-sm">分享</span>
+                </button>
+
+                <div ref={resultRef} className="bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-8 relative overflow-hidden shadow-2xl">
                     {/* Decorative Elements */}
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-yellow-500 to-transparent opacity-50"></div>
                     <div className="absolute -right-10 -top-10 w-32 h-32 bg-yellow-500/10 rounded-full blur-3xl"></div>
