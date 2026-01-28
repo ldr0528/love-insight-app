@@ -76,6 +76,13 @@ export default function DivinePage() {
     }
   };
 
+  const handleReset = () => {
+    setQuestion('');
+    setResult(null);
+    setError('');
+    setStep('input');
+  };
+
   const handleStartDivine = async () => {
     if (!question.trim()) return;
     
@@ -308,7 +315,7 @@ export default function DivinePage() {
                     {/* Actions */}
                     <div className="mt-8 flex gap-4">
                         <button 
-                            onClick={() => setStep('input')}
+                            onClick={handleReset}
                             className="w-full py-3 rounded-xl bg-slate-800 text-slate-300 font-bold text-sm hover:bg-slate-700 transition-all flex items-center justify-center gap-2"
                         >
                             <RefreshCw className="w-4 h-4" /> 再测一事
