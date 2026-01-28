@@ -270,11 +270,12 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
     try {
       // Determine model based on report type to optimize speed/quality
       // Use qwen-max for complex astrology, qwen-plus for standard reports
-      const modelName = req.body.ui_context?.report_type === 'astrology' || req.body.ui_context?.report_type?.startsWith('fortune_') ? 'qwen-max' : 'qwen-plus';
+      const targetReportType = req.body.ui_context?.report_type || req.body.user_profile?.report_type || 'comprehensive';
+      const modelName = targetReportType === 'astrology' || targetReportType.startsWith('fortune_') ? 'qwen-max' : 'qwen-plus';
 
-      console.log(`Attempting AI generation with model ${modelName}...`);
+      console.log(`Attempting AI generation with model ${modelName} for type ${targetReportType}...`);
       
-      const developerSchema = getSchemaForReportType(req.body.ui_context?.report_type || 'comprehensive');
+      const developerSchema = getSchemaForReportType(targetReportType);
       const DEVELOPER_PROMPT_DYNAMIC = `You are a strict JSON generator. You must output VALID JSON matching the schema below.
       Schema:
       ${developerSchema}
@@ -392,10 +393,23 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
                 headline: "第三十二签 · 中平 · 渔人得利",
                 summary: ["蚌鹬相持事可疑，渔人得利不须欺。", "与其相争，不如退一步海阔天空。"],
                 content: "当前局势复杂，可能有竞争对手或利益冲突。建议不要正面硬刚，也不要卷入无谓的纷争。保持中立，观察局势变化，等待最佳时机出手，方能坐收渔利。"
+            },
+            {
+                headline: "第四十八签 · 上吉 · 鹏程万里",
+                summary: ["大鹏一日同风起，扶摇直上九万里。", "志向远大，时运亨通，宜大展宏图。"],
+                content: "你的运势正在上升期，就像大鹏鸟乘风而起。如果你有远大的计划或目标，现在是实施的最佳时机。不要犹豫，大胆去追求你的梦想，周围的环境和人都会成为你的助力。"
+            },
+            {
+                headline: "第五十六签 · 下下 · 缘木求鱼",
+                summary: ["缘木求鱼事多难，枉费心机空叹息。", "方向错误，努力白费，宜及时止损。"],
+                content: "目前的努力方向可能存在问题，就像爬到树上去抓鱼一样，不仅达不到目的，还可能白费力气。建议停下来重新审视你的目标和方法，也许换一条路走，会有意想不到的收获。"
             }
         ];
         
-        const randomSign = fallbacks[Math.floor(Math.random() * fallbacks.length)];
+        // Use a simple hash of the question + current minute to ensure randomness but consistency for short bursts
+        // Or just pure random for now
+        const randomIndex = Math.floor(Math.random() * fallbacks.length);
+        const randomSign = fallbacks[randomIndex];
 
         mockResponse.headline = randomSign.headline;
         mockResponse.summary = randomSign.summary;

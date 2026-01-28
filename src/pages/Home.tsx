@@ -169,6 +169,27 @@ export default function Home() {
         
         {/* Feature Cards */}
         <div className="grid md:grid-cols-2 gap-6 w-full">
+          {/* Divine Oracle (First) */}
+          <Link to="/divine" className="group relative bg-slate-900 rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-slate-700 overflow-hidden flex flex-col h-full md:col-span-2">
+            <div className="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-30 transition-opacity">
+              <Sparkles className="w-24 h-24 text-yellow-400" />
+            </div>
+            <div className="relative z-10 flex flex-col h-full justify-center text-white">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center text-yellow-400 border border-slate-600">
+                    <Compass className="w-6 h-6 animate-spin-slow" />
+                </div>
+                <h3 className="text-xl font-bold text-yellow-400">神算子</h3>
+              </div>
+              <p className="text-slate-300 text-sm mb-6 flex-grow max-w-xl">
+                心中若有惑，天机自会应。针对具体问题（如面试、感情、投资）的一事一测，即时解惑。
+              </p>
+              <span className="inline-flex items-center text-yellow-400 font-bold group-hover:gap-2 transition-all">
+                心诚则灵 <ArrowRight className="w-4 h-4 ml-1" />
+              </span>
+            </div>
+          </Link>
+
           {/* Fortune Inn */}
           <Link to="/report" className="group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-pink-100 overflow-hidden flex flex-col h-full">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
@@ -226,25 +247,6 @@ export default function Home() {
             </div>
           </a>
 
-          {/* Standalone Palmistry */}
-          <Link to="/palm" className="group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-orange-50 overflow-hidden flex flex-col h-full">
-            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-              <Hand className="w-24 h-24 text-orange-500" />
-            </div>
-            <div className="relative z-10 flex flex-col h-full justify-center">
-              <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center text-orange-600 mb-4">
-                <Hand className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">智能手相大师</h3>
-              <p className="text-gray-500 text-sm mb-6 flex-grow">
-                上传手掌照片，视觉模型将自动识别你的感情线与生命线特征。
-              </p>
-              <span className="inline-flex items-center text-orange-600 font-bold group-hover:gap-2 transition-all">
-                单独测手相 <ArrowRight className="w-4 h-4 ml-1" />
-              </span>
-            </div>
-          </Link>
-
           {/* Dream Interpretation */}
           <Link to="/dream" className="group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-purple-50 overflow-hidden flex flex-col h-full">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
@@ -283,7 +285,9 @@ export default function Home() {
             </div>
           </Link>
 
-          {/* AI Naming Master */}
+          {/* --- VIP SECTION --- */}
+          
+          {/* AI Naming Master (VIP) */}
           <div className="relative group bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-purple-50 overflow-hidden flex flex-col h-full">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
               <PenTool className="w-24 h-24 text-purple-500" />
@@ -321,28 +325,10 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Divine Oracle */}
-          <Link to="/divine" className="group relative bg-slate-900 rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-slate-700 overflow-hidden flex flex-col h-full">
-            <div className="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-30 transition-opacity">
-              <Sparkles className="w-24 h-24 text-yellow-400" />
-            </div>
-            <div className="relative z-10 flex flex-col h-full justify-center text-white">
-              <div className="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center text-yellow-400 mb-4 border border-slate-600">
-                <Compass className="w-6 h-6 animate-spin-slow" />
-              </div>
-              <h3 className="text-xl font-bold text-yellow-400 mb-2">神算子</h3>
-              <p className="text-slate-300 text-sm mb-6 flex-grow">
-                心中若有惑，天机自会应。针对具体问题（如面试、感情）的一事一测，即时解惑。
-              </p>
-              <span className="inline-flex items-center text-yellow-400 font-bold group-hover:gap-2 transition-all">
-                心诚则灵 <ArrowRight className="w-4 h-4 ml-1" />
-              </span>
-            </div>
-          </Link>
-            {/* Compatibility Explorer */}
-          <div className="relative group bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-cyan-50 overflow-hidden flex flex-col h-full">
+          {/* Standalone Palmistry (VIP) */}
+          <div className="relative group bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-orange-50 overflow-hidden flex flex-col h-full">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-              <Feather className="w-24 h-24 text-cyan-500" />
+              <Hand className="w-24 h-24 text-orange-500" />
             </div>
             {/* VIP Badge */}
             <div className="absolute top-4 right-4 z-20">
@@ -352,12 +338,12 @@ export default function Home() {
               </div>
             </div>
             <div className="relative z-10 flex flex-col h-full justify-center">
-              <div className="w-12 h-12 bg-cyan-100 rounded-xl flex items-center justify-center text-cyan-600 mb-4">
-                <Feather className="w-6 h-6" />
+              <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center text-orange-600 mb-4">
+                <Hand className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">缘分探索</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">智能手相大师</h3>
               <p className="text-gray-500 text-sm mb-6 flex-grow">
-                输入双方信息， 深度解析前世今生与性格契合度，并赠予专属定情古诗。
+                上传手掌照片，视觉模型将自动识别你的感情线与生命线特征。
               </p>
               
               <button 
@@ -367,12 +353,12 @@ export default function Home() {
                   } else if (!user.isVip) {
                     window.location.href = '/recharge';
                   } else {
-                    window.location.href = '/compatibility';
+                    window.location.href = '/palm';
                   }
                 }}
-                className="inline-flex items-center text-cyan-600 font-bold group-hover:gap-2 transition-all text-left"
+                className="inline-flex items-center text-orange-600 font-bold group-hover:gap-2 transition-all text-left"
               >
-                {user?.isVip ? '开启缘分测试' : '解锁缘分测试'} <ArrowRight className="w-4 h-4 ml-1" />
+                {user?.isVip ? '开始手相分析' : '解锁手相大师'} <ArrowRight className="w-4 h-4 ml-1" />
               </button>
             </div>
           </div>

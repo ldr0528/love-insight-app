@@ -16,27 +16,26 @@ const TARGET_AUDIENCES = ['B端', '大众', '女性向', '男性向', '亲子'];
 const BRAND_LANGUAGES = ['中文', '中英混合', '英文'];
 
 export default function NamingMaster() {
+  const { user, openAuthModal } = useAuthStore();
+  const navigate = useNavigate();
+
   const [namingType, setNamingType] = useState<NamingType>('baby');
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [showPreferences, setShowPreferences] = useState(false);
   const [showTimeInput, setShowTimeInput] = useState(false);
-  const [isVip, setIsVip] = useState(false);
-  const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<'wechat' | 'alipay'>('wechat');
-  const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
-  const [isPollingPayment, setIsPollingPayment] = useState(false);
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
   useEffect(() => {
-    const unlocked = localStorage.getItem('vip_unlocked') === 'true';
-    const qs = new URLSearchParams(window.location.search);
-    const vipParam = qs.get('vip');
-    if (unlocked || vipParam === '1' || vipParam === 'true') {
-      setIsVip(true);
+    if (!user) {
+      openAuthModal();
+      navigate('/');
+      return;
     }
-  }, []);
+    if (!user.isVip) {
+      navigate('/recharge');
+    }
+  }, [user, navigate, openAuthModal]);
 
   // Baby Form States
   const [babyForm, setBabyForm] = useState({
@@ -79,61 +78,16 @@ export default function NamingMaster() {
     return [...list, item];
   };
 
-  const initiatePayment = async (method: 'wechat' | 'alipay') => {
-    try {
-      const res = await fetch('/api/payment/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ method, platform: isMobile ? 'mobile' : 'desktop' })
-      });
-      const data = await res.json();
-      if (!data.success) throw new Error(data.error || '创建订单失败');
-      const { orderId, payUrl } = data;
-      if (method === 'alipay' || (method === 'wechat' && isMobile)) {
-        window.location.href = payUrl;
-      } else {
-        setQrCodeUrl(payUrl);
-        setIsPollingPayment(true);
-        pollPaymentStatus(orderId);
-      }
-    } catch (e: any) {
-      alert(e.message || '支付启动失败，请重试');
-      setIsPollingPayment(false);
-    }
-  };
-
-  const pollPaymentStatus = async (orderId: string) => {
-    const poll = setInterval(async () => {
-      try {
-        const res = await fetch(`/api/payment/status/${orderId}`);
-        const data = await res.json();
-        if (data.success && data.status === 'paid') {
-          clearInterval(poll);
-          setIsPollingPayment(false);
-          setShowPaymentModal(false);
-          setQrCodeUrl(null);
-          setIsVip(true);
-          localStorage.setItem('vip_unlocked', 'true');
-        }
-      } catch (e) {
-        console.error('Polling error', e);
-      }
-    }, 2000);
-    setTimeout(() => {
-      clearInterval(poll);
-      setIsPollingPayment(false);
-    }, 300000);
-  };
-
   const handleGenerate = async () => {
     setIsLoading(true);
     setResult(null);
     setError(null);
     
     try {
+      // Force master version settings: count 10, detailed true
       const params = namingType === 'baby' 
-        ? { type: 'baby', ...babyForm, _t: Date.now(), count: isVip ? 10 : 3, detailed: isVip } 
-        : { type: 'company', ...companyForm, _t: Date.now(), count: isVip ? 10 : 3, detailed: isVip };
+        ? { type: 'baby', ...babyForm, _t: Date.now(), count: 10, detailed: true } 
+        : { type: 'company', ...companyForm, _t: Date.now(), count: 10, detailed: true };
         
       const data = await generateName(params);
       setResult(data);
@@ -147,139 +101,6 @@ export default function NamingMaster() {
 
   return (
     <div className="min-h-screen bg-purple-50 flex flex-col items-center p-4">
-      {/* Payment Modal */}
-      {showPaymentModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white rounded-2xl w-full max-w-sm sm:max-w-md overflow-hidden shadow-2xl animate-scale-in">
-            {/* Modal Header */}
-            <div className="bg-gradient-to-r from-amber-100 to-yellow-50 p-4 sm:p-6 text-center relative">
-              <button 
-                onClick={() => setShowPaymentModal(false)}
-                className="absolute right-4 top-4 text-gray-400 hover:text-gray-600 transition-colors"
-              >
-                <X className="w-6 h-6" />
-              </button>
-              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-amber-400 to-yellow-600 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
-                <Crown className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-lg sm:text-xl font-bold text-gray-800">解锁大师尊享版</h3>
-              <p className="text-amber-700 text-xs sm:text-sm mt-1">
-                {namingType === 'baby' ? '开启全方位命理分析，定制专属好名' : '开启品牌向深度生成，定制中英文名与Slogan'}
-              </p>
-            </div>
-
-            {/* Modal Content */}
-            <div className="p-4 sm:p-6">
-              {/* Features List */}
-              <div className="space-y-3 mb-6">
-                <div className="flex items-start gap-3">
-                  <div className="p-1 bg-green-100 rounded-full text-green-600 mt-0.5">
-                    <Check className="w-3 h-3" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-800 text-sm">生成数量提升至 10 个</h4>
-                    <p className="text-xs text-gray-500">更多选择，总有一个合你心意</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="p-1 bg-green-100 rounded-full text-green-600 mt-0.5">
-                    <Check className="w-3 h-3" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-800 text-sm">
-                      {namingType === 'baby' ? '三才五格与生肖深度解析' : '英文名、Slogan 与品牌标签增强'}
-                    </h4>
-                    <p className="text-xs text-gray-500">
-                      {namingType === 'baby' ? '结合传统命理，分析吉凶宜忌' : '统一品牌调性，强化传播与定位'}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="p-1 bg-green-100 rounded-full text-green-600 mt-0.5">
-                    <Check className="w-3 h-3" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-800 text-sm">
-                      {namingType === 'baby' ? '诗词出处与文化内涵' : '命名理由与读音特点说明'}
-                    </h4>
-                    <p className="text-xs text-gray-500">
-                      {namingType === 'baby' ? '引经据典，赋予名字深厚寓意' : '解释语义来源，保证上口易记'}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Price Card */}
-              <div className="bg-gray-50 rounded-xl p-4 mb-4 sm:mb-6 border-2 border-amber-200 relative overflow-hidden">
-                <div className="absolute top-0 right-0 bg-red-500 text-white text-[10px] px-2 py-1 rounded-bl-lg font-bold">
-                  限时特惠
-                </div>
-                <div className="flex justify-between items-end">
-                  <div>
-                    <div className="text-sm text-gray-500 line-through">原价 ¥66.00</div>
-                    <div className="flex items-baseline gap-1">
-                       <span className="text-sm font-bold text-red-500">¥</span>
-                       <span className="text-3xl font-extrabold text-red-500">16.6</span>
-                       <span className="text-xs text-gray-500 font-medium">/ 永久解锁</span>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-xs text-amber-700 font-bold bg-amber-100 px-2 py-1 rounded-lg">
-                      已售1000+
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Pay Methods */}
-              <div className="grid grid-cols-2 gap-2 mb-3">
-                <button 
-                  onClick={() => setPaymentMethod('wechat')}
-                  className={`w-full py-3 rounded-xl text-sm font-bold border ${paymentMethod === 'wechat' ? 'border-green-500 bg-green-50 text-green-700' : 'border-gray-200 text-gray-600'}`}
-                >
-                  微信支付
-                </button>
-                <button 
-                  onClick={() => setPaymentMethod('alipay')}
-                  className={`w-full py-3 rounded-xl text-sm font-bold border ${paymentMethod === 'alipay' ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 text-gray-600'}`}
-                >
-                  支付宝
-                </button>
-              </div>
-
-              {/* Action */}
-              <button 
-                onClick={() => initiatePayment(paymentMethod)}
-                className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-3.5 rounded-xl font-bold text-base hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 mb-3"
-              >
-                <Smartphone className="w-5 h-5" /> 发起支付
-              </button>
-
-              {/* QR Code for Desktop WeChat */}
-              {qrCodeUrl && paymentMethod === 'wechat' && !isMobile && (
-                <div className="flex flex-col items-center gap-2 mb-3">
-                  <div className="bg-white p-3 rounded-xl border">
-                    <QRCodeSVG value={qrCodeUrl} size={180} />
-                  </div>
-                  <span className="text-xs text-gray-500">使用微信扫码完成支付</span>
-                  {isPollingPayment && (
-                    <span className="text-xs text-green-600 flex items-center gap-1">
-                      <Loader2 className="w-3 h-3 animate-spin" /> 正在确认支付状态...
-                    </span>
-                  )}
-                </div>
-              )}
-              
-              <div className="text-center">
-                 <span className="text-xs text-gray-400 flex items-center justify-center gap-1">
-                   <ShieldCheck className="w-3 h-3" /> 支付安全保障 · 无效退款
-                 </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Header */}
       <div className="w-full max-w-2xl flex items-center justify-between mb-8 pt-4">
         <Link to="/" className="p-2 rounded-full bg-white shadow-sm hover:bg-gray-50 transition-colors">

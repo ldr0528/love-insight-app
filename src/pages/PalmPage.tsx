@@ -87,10 +87,23 @@ function PalmStory({ report, features, onReplay, onShowFull }: { report: any, fe
 }
 
 export default function PalmPage() {
+  const { user, openAuthModal } = useAuthStore();
+  const navigate = useNavigate();
   const [features, setFeatures] = useState<any>(null);
   const [report, setReport] = useState<any>(null);
   const [loadingReport, setLoadingReport] = useState(false);
   const [showStory, setShowStory] = useState(false); // Toggle between Story and Full View
+
+  useEffect(() => {
+    if (!user) {
+      openAuthModal();
+      navigate('/');
+      return;
+    }
+    if (!user.isVip) {
+      navigate('/recharge');
+    }
+  }, [user, navigate, openAuthModal]);
 
   const handleAnalysisComplete = (res: any) => {
     setFeatures(res);

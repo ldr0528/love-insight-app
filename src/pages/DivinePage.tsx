@@ -106,6 +106,9 @@ export default function DivinePage() {
             },
             entitlements: {
                 pay_status: user.isVip ? 'paid' : 'free'
+            },
+            ui_context: {
+                report_type: 'divine_oracle'
             }
         })
     }).then(res => res.json());
