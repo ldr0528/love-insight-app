@@ -4,7 +4,7 @@ import { create } from 'zustand';
 export type RelationshipStage = 'single' | 'dating' | 'relationship' | 'breakup_recovery';
 export type Goal = 'improve_attraction' | 'stabilize_relationship' | 'improve_communication' | 'move_on' | 'other';
 export type Gender = 'male' | 'female';
-export type FortuneType = 'weekly' | 'monthly' | 'yearly'; // New type
+export type FortuneType = 'monthly' | 'yearly'; // New type
 
 export interface UserProfile {
   name: string;
@@ -61,7 +61,7 @@ export const useReportStore = create<ReportState>((set) => ({
     life_line: 'unknown',
     mount_venus: 'unknown',
   },
-  fortuneType: 'weekly', // Default
+  fortuneType: 'monthly', // Default
   
   currentStep: 0,
   totalSteps: 3, // Increased to 3: Selection -> Info -> Result
@@ -75,7 +75,7 @@ export const useReportStore = create<ReportState>((set) => ({
   prevStep: () => set((state) => ({ currentStep: Math.max(state.currentStep - 1, 0) })),
   reset: () => set({
     currentStep: 0,
-    fortuneType: 'weekly',
+    fortuneType: 'yearly',
     profile: {
       name: '',
       gender: 'female',

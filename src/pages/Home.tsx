@@ -284,9 +284,16 @@ export default function Home() {
           </Link>
 
           {/* AI Naming Master */}
-          <Link to="/naming" className="group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-purple-50 overflow-hidden flex flex-col h-full">
+          <div className="relative group bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-purple-50 overflow-hidden flex flex-col h-full">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
               <PenTool className="w-24 h-24 text-purple-500" />
+            </div>
+             {/* VIP Badge */}
+             <div className="absolute top-4 right-4 z-20">
+              <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-sm flex items-center gap-1">
+                <Crown size={12} fill="currentColor" />
+                VIP
+              </div>
             </div>
             <div className="relative z-10 flex flex-col h-full justify-center">
               <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center text-purple-600 mb-4">
@@ -296,11 +303,23 @@ export default function Home() {
               <p className="text-gray-500 text-sm mb-6 flex-grow">
                 结合传统生辰八字与现代美学，为宝宝、公司或品牌定制寓意深远、朗朗上口的好名字。
               </p>
-              <span className="inline-flex items-center text-purple-600 font-bold group-hover:gap-2 transition-all">
-                立即开始起名 <ArrowRight className="w-4 h-4 ml-1" />
-              </span>
+              
+              <button 
+                onClick={() => {
+                  if (!user) {
+                    openAuthModal();
+                  } else if (!user.isVip) {
+                    window.location.href = '/recharge';
+                  } else {
+                    window.location.href = '/naming';
+                  }
+                }}
+                className="inline-flex items-center text-purple-600 font-bold group-hover:gap-2 transition-all text-left"
+              >
+                {user?.isVip ? '立即开始起名' : '解锁起名服务'} <ArrowRight className="w-4 h-4 ml-1" />
+              </button>
             </div>
-          </Link>
+          </div>
 
           {/* Compatibility Explorer */}
           <div className="relative group bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-cyan-50 overflow-hidden flex flex-col h-full">

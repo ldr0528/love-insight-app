@@ -652,42 +652,18 @@ export default function NamingMaster() {
           )}
 
           <div className="mb-4">
-            {!isVip ? (
-              <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 rounded-xl p-4 flex items-center justify-between cursor-pointer hover:shadow-md transition-all" onClick={() => setShowPaymentModal(true)}>
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-amber-100 rounded-full text-amber-600">
-                    <Crown className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-gray-800 flex items-center gap-2">
-                      解锁大师版
-                      <span className="bg-amber-100 text-amber-700 text-xs px-2 py-0.5 rounded-full">限时特惠</span>
-                    </h3>
-                    <p className="text-sm text-gray-600">
-                      {namingType === 'baby' 
-                        ? '单次生成 10 个精选好名 + 五行/八字深度解析'
-                        : '单次生成 10 个精选候选 + 英文名/Slogan/品牌标签'}
-                    </p>
-                  </div>
+            {/* VIP Status Banner (Always show active) */}
+            <div className="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-xl p-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-purple-100 rounded-full text-purple-600">
+                  <Crown className="w-6 h-6" />
                 </div>
-                <div className="flex items-center gap-1 text-amber-600 font-bold whitespace-nowrap shrink-0">
-                  <span>去解锁</span>
-                  <ChevronDown className="w-4 h-4 -rotate-90" />
+                <div>
+                  <h3 className="font-bold text-gray-800">尊贵大师版已激活</h3>
+                  <p className="text-sm text-gray-600">正在为您提供深度五行分析与更多候选结果</p>
                 </div>
               </div>
-            ) : (
-              <div className="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-xl p-4 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-purple-100 rounded-full text-purple-600">
-                    <Crown className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-gray-800">尊贵大师版已激活</h3>
-                    <p className="text-sm text-gray-600">正在为您提供深度五行分析与更多候选结果</p>
-                  </div>
-                </div>
-              </div>
-            )}
+            </div>
           </div>
 
           <button
@@ -925,41 +901,12 @@ export default function NamingMaster() {
                 )}
               </div>
             ))}
-            {/* Unlock Banner */}
-            {!isVip && (
+          {/* Unlock Banner - Removed as functionality is now VIP-gated at entry */}
+          {/* {!isVip && (
               <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-4 sm:p-6 text-white shadow-xl relative overflow-hidden group cursor-pointer" onClick={() => setShowPaymentModal(true)}>
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-white/20 transition-all"></div>
-                <div className="relative z-10 flex items-center justify-between gap-3">
-                   <div className="flex-1 min-w-0">
-                     <h3 className="text-lg sm:text-xl font-bold flex items-center gap-2 mb-2">
-                       <Lock className="w-5 h-5 text-amber-400" />
-                       解锁更多好名与深度解析
-                     </h3>
-                     <p className="text-gray-300 text-xs sm:text-sm">
-                       当前仅显示 3 个基础结果。升级后可获取：
-                       {namingType === 'baby' ? (
-                         <>
-                           <br />• 单次生成 10 个精选候选
-                           <br />• 五行缺补深度分析
-                           <br />• 八字运势详细解读
-                         </>
-                       ) : (
-                         <>
-                           <br />• 单次生成 10 个精选候选
-                           <br />• 英文名建议与拼写
-                           <br />• 3 条精炼 Slogan
-                           <br />• 标签与释义强化
-                         </>
-                       )}
-                     </p>
-                   </div>
-                   <button className="bg-gradient-to-r from-amber-400 to-amber-600 text-gray-900 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold hover:shadow-lg hover:scale-105 transition-all flex items-center gap-2 shrink-0 whitespace-nowrap text-base sm:text-lg">
-                     <Crown className="w-4 h-4" />
-                     立即解锁
-                   </button>
-                </div>
+                ...
               </div>
-            )}
+            )} */}
           </div>
         )}
       </div>

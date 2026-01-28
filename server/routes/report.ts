@@ -47,7 +47,7 @@ const getSchemaForReportType = (type: string) => {
   }
 
   // Fortune Inn Schemas
-  if (type === 'fortune_weekly' || type === 'fortune_monthly' || type === 'fortune_yearly') {
+  if (type === 'fortune_monthly' || type === 'fortune_yearly') {
       return `{
         "headline": "string (Title for the period, e.g., '本周运势：星光闪耀之时')",
         "summary": ["string", "string", "string"],
@@ -92,7 +92,7 @@ const getSchemaForReportType = (type: string) => {
 const MOCK_REPORT = {
   headline: "星际引力：你在混乱中寻找秩序的深情守望者",
   summary: [
-    "你的 INTJ 特质让你在感情中显得冷静克制，但内心藏着一座休眠火山。",
+    "你的特质让你在感情中显得冷静克制，但内心藏着一座休眠火山。",
     "近期星盘显示土星正在考验你的耐心，建议在关系中少一点逻辑分析，多一点直觉感受。",
     "星盘中的金星位置暗示了你对完美的苛求，这可能是你感到孤独的根源。"
   ],
@@ -116,7 +116,7 @@ const MOCK_REPORT = {
     avoid: ["说教", "冷暴力"]
   },
   share_card_copy: {
-    title: "INTJ 恋爱说明书",
+    title: "恋爱说明书",
     one_liner: "看似冷漠的冰山，实则是最长情的守候。",
     tags: ["智性恋", "深情", "完美主义"]
   }
@@ -445,18 +445,6 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
         delete (mockResponse as any).attraction_profile;
         delete (mockResponse as any).action_plan;
         delete (mockResponse as any).weekly_focus;
-    }
-
-    // Astrology specific fallback
-    if (user_profile.report_type === 'astrology') {
-       mockResponse.headline = "星盘指引：星辰为你铺就的命运轨迹";
-       mockResponse.summary = [
-         "你的星盘显示，你的太阳与金星呈和谐相位，预示着你在人际交往中具有天然的魅力。",
-         "流年土星的影响正在减弱，这标志着过去两年的情感压力即将解除，新的机遇正在萌芽。",
-         "结合八字五行来看，你命格中水木相生，非常适合在柔和、具有艺术气息的环境中邂逅良缘。"
-       ];
-       mockResponse.attraction_profile.you_attract = ["情感细腻的艺术家型伴侣", "稳重可靠的实干家"];
-       mockResponse.attraction_profile.key_strengths = ["极具同理心", "审美独特", "温柔包容"];
     }
 
     res.json(mockResponse)

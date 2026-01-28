@@ -124,23 +124,6 @@ export default function BasicInfoStep() {
             ))}
           </div>
         </div>
-
-        {/* Goal */}
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-          <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-            <Target className="w-4 h-4 text-pink-500" /> 本次测试目标
-          </label>
-          <select
-            value={profile.goal}
-            onChange={(e) => setProfile({ goal: e.target.value as any })}
-            className="w-full border-gray-200 rounded-lg p-3 bg-white focus:ring-2 focus:ring-pink-200 focus:border-pink-500 outline-none"
-          >
-            <option value="improve_attraction">提升吸引力/脱单</option>
-            <option value="stabilize_relationship">关系升温/稳定</option>
-            <option value="improve_communication">改善沟通技巧</option>
-            <option value="move_on">走出失恋阴影</option>
-          </select>
-        </div>
       </div>
 
       <button

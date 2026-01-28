@@ -1,24 +1,26 @@
 import React from 'react';
 import { useReportStore, FortuneType } from '@/store/useReportStore';
-import { Calendar, Moon, Sun, ArrowRight } from 'lucide-react';
+import { useAuthStore } from '@/store/useAuthStore';
+import { Calendar, Moon, Sun, ArrowRight, Crown } from 'lucide-react';
 
 export default function FortuneTypeSelectionStep() {
   const { setFortuneType, nextStep } = useReportStore();
+  const { user, openAuthModal } = useAuthStore();
 
   const handleSelect = (type: FortuneType) => {
+    if (!user) {
+      openAuthModal();
+      return;
+    }
+    if (!user.isVip) {
+      window.location.href = '/recharge';
+      return;
+    }
     setFortuneType(type);
     nextStep();
   };
 
   const options = [
-    {
-      id: 'weekly' as FortuneType,
-      title: '周运来福',
-      desc: '本周运势 · 宜忌指南',
-      icon: <Sun className="w-8 h-8 text-orange-500" />,
-      color: 'bg-orange-50 hover:bg-orange-100 border-orange-200',
-      textColor: 'text-orange-700',
-    },
     {
       id: 'monthly' as FortuneType,
       title: '月运来福',
@@ -49,8 +51,16 @@ export default function FortuneTypeSelectionStep() {
           <button
             key={option.id}
             onClick={() => handleSelect(option.id)}
-            className={`w-full p-6 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-between group ${option.color}`}
+            className={`w-full p-6 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-between group relative overflow-hidden ${option.color}`}
           >
+            {/* VIP Badge */}
+            <div className="absolute top-3 right-3 z-20">
+              <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm flex items-center gap-1">
+                <Crown size={10} fill="currentColor" />
+                VIP
+              </div>
+            </div>
+
             <div className="flex items-center gap-4">
               <div className="p-3 bg-white rounded-xl shadow-sm">
                 {option.icon}
