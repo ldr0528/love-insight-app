@@ -435,7 +435,7 @@ export default function ReportGenerationStep() {
                         <Star className="w-5 h-5 text-yellow-500 fill-current" /> 运势总览
                     </h3>
                     <div className="space-y-3 text-gray-600 text-sm leading-relaxed">
-                        {report.summary.map((s, i) => <p key={i}>{s}</p>)}
+                        {report.summary?.map((s, i) => <p key={i}>{s}</p>)}
                     </div>
                 </div>
 
@@ -447,7 +447,7 @@ export default function ReportGenerationStep() {
                                 <CheckCircle2 className="w-5 h-5" /> 宜
                             </h3>
                             <ul className="space-y-2">
-                                {report.taboos.do.map((item, i) => (
+                                {report.taboos.do?.map((item, i) => (
                                     <li key={i} className="text-sm text-green-800 flex items-start gap-2">
                                         <span className="mt-1.5 w-1.5 h-1.5 bg-green-400 rounded-full flex-shrink-0"></span>
                                         {item}
@@ -460,7 +460,7 @@ export default function ReportGenerationStep() {
                                 <Ban className="w-5 h-5" /> 忌
                             </h3>
                             <ul className="space-y-2">
-                                {report.taboos.avoid.map((item, i) => (
+                                {report.taboos.avoid?.map((item, i) => (
                                     <li key={i} className="text-sm text-red-800 flex items-start gap-2">
                                         <span className="mt-1.5 w-1.5 h-1.5 bg-red-400 rounded-full flex-shrink-0"></span>
                                         {item}
@@ -476,7 +476,7 @@ export default function ReportGenerationStep() {
                     {report.content_sections?.map((section, i) => (
                         <div key={i} className="bg-white rounded-2xl shadow-sm p-5">
                             <h4 className="font-bold text-indigo-900 mb-2">{section.title}</h4>
-                            <p className="text-sm text-gray-600">{section.content}</p>
+                            <p className="text-sm text-gray-600 whitespace-pre-wrap">{section.content}</p>
                         </div>
                     ))}
                 </div>
