@@ -1,8 +1,9 @@
 
 import { useState, useEffect } from 'react';
-import { Hand, Camera, ArrowLeft, Loader2, Sparkles, BookOpen, Heart, Brain, Zap, Compass, ChevronRight, RotateCcw, Search } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Hand, Camera, ArrowLeft, Loader2, Sparkles, BookOpen, Heart, Brain, Zap, Compass, ChevronRight, RotateCcw } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import PalmUploader from '@/components/PalmUploader';
+import { useAuthStore } from '@/store/useAuthStore';
 
 // Story Component
 function PalmStory({ report, features, onReplay, onShowFull }: { report: any, features: any, onReplay: () => void, onShowFull: () => void }) {

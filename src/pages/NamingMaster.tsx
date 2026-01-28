@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowLeft, PenTool, Sparkles, User, Briefcase, Wand2, ChevronDown, ChevronUp, Copy, RefreshCcw, Heart, Info, X, Crown, Lock, Check, Loader2, Smartphone, ShieldCheck } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { ArrowLeft, PenTool, Sparkles, User, Briefcase, Wand2, ChevronDown, ChevronUp, Copy, RefreshCcw, Heart, Info, X, Crown } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { generateName } from '@/services/aiNaming';
-import { QRCodeSVG } from 'qrcode.react';
+import { useAuthStore } from '@/store/useAuthStore';
 
 type NamingType = 'baby' | 'company' | 'brand';
 
