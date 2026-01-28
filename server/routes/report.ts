@@ -271,7 +271,8 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
       // Determine model based on report type to optimize speed/quality
       // Use qwen-max for complex astrology, qwen-plus for standard reports
       const targetReportType = req.body.ui_context?.report_type || req.body.user_profile?.report_type || 'comprehensive';
-      const modelName = targetReportType === 'astrology' || targetReportType.startsWith('fortune_') ? 'qwen-max' : 'qwen-plus';
+      // Use qwen-max for divine oracle as well to ensure creative quality and strict JSON
+      const modelName = targetReportType === 'astrology' || targetReportType.startsWith('fortune_') || targetReportType === 'divine_oracle' ? 'qwen-max' : 'qwen-plus';
 
       console.log(`Attempting AI generation with model ${modelName} for type ${targetReportType}...`);
       
