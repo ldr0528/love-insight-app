@@ -235,23 +235,35 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
          - **流年预测**：基于生命线和事业线的流年法，详细预测未来 5 年的情感关键节点。
          - **行动指南**：包含 5-7 个针对性的改运指南。
       `
-    } else if (reportType === 'fortune_weekly' || reportType === 'fortune_monthly' || reportType === 'fortune_yearly') {
-        const periodText = reportType === 'fortune_weekly' ? '本周' : reportType === 'fortune_monthly' ? '本月' : `${now.getFullYear()}年`;
-        systemPrompt = `你是「灵犀指引」的运势分析师。当前日期是 ${currentDateStr}。你的任务是为用户生成${periodText}的运势报告（运报客栈）。
+    } else if (reportType === 'fortune_monthly' || reportType === 'fortune_yearly') {
+        const periodText = reportType === 'fortune_monthly' ? '本月' : `${now.getFullYear()}年`;
+        systemPrompt = `你是「灵犀指引」的资深运势分析师。当前日期是 ${currentDateStr}。
+        你的任务是基于当前日期和用户的星座/八字，推演并生成一份${periodText}的运势报告（运报客栈）。
 
         **核心要求**：
-        1. **精准时效**：基于当前日期（${currentDateStr}）和用户的星座/八字，推演${periodText}的运势。
-        2. **实用宜忌**：必须给出具体的宜忌指南（Taboos），例如“宜：修剪植物，忌：签署合同”。
-        3. **生活化**：建议要具体到生活细节，如幸运色、幸运数字、方位等。
-        
-        **输出控制（JSON格式）**：
-        - headline: 标题
-        - summary: 运势总览（3段）
-        - fortune_score: 运势评分 (0-100)
-        - lucky_items: { color, number, direction, element }
-        - taboos: { do: [3点], avoid: [3点] }
-        - content_sections: [ {title: '事业/学业', content: '...'}, {title: '情感/人际', content: '...'}, {title: '财运/健康', content: '...'} ]
-        `
+        1. **精准时效**：内容必须针对${periodText}（${currentDateStr}之后），不要生成过期的建议。
+        2. **实用宜忌**：必须给出具体的、生活化的宜忌指南（Taboos），例如“宜：修剪植物，忌：签署合同”。避免抽象概念。
+        3. **生活化细节**：幸运物品（颜色、数字等）必须明确且易于理解。
+        4. **结构完整**：必须严格按照 JSON Schema 输出，确保所有字段（summary, taboos, content_sections）都包含有效内容。
+
+        **输出内容指南（JSON格式）**：
+        - headline: 标题，如“${periodText}运势：破茧成蝶的关键期”。
+        - summary: 运势总览，包含 3 个段落，分别概述整体基调、核心挑战和应对策略。
+        - fortune_score: 运势评分 (0-100)，请根据运势好坏给出合理分数。
+        - lucky_items: 
+            - color: 幸运色 (如: 藏青色)
+            - number: 幸运数字 (如: 7)
+            - direction: 吉方位 (如: 东南方)
+            - element: 幸运元素 (如: 木)
+        - taboos: 
+            - do: [3个具体的宜做事项，如"晨跑", "阅读历史书", "整理办公桌"]
+            - avoid: [3个具体的忌做事项，如"熬夜", "借钱给他人", "食用生冷食物"]
+        - content_sections: [ 
+            {title: '事业/学业', content: '详细分析事业或学业运势...'}, 
+            {title: '情感/人际', content: '详细分析情感状态和人际关系...'}, 
+            {title: '财运/健康', content: '详细分析财务状况和健康建议...'} 
+        ]
+        `;
     }
 
     // Try AI generation first
