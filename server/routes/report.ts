@@ -148,15 +148,18 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
       birthday: signals.birthday, 
       palm: signals.palm, 
       coach_data: signals.coach_data, 
-      report_type: user_profile.report_type || 'comprehensive',
+      report_type: user_profile.report_type || 'comprehensive', 
       fortune_type: user_profile.fortune_type, 
-      stage: user_profile.relationship_stage,
-      goal: user_profile.goal,
+      stage: user_profile.relationship_stage, 
+      goal: user_profile.goal, 
       name: user_profile.name,
-      v: '14' // Bump version
+      question: user_profile.question, // Add question to cache key
+      seed: signals.seed, // Add seed to cache key for randomness
+      v: '16' // Bump version
     })
 
-    if (reportCache[cacheKey]) {
+    // Skip cache for Divine Oracle to ensure randomness every time
+    if (reportCache[cacheKey] && user_profile.report_type !== 'divine_oracle') {
        console.log('Serving cached report for key:', cacheKey.slice(0, 20) + '...')
        res.json(reportCache[cacheKey])
        return
