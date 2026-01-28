@@ -51,7 +51,7 @@ export default function Compatibility() {
                 缘分探索
               </h1>
               <p className="text-gray-500">
-                以名之灵，测爱之深。AI 将结合古今智慧，为您解析前世今生的羁绊。
+                以名之灵，测爱之深。结合古今智慧，为您解析前世今生的羁绊。
               </p>
             </div>
 

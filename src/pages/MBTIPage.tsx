@@ -121,15 +121,7 @@ export default function MBTIPage() {
                 </button>
               </div>
               
-              <div className="pt-6 border-t border-gray-100 text-center">
-                <p className="text-sm text-gray-500 mb-3">想知道 {result} 的恋爱运势吗？</p>
-                <Link 
-                  to="/report" 
-                  className="block w-full py-3 bg-pink-500 hover:bg-pink-600 text-white rounded-xl font-bold transition-colors"
-                >
-                  解锁我的恋爱报告 &rarr;
-                </Link>
-              </div>
+
             </div>
           </div>
         )}

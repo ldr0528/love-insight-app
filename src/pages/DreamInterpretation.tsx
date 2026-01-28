@@ -452,7 +452,7 @@ export default function DreamInterpretation() {
               </h2>
               <p className="text-blue-100/80 leading-relaxed font-light">
                 梦境如同深海，藏着你未曾察觉的真实自我。
-                跟随这只引路鲸，潜入 15 层梦境深处，
+                跟随这只引路鲸，潜入 20 层梦境深处，
                 找回那个被遗忘的自己。
               </p>
             </div>

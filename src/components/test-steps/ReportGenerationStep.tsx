@@ -1,8 +1,9 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { useReportStore } from '@/store/useReportStore';
-import { Loader2, Lock, Heart, RefreshCw, X, CheckCircle2, ScanLine, ExternalLink } from 'lucide-react';
+import { Loader2, Lock, Heart, RefreshCw, X, CheckCircle2, ScanLine, ExternalLink, Star, Compass, Ban, Sparkles, Share2, Download } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import html2canvas from 'html2canvas';
 
 // Type definitions
 interface ReportData {
@@ -10,13 +11,30 @@ interface ReportData {
   version: 'preview' | 'full';
   headline: string;
   summary: string[];
-  attraction_profile: {
+  // Fortune Inn Fields
+  fortune_score?: number;
+  lucky_items?: {
+    color: string;
+    number: string;
+    direction: string;
+    element?: string;
+  };
+  taboos?: {
+    do: string[];
+    avoid: string[];
+  };
+  content_sections?: {
+    title: string;
+    content: string;
+  }[];
+  // Original Fields
+  attraction_profile?: {
     you_attract: string[];
     you_miss: string[];
   };
-  action_plan: {
+  action_plan?: {
     title: string;
-    steps: string[];
+    steps: string[] | string;
     scenario: string;
     example_script: string;
   }[];
@@ -29,6 +47,34 @@ interface ReportData {
   share_card_copy: {
     one_liner: string;
   };
+}
+
+// Share Modal Component
+function ShareModal({ image, onClose }: { image: string; onClose: () => void }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200" onClick={onClose}>
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col relative animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
+         <button 
+          onClick={onClose}
+          className="absolute top-3 right-3 p-1 rounded-full bg-black/5 hover:bg-black/10 text-gray-500 transition-colors z-10"
+        >
+          <X className="w-5 h-5" />
+        </button>
+        <div className="p-4 text-center border-b border-gray-100">
+          <h3 className="text-lg font-bold text-gray-800">保存分享</h3>
+          <p className="text-xs text-gray-400 mt-1">长按图片保存到相册，或直接发送给朋友</p>
+        </div>
+        <div className="p-4 bg-gray-50 max-h-[60vh] overflow-y-auto flex justify-center">
+            <img src={image} alt="Report Share" className="w-full h-auto rounded-lg shadow-sm border border-gray-200" />
+        </div>
+        <div className="p-4 border-t border-gray-100 bg-gray-50 flex justify-center">
+             <a href={image} download="fortune-report.png" className="flex items-center gap-2 px-6 py-2 bg-indigo-600 text-white rounded-full font-bold text-sm shadow-lg hover:bg-indigo-700 transition-all">
+                <Download className="w-4 h-4" /> 保存图片
+             </a>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 // Payment Modal Component
@@ -103,7 +149,7 @@ function PaymentModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
         <div className="p-6 text-center border-b border-gray-100">
           <h3 className="text-lg font-bold text-gray-800">收银台</h3>
           <p className="text-3xl font-extrabold text-gray-900 mt-2">¥ 9.90</p>
-          <p className="text-sm text-gray-500 mt-1">解锁完整深度情感报告</p>
+          <p className="text-sm text-gray-500 mt-1">解锁完整深度报告</p>
         </div>
 
         <div className="p-6 flex flex-col items-center">
@@ -179,19 +225,6 @@ function PaymentModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
                 <ScanLine className="w-3 h-3" />
                 <span>请使用{method === 'wechat' ? '微信' : method === 'alipay' ? '支付宝' : '聚合平台支持的支付方式'}扫码支付</span>
               </div>
-              
-              {/* Debug/Dev Link - Removed for Production */}
-              {/* {order && (
-                <a 
-                  href={order.payUrl} 
-                  target="_blank" 
-                  rel="noreferrer"
-                  className="mt-4 text-xs text-blue-500 hover:underline flex items-center gap-1"
-                >
-                  <ExternalLink className="w-3 h-3" />
-                  (开发模式) 点击此处模拟支付成功
-                </a>
-              )} */}
             </>
           )}
         </div>
@@ -207,25 +240,56 @@ function PaymentModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
 }
 
 export default function ReportGenerationStep() {
-  const { profile, mbti, palm, reset } = useReportStore();
+  const { profile, mbti, palm, reset, fortuneType } = useReportStore();
   const [loading, setLoading] = useState(true);
   const [report, setReport] = useState<ReportData | null>(null);
   const [error, setError] = useState('');
   const [showPayment, setShowPayment] = useState(false);
   const navigate = useNavigate();
 
+  // Share functionality
+  const [shareImage, setShareImage] = useState<string | null>(null);
+  const [isGeneratingShare, setIsGeneratingShare] = useState(false);
+  const reportRef = useRef<HTMLDivElement>(null);
+
+  const handleShare = async () => {
+    if (!reportRef.current) return;
+    setIsGeneratingShare(true);
+    try {
+      // Small delay to ensure clean render
+      await new Promise(resolve => setTimeout(resolve, 100));
+      const canvas = await html2canvas(reportRef.current, {
+        useCORS: true,
+        scale: 2,
+        backgroundColor: '#f8fafc', // slate-50
+        logging: false,
+      });
+      const image = canvas.toDataURL('image/png');
+      setShareImage(image);
+    } catch (err) {
+      console.error("Share generation failed", err);
+    } finally {
+      setIsGeneratingShare(false);
+    }
+  };
+
   const fetchReport = async (status: 'free' | 'paid') => {
     setLoading(true);
     setError('');
     
     // Determine report type based on available data
-    // If palm data is available (not 'unknown'), we prioritize palm report or combine it.
-    // For now, let's switch to 'palm' report type if palm features are detected.
-    const isPalmReport = palm.heart_line !== 'unknown' && palm.head_line !== 'unknown';
-    const reportType = isPalmReport ? 'palm' : 'astrology';
+    // If fortuneType is set, it overrides others for the new module
+    let reportType = 'astrology';
+    
+    if (fortuneType) {
+        reportType = `fortune_${fortuneType}`;
+    } else {
+        // Fallback logic for old flow
+        const isPalmReport = palm.heart_line !== 'unknown' && palm.head_line !== 'unknown';
+        reportType = isPalmReport ? 'palm' : 'astrology';
+    }
 
     try {
-      // Use the new port 3001
       const response = await fetch('/api/report', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -238,11 +302,12 @@ export default function ReportGenerationStep() {
             name: profile.name,
             birth_time: profile.birthTime,
             birth_location: profile.birthLocation,
-            report_type: reportType, // Send the correct report type
+            report_type: reportType, 
+            fortune_type: fortuneType // Pass explicit fortune type
           },
           signals: {
             // Include Palm data if available
-            palm: isPalmReport ? { features: palm } : undefined,
+            palm: reportType === 'palm' ? { features: palm } : undefined,
             birthday: { date: profile.birthday, time: profile.birthTime, location: profile.birthLocation },
           },
           entitlements: {
@@ -286,10 +351,10 @@ export default function ReportGenerationStep() {
 
   if (loading && !report) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[50vh] text-pink-800">
-        <Loader2 className="w-16 h-16 animate-spin mb-6 text-pink-500" />
+      <div className="flex flex-col items-center justify-center min-h-[50vh] text-indigo-800">
+        <Loader2 className="w-16 h-16 animate-spin mb-6 text-indigo-500" />
         <h3 className="text-xl font-bold animate-pulse">正在连接宇宙能量...</h3>
-        <p className="text-sm text-pink-400 mt-2">正在分析你的星盘与八字数据</p>
+        <p className="text-sm text-indigo-400 mt-2">正在推演{fortuneType === 'weekly' ? '本周' : fortuneType === 'monthly' ? '本月' : '年度'}运势数据</p>
       </div>
     );
   }
@@ -298,13 +363,154 @@ export default function ReportGenerationStep() {
     return (
       <div className="text-center p-8">
         <div className="text-red-500 mb-4 text-lg">{error}</div>
-        <button onClick={() => fetchReport('free')} className="px-6 py-2 bg-pink-500 text-white rounded-lg">
+        <button onClick={() => fetchReport('free')} className="px-6 py-2 bg-indigo-500 text-white rounded-lg">
           重试
         </button>
       </div>
     );
   }
 
+  // --- Fortune Report Rendering Logic ---
+  const isFortuneReport = report?.fortune_score !== undefined || fortuneType;
+
+  if (isFortuneReport && report) {
+      return (
+        <div className="animate-in fade-in duration-700 pb-20 relative">
+            {shareImage && (
+                <ShareModal image={shareImage} onClose={() => setShareImage(null)} />
+            )}
+            {showPayment && (
+                <PaymentModal onClose={() => setShowPayment(false)} onSuccess={handlePaymentSuccess} />
+            )}
+
+            {/* Share FAB */}
+            <button
+                onClick={handleShare}
+                disabled={isGeneratingShare}
+                className="fixed bottom-8 right-6 z-40 bg-indigo-600 text-white p-3 rounded-full shadow-xl hover:bg-indigo-700 transition-all hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 pr-5"
+            >
+                {isGeneratingShare ? <Loader2 className="w-5 h-5 animate-spin" /> : <Share2 className="w-5 h-5" />}
+                <span className="font-bold text-sm">分享</span>
+            </button>
+
+            <div ref={reportRef} className="bg-slate-50 p-4 -m-4">
+                {/* Header */}
+                <div className="bg-gradient-to-br from-indigo-600 to-purple-700 text-white p-8 rounded-3xl shadow-xl mb-8 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-4 opacity-10">
+                        <Sparkles className="w-48 h-48" />
+                    </div>
+                    <div className="relative z-10 text-center">
+                        <div className="inline-block px-3 py-1 bg-white/20 rounded-full text-xs mb-4 backdrop-blur-md">
+                            {fortuneType === 'weekly' ? '本周运势' : fortuneType === 'monthly' ? '本月运势' : '年度运势'} · 专属分析
+                        </div>
+                        <h1 className="text-3xl font-bold mb-2">{report.headline}</h1>
+                        <div className="flex justify-center items-end gap-2 mt-6">
+                            <span className="text-6xl font-extrabold text-yellow-300">{report.fortune_score}</span>
+                            <span className="text-xl mb-2 opacity-80">/ 100分</span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Lucky Items */}
+                {report.lucky_items && (
+                    <div className="grid grid-cols-3 gap-4 mb-8">
+                        <div className="bg-white p-4 rounded-xl shadow-sm text-center border border-indigo-50">
+                            <div className="text-xs text-gray-400 mb-1">幸运色</div>
+                            <div className="font-bold text-indigo-600">{report.lucky_items.color}</div>
+                        </div>
+                        <div className="bg-white p-4 rounded-xl shadow-sm text-center border border-indigo-50">
+                            <div className="text-xs text-gray-400 mb-1">幸运数</div>
+                            <div className="font-bold text-indigo-600">{report.lucky_items.number}</div>
+                        </div>
+                        <div className="bg-white p-4 rounded-xl shadow-sm text-center border border-indigo-50">
+                            <div className="text-xs text-gray-400 mb-1">吉方位</div>
+                            <div className="font-bold text-indigo-600">{report.lucky_items.direction}</div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Summary */}
+                <div className="bg-white rounded-2xl shadow-sm p-6 mb-8 border-l-4 border-indigo-500">
+                    <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <Star className="w-5 h-5 text-yellow-500 fill-current" /> 运势总览
+                    </h3>
+                    <div className="space-y-3 text-gray-600 text-sm leading-relaxed">
+                        {report.summary.map((s, i) => <p key={i}>{s}</p>)}
+                    </div>
+                </div>
+
+                {/* Taboos (Do's and Don'ts) */}
+                {report.taboos && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div className="bg-green-50 rounded-2xl p-5 border border-green-100">
+                            <h3 className="font-bold text-green-700 mb-3 flex items-center gap-2">
+                                <CheckCircle2 className="w-5 h-5" /> 宜
+                            </h3>
+                            <ul className="space-y-2">
+                                {report.taboos.do.map((item, i) => (
+                                    <li key={i} className="text-sm text-green-800 flex items-start gap-2">
+                                        <span className="mt-1.5 w-1.5 h-1.5 bg-green-400 rounded-full flex-shrink-0"></span>
+                                        {item}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                        <div className="bg-red-50 rounded-2xl p-5 border border-red-100">
+                            <h3 className="font-bold text-red-700 mb-3 flex items-center gap-2">
+                                <Ban className="w-5 h-5" /> 忌
+                            </h3>
+                            <ul className="space-y-2">
+                                {report.taboos.avoid.map((item, i) => (
+                                    <li key={i} className="text-sm text-red-800 flex items-start gap-2">
+                                        <span className="mt-1.5 w-1.5 h-1.5 bg-red-400 rounded-full flex-shrink-0"></span>
+                                        {item}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                )}
+
+                {/* Content Sections */}
+                <div className="space-y-4 mb-8">
+                    {report.content_sections?.map((section, i) => (
+                        <div key={i} className="bg-white rounded-2xl shadow-sm p-5">
+                            <h4 className="font-bold text-indigo-900 mb-2">{section.title}</h4>
+                            <p className="text-sm text-gray-600">{section.content}</p>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Paywall */}
+                {report?.paywall?.show && (
+                    <div className="relative overflow-hidden rounded-3xl bg-gray-900 text-white p-8 text-center shadow-2xl mx-auto max-w-md transform hover:scale-[1.01] transition-transform">
+                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 to-pink-500"></div>
+                        <Lock className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
+                        <h2 className="text-2xl font-bold mb-2">解锁完整运势报告</h2>
+                        <p className="text-gray-400 text-sm mb-6">{report.paywall.reason}</p>
+                        
+                        <button
+                            onClick={handleUnlockClick}
+                            disabled={loading}
+                            className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 font-bold py-4 rounded-full shadow-lg hover:shadow-yellow-500/20 transition-all"
+                        >
+                            {loading ? <Loader2 className="w-5 h-5 animate-spin mx-auto"/> : report.paywall.cta.text}
+                        </button>
+                    </div>
+                )}
+
+                <div className="mt-12 text-center pb-8">
+                    <div className="text-xs text-gray-400 mb-4">灵犀指引 · Fortune Inn</div>
+                    <button onClick={handleRestart} className="text-gray-400 hover:text-gray-600 text-sm flex items-center justify-center gap-2 mx-auto">
+                        <RefreshCw className="w-4 h-4" /> 返回客栈
+                    </button>
+                </div>
+            </div>
+        </div>
+      );
+  }
+
+  // --- Fallback to Original Rendering for other types ---
   return (
     <div className="animate-in fade-in duration-700 pb-20 relative">
       {/* Payment Modal */}

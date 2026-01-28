@@ -169,21 +169,21 @@ export default function Home() {
         
         {/* Feature Cards */}
         <div className="grid md:grid-cols-2 gap-6 w-full">
-          {/* Main Wizard (kept as secondary entry) */}
-          <Link to="/report" className="hidden group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-pink-100 overflow-hidden flex flex-col h-full">
+          {/* Fortune Inn */}
+          <Link to="/report" className="group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-pink-100 overflow-hidden flex flex-col h-full">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-              <Heart className="w-24 h-24 text-pink-500" />
+              <Store className="w-24 h-24 text-pink-500" />
             </div>
             <div className="relative z-10 flex flex-col h-full justify-center">
               <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center text-pink-600 mb-4">
-                <Heart className="w-6 h-6 fill-current" />
+                <Store className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">专属运势分析</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">运报客栈</h3>
               <p className="text-gray-500 text-sm mb-6 flex-grow">
-                融合东方八字与西方星盘，深度解析你的命定缘分与人生轨迹。
+                进店领取你的专属周运、月运与年运，解锁今日宜忌，为生活趋吉避凶。
               </p>
               <span className="inline-flex items-center text-pink-600 font-bold group-hover:gap-2 transition-all">
-                开始综合测试 <ArrowRight className="w-4 h-4 ml-1" />
+                进入客栈 <ArrowRight className="w-4 h-4 ml-1" />
               </span>
             </div>
           </Link>
@@ -284,7 +284,7 @@ export default function Home() {
           </Link>
 
           {/* AI Naming Master */}
-          <Link to="/naming" className="hidden group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-purple-50 overflow-hidden flex flex-col h-full">
+          <Link to="/naming" className="group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-purple-50 overflow-hidden flex flex-col h-full">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
               <PenTool className="w-24 h-24 text-purple-500" />
             </div>
@@ -320,7 +320,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">缘分探索</h3>
               <p className="text-gray-500 text-sm mb-6 flex-grow">
-                输入双方信息，AI 深度解析前世今生与性格契合度，并赠予专属定情古诗。
+                输入双方信息， 深度解析前世今生与性格契合度，并赠予专属定情古诗。
               </p>
               
               <button 

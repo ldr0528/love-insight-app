@@ -185,7 +185,7 @@ export default function RechargePage() {
             </div>
             <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-xl">
               <p className="text-sm text-red-700 font-bold">
-                如有联系请咨询客服，请不要相信其它充值方式！
+                如有问题请咨询客服，请不要相信其它充值方式！
               </p>
             </div>
           </div>
