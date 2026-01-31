@@ -182,15 +182,15 @@ function TubeModel({ shaking, stickUp, onDraw, hovered, setHovered }: { shaking:
       <Cylinder args={[0.65, 0.65, 0.1, 64]} position={[0, -1.55, 0]} material={woodMaterial} />
 
       {/* 签筒正面 "签" 字牌 (使用 Canvas 纹理) */}
-        <group position={[0, -0.6, 0.7]} rotation={[0, 0, 0]}>
+        <group position={[0, -0.6, 0.72]} rotation={[0, 0, 0]}>
           <mesh rotation={[Math.PI / 2, 0, 0]}>
-            <cylinderGeometry args={[0.25, 0.25, 0.05, 32]} />
-            <meshPhysicalMaterial color="#D4AF37" metalness={0.8} roughness={0.3} />
+            <cylinderGeometry args={[0.35, 0.35, 0.05, 32]} />
+            <meshPhysicalMaterial color="#FFD700" metalness={0.8} roughness={0.3} emissive="#B8860B" emissiveIntensity={0.2} />
           </mesh>
           
           {/* 使用动态生成的纹理贴图 */}
           <mesh position={[0, 0, 0.026]} rotation={[0, 0, Math.PI / 4]}>
-             <boxGeometry args={[0.18, 0.18, 0.01]} />
+             <boxGeometry args={[0.26, 0.26, 0.01]} />
              <meshBasicMaterial map={signTexture} />
           </mesh>
         </group>
