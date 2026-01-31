@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { Sparkles, X, Loader2, AlertCircle } from 'lucide-react';
 import DailyCheckIn from '@/components/DailyCheckIn';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Cylinder, Environment, ContactShadows, Html, Text } from '@react-three/drei';
+import { Cylinder, Environment, ContactShadows, Html } from '@react-three/drei';
 import * as THREE from 'three';
 import { useAuthStore } from '@/store/useAuthStore';
 
@@ -131,6 +131,30 @@ function TubeModel({ shaking, stickUp, onDraw, hovered, setHovered }: { shaking:
     emissiveIntensity: 0.2
   }), []);
 
+  // 动态生成 "签" 字纹理，避免加载远程字体导致的卡顿
+  const signTexture = useMemo(() => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 128;
+    canvas.height = 128;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      // 背景设为红色
+      ctx.fillStyle = '#C41E3A'; 
+      ctx.fillRect(0, 0, 128, 128);
+      
+      // 绘制金字
+      ctx.font = 'bold 90px "KaiTi", "STKaiti", "SimKai", serif'; // 优先使用楷体
+      ctx.fillStyle = '#FFD700'; 
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      // 微调位置
+      ctx.fillText('签', 64, 70);
+    }
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    return texture;
+  }, []);
+
   return (
     // 整体缩放 0.65 倍，显得更小巧
     <group 
@@ -157,32 +181,19 @@ function TubeModel({ shaking, stickUp, onDraw, hovered, setHovered }: { shaking:
       {/* 筒底 */}
       <Cylinder args={[0.65, 0.65, 0.1, 64]} position={[0, -1.55, 0]} material={woodMaterial} />
 
-      {/* 签筒正面 "签" 字牌 */}
-      <group position={[0, -0.6, 0.7]} rotation={[0, 0, 0]}>
-        <mesh rotation={[Math.PI / 2, 0, 0]}>
-          <cylinderGeometry args={[0.25, 0.25, 0.05, 32]} />
-          <meshPhysicalMaterial color="#D4AF37" metalness={0.8} roughness={0.3} />
-        </mesh>
-        
-        {/* 红纸背景 */}
-        <mesh position={[0, 0, 0.026]} rotation={[0, 0, Math.PI / 4]}>
-           <boxGeometry args={[0.18, 0.18, 0.01]} />
-           <meshBasicMaterial color="#C41E3A" />
-        </mesh>
-
-        {/* "签" 字 */}
-        <Text
-          position={[0, -0.02, 0.04]}
-          fontSize={0.15}
-          color="#FFD700" // 金色字体
-          anchorX="center"
-          anchorY="middle"
-          font="https://fonts.gstatic.com/s/notosanssc/v26/k3kXo84MPvpLmixcA63oeALhLOCT-xWtmhE.woff2" // 使用 Noto Sans SC 作为后备，或使用本地字体
-          characters="签"
-        >
-          签
-        </Text>
-      </group>
+      {/* 签筒正面 "签" 字牌 (使用 Canvas 纹理) */}
+        <group position={[0, -0.6, 0.7]} rotation={[0, 0, 0]}>
+          <mesh rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[0.25, 0.25, 0.05, 32]} />
+            <meshPhysicalMaterial color="#D4AF37" metalness={0.8} roughness={0.3} />
+          </mesh>
+          
+          {/* 使用动态生成的纹理贴图 */}
+          <mesh position={[0, 0, 0.026]} rotation={[0, 0, Math.PI / 4]}>
+             <boxGeometry args={[0.18, 0.18, 0.01]} />
+             <meshBasicMaterial map={signTexture} />
+          </mesh>
+        </group>
 
       {/* 顶部边缘 - 使用圆环模拟口沿，避免封口 */}
       <mesh position={[0, 0.4, 0]} rotation={[Math.PI / 2, 0, 0]}>
