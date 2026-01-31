@@ -204,45 +204,6 @@ export default function RechargePage() {
           </p>
         </div>
 
-        {/* Customer Service */}
-        <div className="bg-white rounded-3xl p-6 shadow-lg border border-indigo-50 text-center space-y-6">
-          <h3 className="text-lg font-bold flex items-center justify-center gap-2 text-indigo-900">
-            <AlertCircle className="w-5 h-5 text-indigo-500" /> 如有问题请联系客服
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-2xl border border-indigo-100 shadow-sm hover:shadow-md transition-shadow flex flex-col items-center">
-              <span className="text-indigo-400 text-xs font-bold tracking-wider mb-2">客服 1 WX</span>
-              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg border border-indigo-50 w-full justify-center">
-                <span className="font-mono text-lg font-bold text-gray-800 select-all">MxL1Ddi8f</span>
-                <button 
-                  onClick={() => {
-                    navigator.clipboard.writeText('MxL1Ddi8f');
-                    toast.success('复制成功');
-                  }}
-                  className="p-1.5 text-indigo-500 hover:bg-indigo-50 rounded-md transition-colors"
-                >
-                  <Copy size={14} />
-                </button>
-              </div>
-            </div>
-            <div className="bg-gradient-to-br from-purple-50 to-white p-4 rounded-2xl border border-purple-100 shadow-sm hover:shadow-md transition-shadow flex flex-col items-center">
-              <span className="text-purple-400 text-xs font-bold tracking-wider mb-2">客服 2 WX</span>
-              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg border border-purple-50 w-full justify-center">
-                <span className="font-mono text-lg font-bold text-gray-800 select-all">Lingxi00888</span>
-                <button 
-                  onClick={() => {
-                    navigator.clipboard.writeText('Lingxi00888');
-                    toast.success('复制成功');
-                  }}
-                  className="p-1.5 text-purple-500 hover:bg-purple-50 rounded-md transition-colors"
-                >
-                  <Copy size={14} />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
       </main>
     </div>
   );

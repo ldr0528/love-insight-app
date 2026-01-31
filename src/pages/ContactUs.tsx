@@ -26,37 +26,19 @@ export default function ContactUs() {
             </h3>
             <div className="text-gray-600 leading-relaxed space-y-4">
               <p>
-                欢迎光临「灵犀指引」。这是一个连接内心与缘分的静谧宇宙。
+                欢迎来到「灵犀指引」，一个让古老东方智慧与现代 AI 科技温柔相遇的静谧宇宙。
               </p>
               <p>
-                我们的初衷纯粹而简单：在喧嚣的数字洪流中，为你筑起一个温暖的避风港。我们尝试将古老的东方智慧与前沿的 AI 技术交织，只为帮你更清晰地照见自我，更温柔地理解他人。
+                在这里，玄学不再是晦涩的符咒，科技也不再是冰冷的代码。我们致力于搭建一座桥梁，连接你的内心世界与浩瀚的命运星空。
               </p>
               <p>
-                在这里，你可以通过 MBTI 探寻灵魂的底色，在电子宠物店领养一只懂你的守护灵，或是让恋爱军师为你理清情感的丝缕。愿这些小小的工具，如微光般照亮你的角落，带来些许启发与治愈。
+                你可以通过 <strong>MBTI</strong> 与 <strong>缘分探索</strong> 厘清灵魂的脉络与缘分的红线；让 <strong>AI 手相</strong> 与 <strong>周公解梦</strong> 替你翻译命运的掌纹与潜意识的低语。当你感到迷茫或孤独，<strong>解忧杂货铺</strong> 与 <strong>恋爱军师</strong> 永远为你敞开，倾听你的心事，提供温暖的锦囊。
               </p>
-            </div>
-          </div>
-
-          {/* Call to Action */}
-          <div className="bg-blue-50 rounded-2xl p-6 border border-blue-100">
-            <h3 className="text-lg font-bold text-blue-900 mb-4 flex items-center gap-2">
-              <Send className="w-5 h-5" /> 我们期待你的声音
-            </h3>
-            <p className="text-gray-700 mb-6 text-sm md:text-base">
-              网站还在成长中，可能会有一些不完美的地方。如果你在使用过程中遇到了问题，或者有任何新颖有趣的点子想要分享，甚至只是想找人聊聊你的使用感受，都<strong>热烈欢迎联系我们！</strong>
-            </p>
-            
-            <div className="flex flex-col items-center justify-center gap-4 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <div className="relative group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-lg blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
-                <img 
-                  src="/images/contact_qr.jpg" 
-                  alt="客服二维码" 
-                  className="relative w-48 h-48 md:w-56 md:h-56 object-cover rounded-lg shadow-md"
-                />
-              </div>
-              <p className="text-xs text-gray-500 font-medium mt-2">
-                扫一扫上面的二维码图案，加我为朋友
+              <p>
+                不仅如此，你还能体验 <strong>AI 取名</strong> 赋予文字的新生，在 <strong>灵签</strong> 摇落间寻求神性的指引，或是领养一只专属的 <strong>电子守护灵</strong>，陪伴你度过每一个日夜。
+              </p>
+              <p>
+                愿这点点汇聚了传统与科技的微光，能穿透生活的迷雾，为你照亮前行的路，带来些许温暖、启发与治愈。
               </p>
             </div>
           </div>
