@@ -23,17 +23,23 @@ function AuthEffect() {
   const { isAuthenticated, refreshProfile } = useAuthStore();
 
   useEffect(() => {
+    // Listen for unauthorized events to trigger logout
+    const handleUnauthorized = () => {
+      useAuthStore.getState().logout();
+    };
+    window.addEventListener('auth:unauthorized', handleUnauthorized);
+
     // Check profile immediately on mount if authenticated
     if (isAuthenticated) {
       refreshProfile();
     }
 
-    // Poll every 5 seconds to keep VIP status/Ban status updated in near real-time
+    // Poll every 30 seconds to keep VIP status updated
     const interval = setInterval(() => {
       if (useAuthStore.getState().isAuthenticated) {
         refreshProfile();
       }
-    }, 5000);
+    }, 30000);
 
     // Refresh when window regains focus
     const handleFocus = () => {
@@ -44,6 +50,7 @@ function AuthEffect() {
     window.addEventListener('focus', handleFocus);
 
     return () => {
+      window.removeEventListener('auth:unauthorized', handleUnauthorized);
       clearInterval(interval);
       window.removeEventListener('focus', handleFocus);
     };

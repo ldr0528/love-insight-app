@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import request from '../utils/request';
+import request from '@/utils/request';
 
 export type PetType = 'cat' | 'dog' | 'chicken' | 'rabbit' | 'hamster' | 'fox';
 

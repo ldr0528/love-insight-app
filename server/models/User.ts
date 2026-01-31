@@ -19,7 +19,7 @@ export interface IUser extends Document {
   loginHistory: {
     ip: string;
     timestamp: Date;
-    device?: string;
+    device: string;
   }[];
   createdAt: Date;
   updatedAt: Date;
@@ -75,7 +75,7 @@ const userSchema = new mongoose.Schema({
   },
   petType: {
     type: String,
-    enum: ['cat', 'dog', 'chicken', 'rabbit', 'panda', 'hamster', 'koala', 'fox', 'lion', null],
+    enum: ['cat', 'dog', 'chicken', 'rabbit', 'hamster', 'fox', null],
     default: null,
   },
   petName: {
@@ -88,13 +88,13 @@ const userSchema = new mongoose.Schema({
   },
   currentSessionToken: {
     type: String,
-    default: null
+    default: null,
   },
   loginHistory: [{
     ip: String,
-    timestamp: { type: Date, default: Date.now },
-    device: String
-  }]
+    timestamp: Date,
+    device: String,
+  }],
 }, {
   timestamps: true,
 });

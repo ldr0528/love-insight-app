@@ -147,7 +147,7 @@ export default function RechargePage() {
             <p className="text-[10px] md:text-xs text-gray-400">有效期 30 天</p>
           </button>
 
-          {/* Permanent Plan (Now Yearly) */}
+          {/* Permanent Plan */}
           <button
             onClick={() => setSelectedPlan('permanent')}
             className={`relative p-4 md:p-6 rounded-2xl border-2 transition-all flex flex-col items-center justify-center gap-2 ${
@@ -167,13 +167,13 @@ export default function RechargePage() {
               </div>
             )}
             <h3 className={`font-bold text-base md:text-lg ${selectedPlan === 'permanent' ? 'text-amber-800' : 'text-gray-600'}`}>
-              VIP年卡
+              VIP永久
             </h3>
             <div className="flex items-baseline gap-1">
               <span className="text-sm font-medium text-gray-500">¥</span>
-              <span className={`text-2xl md:text-3xl font-extrabold ${selectedPlan === 'permanent' ? 'text-amber-600' : 'text-gray-800'}`}>58</span>
+              <span className={`text-2xl md:text-3xl font-extrabold ${selectedPlan === 'permanent' ? 'text-amber-600' : 'text-gray-800'}`}>38</span>
             </div>
-            <p className="text-[10px] md:text-xs text-gray-400">有效期 365 天</p>
+            <p className="text-[10px] md:text-xs text-gray-400">终身有效</p>
           </button>
         </div>
 
@@ -184,10 +184,10 @@ export default function RechargePage() {
              <p className="text-xl font-bold text-gray-800">
                {selectedPlan === 'weekly' && 'VIP周卡 (7天)'}
                {selectedPlan === 'monthly' && 'VIP月卡 (30天)'}
-               {selectedPlan === 'permanent' && 'VIP年卡 (365天)'}
+               {selectedPlan === 'permanent' && 'VIP永久会员'}
              </p>
              <p className="text-3xl font-extrabold text-orange-600 mt-2">
-               ¥ {selectedPlan === 'weekly' ? '8' : selectedPlan === 'monthly' ? '16' : '58'}
+               ¥ {selectedPlan === 'weekly' ? '8' : selectedPlan === 'monthly' ? '16' : '38'}
              </p>
           </div>
           
@@ -203,6 +203,46 @@ export default function RechargePage() {
             支付成功后自动开通权益，无需人工介入
           </p>
         </div>
+
+        {/* Customer Service */}
+        <div className="bg-white rounded-3xl p-6 shadow-lg border border-indigo-50 text-center space-y-6">
+          <h3 className="text-lg font-bold flex items-center justify-center gap-2 text-indigo-900">
+            <AlertCircle className="w-5 h-5 text-indigo-500" /> 如有问题请联系客服
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-2xl border border-indigo-100 shadow-sm hover:shadow-md transition-shadow flex flex-col items-center">
+              <span className="text-indigo-400 text-xs font-bold tracking-wider mb-2">客服 1 WX</span>
+              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg border border-indigo-50 w-full justify-center">
+                <span className="font-mono text-lg font-bold text-gray-800 select-all">MxL1Ddi8f</span>
+                <button 
+                  onClick={() => {
+                    navigator.clipboard.writeText('MxL1Ddi8f');
+                    toast.success('复制成功');
+                  }}
+                  className="p-1.5 text-indigo-500 hover:bg-indigo-50 rounded-md transition-colors"
+                >
+                  <Copy size={14} />
+                </button>
+              </div>
+            </div>
+            <div className="bg-gradient-to-br from-purple-50 to-white p-4 rounded-2xl border border-purple-100 shadow-sm hover:shadow-md transition-shadow flex flex-col items-center">
+              <span className="text-purple-400 text-xs font-bold tracking-wider mb-2">客服 2 WX</span>
+              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg border border-purple-50 w-full justify-center">
+                <span className="font-mono text-lg font-bold text-gray-800 select-all">Lingxi00888</span>
+                <button 
+                  onClick={() => {
+                    navigator.clipboard.writeText('Lingxi00888');
+                    toast.success('复制成功');
+                  }}
+                  className="p-1.5 text-purple-500 hover:bg-purple-50 rounded-md transition-colors"
+                >
+                  <Copy size={14} />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </main>
     </div>
   );
