@@ -1,7 +1,18 @@
-import { ArrowLeft, MessageCircle, Heart, Sparkles, Send } from 'lucide-react';
+import { ArrowLeft, MessageCircle, Sparkles, Send, Copy, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 export default function ContactUs() {
+  const [copied, setCopied] = useState<string | null>(null);
+
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(text);
+    toast.success('复制成功');
+    setTimeout(() => setCopied(null), 2000);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex flex-col font-sans">
       {/* Header */}
@@ -50,21 +61,46 @@ export default function ContactUs() {
               网站还在成长中，可能会有一些不完美的地方。如果你在使用过程中遇到了问题，或者有任何新颖有趣的点子想要分享，甚至只是想找人聊聊你的使用感受，都<strong>热烈欢迎联系我们！</strong>
             </p>
             
-            <div className="flex flex-col items-center justify-center gap-4 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-               <div className="text-center space-y-2">
-                 <p className="text-sm text-gray-500">可以通过以下方式联系主创团队：</p>
-                 <div className="flex flex-col gap-2">
-                    <div className="bg-gray-50 px-4 py-2 rounded-lg font-mono text-gray-800 font-bold border border-gray-200 select-all">
-                      MxL1Ddi8f
+            <div className="flex flex-col items-center justify-center gap-6 bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+               <p className="text-gray-500 font-medium">主创团队微信号</p>
+               
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                  {/* Contact Card 1 */}
+                  <div className="group relative bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-100 hover:border-indigo-300 hover:shadow-md transition-all duration-300">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <span className="text-xs font-bold text-indigo-400 tracking-wider uppercase">客服 01</span>
+                        <div className="font-mono text-xl font-bold text-gray-800 mt-1">MxL1Ddi8f</div>
+                      </div>
+                      <button 
+                        onClick={() => handleCopy('MxL1Ddi8f')}
+                        className="p-2 bg-white rounded-lg border border-indigo-50 text-indigo-500 hover:bg-indigo-500 hover:text-white transition-colors"
+                      >
+                        {copied === 'MxL1Ddi8f' ? <Check size={18} /> : <Copy size={18} />}
+                      </button>
                     </div>
-                    <div className="bg-gray-50 px-4 py-2 rounded-lg font-mono text-gray-800 font-bold border border-gray-200 select-all">
-                      Lingxi00888
+                  </div>
+
+                  {/* Contact Card 2 */}
+                  <div className="group relative bg-gradient-to-br from-purple-50 to-white p-4 rounded-xl border border-purple-100 hover:border-purple-300 hover:shadow-md transition-all duration-300">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <span className="text-xs font-bold text-purple-400 tracking-wider uppercase">客服 02</span>
+                        <div className="font-mono text-xl font-bold text-gray-800 mt-1">Lingxi00888</div>
+                      </div>
+                      <button 
+                        onClick={() => handleCopy('Lingxi00888')}
+                        className="p-2 bg-white rounded-lg border border-purple-50 text-purple-500 hover:bg-purple-500 hover:text-white transition-colors"
+                      >
+                        {copied === 'Lingxi00888' ? <Check size={18} /> : <Copy size={18} />}
+                      </button>
                     </div>
-                 </div>
-                 <p className="text-xs text-gray-400 mt-2">
-                   (复制微信号添加好友，请注明“灵犀指引”)
-                 </p>
+                  </div>
                </div>
+
+               <p className="text-xs text-gray-400 bg-gray-50 px-3 py-1 rounded-full">
+                 点击复制微信号添加好友，请注明“灵犀指引”
+               </p>
             </div>
           </div>
 
