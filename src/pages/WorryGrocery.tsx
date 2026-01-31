@@ -29,7 +29,7 @@ const PetOptionButton = memo(({ type, selectedType, onSelect, imgSrc, label, col
 ));
 
 export default function DigitalPetShop() {
-  const { user, login } = useAuthStore();
+  const { user, token, login } = useAuthStore();
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState<{ reply: string; quote: { content: string; source: string } } | null>(null);
@@ -66,14 +66,15 @@ export default function DigitalPetShop() {
 
   // Function to reset pet choice (for testing/user request)
   const handleResetPet = async () => {
+    if (!user || !token) return;
+
     // Optimistically update local state
-    const updatedUser = { ...user!, petType: null, petName: null };
+    const updatedUser = { ...user, petType: null, petName: null };
     // @ts-ignore - Allowing nulls for reset
-    login(updatedUser);
+    login(updatedUser, token);
 
     // Also update backend to persist the reset
     try {
-      const token = `mock-token-${user?.username}`; 
       await fetch('/api/auth/pet', {
         method: 'POST',
         headers: { 
@@ -120,6 +121,10 @@ export default function DigitalPetShop() {
   }, []);
 
   const handleAdoptPet = async () => {
+    if (!user || !token) {
+       toast.error('请先登录');
+       return;
+    }
     if (!selectedPetType) {
       toast.error('请选择一只宠物');
       return;
@@ -131,8 +136,6 @@ export default function DigitalPetShop() {
 
     setIsSubmittingPet(true);
     try {
-      // Assuming mock-token-PHONE format for demo
-      const token = `mock-token-${user?.username}`; 
       const res = await fetch('/api/auth/pet', {
         method: 'POST',
         headers: { 
@@ -144,7 +147,7 @@ export default function DigitalPetShop() {
       const data = await res.json();
       
       if (data.success) {
-        login(data.user); // Update local user store
+        login(data.user, token); // Update local user store
         toast.success('领养成功！');
       } else {
         toast.error(data.error || '领养失败');
