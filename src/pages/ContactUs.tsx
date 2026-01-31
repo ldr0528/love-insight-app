@@ -22,17 +22,21 @@ export default function ContactUs() {
           {/* Intro */}
           <div className="space-y-4">
             <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2 border-b pb-2 border-gray-100">
-              <Heart className="w-5 h-5 text-red-500 fill-current" /> 关于灵犀指引
+              <Sparkles className="w-5 h-5 text-purple-500 fill-current" /> 关于灵犀指引
             </h3>
             <div className="text-gray-600 leading-relaxed space-y-4">
               <p>
-                欢迎光临「灵犀指引」。这是一个连接内心与缘分的静谧宇宙。
+                欢迎来到「灵犀指引」。
               </p>
               <p>
-                我们的初衷纯粹而简单：在喧嚣的数字洪流中，为你筑起一个温暖的避风港。我们尝试将古老的东方智慧与前沿的 AI 技术交织，只为帮你更清晰地照见自我，更温柔地理解他人。
+                这是一个连接内心与未来的静谧角落。我们的初衷很简单：在喧嚣的数字世界里，为你留一盏温暖的灯。
               </p>
               <p>
-                在这里，你可以通过 MBTI 探寻灵魂的底色，在电子宠物店领养一只懂你的守护灵，或是让恋爱军师为你理清情感的丝缕。愿这些小小的工具，如微光般照亮你的角落，带来些许启发与治愈。
+                我们将前沿的 AI 技术与心理学、传统智慧相融合，只为帮你更清晰地照见自我，更从容地应对生活。
+                无论是通过 MBTI 探寻性格底色，还是在缘名堂寻找一个美好的代号，亦或是让智能助手为你理清思绪——
+              </p>
+              <p className="font-medium text-gray-800">
+                愿这些小小的工具，如微光般照亮你的前行之路，带来些许启发与治愈。
               </p>
             </div>
           </div>
@@ -47,17 +51,20 @@ export default function ContactUs() {
             </p>
             
             <div className="flex flex-col items-center justify-center gap-4 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <div className="relative group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-lg blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
-                <img 
-                  src="/images/contact_qr.jpg" 
-                  alt="客服二维码" 
-                  className="relative w-48 h-48 md:w-56 md:h-56 object-cover rounded-lg shadow-md"
-                />
-              </div>
-              <p className="text-xs text-gray-500 font-medium mt-2">
-                扫一扫上面的二维码图案，加我为朋友
-              </p>
+               <div className="text-center space-y-2">
+                 <p className="text-sm text-gray-500">可以通过以下方式联系主创团队：</p>
+                 <div className="flex flex-col gap-2">
+                    <div className="bg-gray-50 px-4 py-2 rounded-lg font-mono text-gray-800 font-bold border border-gray-200 select-all">
+                      MxL1Ddi8f
+                    </div>
+                    <div className="bg-gray-50 px-4 py-2 rounded-lg font-mono text-gray-800 font-bold border border-gray-200 select-all">
+                      Lingxi00888
+                    </div>
+                 </div>
+                 <p className="text-xs text-gray-400 mt-2">
+                   (复制微信号添加好友，请注明“灵犀指引”)
+                 </p>
+               </div>
             </div>
           </div>
 
