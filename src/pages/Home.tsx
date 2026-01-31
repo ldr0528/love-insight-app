@@ -199,7 +199,7 @@ export default function Home() {
               <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center text-pink-600 mb-4">
                 <Store className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">运报客栈</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">年运来福</h3>
               <p className="text-gray-500 text-sm mb-6 flex-grow">
                 进店领取你的专属周运、月运与年运，解锁今日宜忌，为生活趋吉避凶。
               </p>
