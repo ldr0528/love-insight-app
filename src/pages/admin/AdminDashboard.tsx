@@ -34,7 +34,12 @@ export default function AdminDashboard() {
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch('/api/admin/users');
+      const token = localStorage.getItem('admin_token');
+      const res = await fetch('/api/admin/users', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       const data = await res.json();
       if (data.success) {
         setUsers(data.users);
@@ -61,9 +66,13 @@ export default function AdminDashboard() {
     }
     
     try {
+      const token = localStorage.getItem('admin_token');
       const res = await fetch(`/api/admin/users/${selectedUser._id}/set-vip`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ 
           isVip: type !== 'remove',
           expiresAt 
@@ -89,7 +98,13 @@ export default function AdminDashboard() {
     if (!confirm(`Are you sure you want to ${action} this user?`)) return;
 
     try {
-      const res = await fetch(`/api/admin/users/${user._id}/toggle-blacklist`, { method: 'POST' });
+      const token = localStorage.getItem('admin_token');
+      const res = await fetch(`/api/admin/users/${user._id}/toggle-blacklist`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       const data = await res.json();
       if (data.success) {
         setUsers(users.map(u => u._id === user._id ? { ...u, isBlacklisted: !u.isBlacklisted } : u));
@@ -104,7 +119,13 @@ export default function AdminDashboard() {
   const deleteUser = async (id: string) => {
     if (!confirm('Are you sure you want to delete this user?')) return;
     try {
-      const res = await fetch(`/api/admin/users/${id}`, { method: 'DELETE' });
+      const token = localStorage.getItem('admin_token');
+      const res = await fetch(`/api/admin/users/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       const data = await res.json();
       if (data.success) {
         setUsers(users.filter(u => u._id !== id));
