@@ -115,20 +115,21 @@ function TubeModel({ shaking, stickUp, onDraw, hovered, setHovered }: { shaking:
 
   // 材质 - 使用 useMemo 避免重复创建
   const woodMaterial = useMemo(() => new THREE.MeshPhysicalMaterial({
-    color: '#E53E3E', // 改为更鲜艳的中国红
-    roughness: 0.3,   // 降低粗糙度，增加光泽
+    color: '#FF2400', // 更鲜艳的朱红/大红
+    roughness: 0.2,   // 更光滑
     metalness: 0.1,
-    clearcoat: 0.6,   // 增加清漆感，看起来更像烤漆木
-    clearcoatRoughness: 0.2,
+    clearcoat: 1.0,   // 满级清漆，产生强烈的反光效果
+    clearcoatRoughness: 0.1,
+    reflectivity: 1.0, // 增加反射
   }), []);
   
   const bandMaterial = useMemo(() => new THREE.MeshPhysicalMaterial({
-    color: '#D4AF37', // 这里的颜色改为金色，更符合传统签筒的装饰
-    roughness: 0.3,
-    metalness: 0.8, // 增加金属感
-    clearcoat: 0.8,
-    emissive: '#B8860B',
-    emissiveIntensity: 0.2
+    color: '#FFD700', // 更亮的黄金色
+    roughness: 0.2,
+    metalness: 1.0,   // 纯金属质感
+    clearcoat: 0.5,
+    emissive: '#FFD700',
+    emissiveIntensity: 0.2 // 自发光增强亮度
   }), []);
 
   // 动态生成 "签" 字纹理，避免加载远程字体导致的卡顿
