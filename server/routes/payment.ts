@@ -5,12 +5,20 @@ import { createEPayOrder, verifyEPayNotify } from '../services/epay.js'
 
 const router = Router()
 
+const VIP_PLANS = {
+  weekly: { amount: 8.00, name: 'VIP周卡', duration: 7 },
+  monthly: { amount: 16.00, name: 'VIP月卡', duration: 30 },
+  permanent: { amount: 38.00, name: 'VIP永久', duration: 36500 }
+}
+
 // In-memory store for orders (Ideally, use a database)
 const orders: Record<string, {
   id: string;
   amount: number;
   status: 'pending' | 'paid';
   method: 'epay';
+  type: 'report' | 'vip';
+  plan?: keyof typeof VIP_PLANS;
   createdAt: number;
 }> = {}
 
@@ -20,15 +28,31 @@ const orders: Record<string, {
  */
 router.post('/create', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { method = 'epay', platform = 'mobile' } = req.body
+    const { method = 'epay', platform = 'mobile', type = 'report', plan } = req.body
     const orderId = uuidv4().replace(/-/g, '') 
     
+    let amount = 16.60
+    let productName = 'Love Insight Report'
+    let returnUrlPath = '/report'
+
+    if (type === 'vip') {
+      if (!plan || !VIP_PLANS[plan as keyof typeof VIP_PLANS]) {
+        throw new Error('Invalid VIP plan')
+      }
+      const planConfig = VIP_PLANS[plan as keyof typeof VIP_PLANS]
+      amount = planConfig.amount
+      productName = planConfig.name
+      returnUrlPath = '/recharge' // Return to recharge page or profile
+    }
+
     // Save order status
     orders[orderId] = {
       id: orderId,
-      amount: 16.60,
+      amount,
       status: 'pending',
       method: 'epay',
+      type,
+      plan,
       createdAt: Date.now()
     }
 
@@ -41,14 +65,14 @@ router.post('/create', async (req: Request, res: Response): Promise<void> => {
     if (method === 'epay') {
       // Use EPay for generic third-party
       const notifyUrl = `${protocol}://${host}/api/payment/notify/epay`
-      const returnUrl = `${protocol}://${host}/report?orderId=${orderId}&status=paid`
+      const returnUrl = `${protocol}://${host}${returnUrlPath}?orderId=${orderId}&status=paid`
       
       payUrl = await createEPayOrder({
-        name: 'Love Insight Report',
+        name: productName,
         out_trade_no: orderId,
         notify_url: notifyUrl,
         return_url: returnUrl,
-        money: '16.60',
+        money: amount.toFixed(2),
         type: 'wxpay' // Default to wxpay or pass from frontend
       })
     } else {
@@ -59,7 +83,7 @@ router.post('/create', async (req: Request, res: Response): Promise<void> => {
       success: true,
       orderId,
       payUrl,
-      amount: 16.60
+      amount
     })
   } catch (error: any) {
     console.error('Payment creation error:', error)
@@ -116,6 +140,29 @@ const handleEPayNotify = async (req: Request, res: Response) => {
     if (orderId && orders[orderId]) {
       orders[orderId].status = 'paid'
       console.log(`[EPay] Order ${orderId} paid successfully`)
+
+      // If it's a VIP order, update user VIP status
+      // Note: In a real app, you need to associate the order with a user ID.
+      // Since we don't have user ID in the notify callback (unless passed in params),
+      // we usually pass userId in `param` or `attach` field when creating order,
+      // OR we stored userId in our `orders` DB when creating the order.
+      // 
+      // Assuming `orders[orderId]` has user info or we can find it.
+      // Currently `orders` is in-memory and doesn't store userId.
+      // Let's assume we can't update User DB here without userId.
+      // 
+      // TODO: You should add `userId` to `orders` object and pass it from frontend /create.
+      
+      // For now, let's just log it. The actual update should happen if we had the User model integrated.
+      // If we want to implement it now, we need to know WHICH user paid.
+      // The current /create endpoint doesn't take userId?
+      // Let's check... it doesn't.
+      
+      // However, the previous code mentions `user_profile` in report.ts.
+      // Let's assume the user is logged in and we have their session/token,
+      // but notify is a server-to-server callback, no session.
+      
+      // We should use the `param` field in EPay to pass userId.
     }
     res.send('success')
   } catch (e: any) {

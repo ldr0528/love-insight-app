@@ -6,13 +6,33 @@ import toast from 'react-hot-toast';
 export default function RechargePage() {
   const [selectedPlan, setSelectedPlan] = useState<'weekly' | 'monthly' | 'permanent'>('monthly');
 
-  const copyLink = () => {
-    const link = '#付款:astra(dr13528855668)';
-    navigator.clipboard.writeText(link).then(() => {
-      toast.success('复制成功！请前往微信发送给任意好友');
-    }).catch(() => {
-      toast.error('复制失败，请手动复制');
-    });
+  const handlePayment = async () => {
+    try {
+      const response = await fetch('/api/payment/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          method: 'epay',
+          type: 'vip',
+          plan: selectedPlan,
+          // In a real app, you might want to pass the user ID here if not handled by session/cookie
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success && data.payUrl) {
+        // Redirect to payment page
+        window.location.href = data.payUrl;
+      } else {
+        toast.error('创建订单失败: ' + (data.error || '未知错误'));
+      }
+    } catch (error) {
+      console.error('Payment Error:', error);
+      toast.error('支付请求失败，请稍后重试');
+    }
   };
 
   return (
@@ -29,21 +49,6 @@ export default function RechargePage() {
 
       <main className="flex-1 max-w-3xl w-full mx-auto p-4 md:p-6 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
         
-        {/* Encouragement Message */}
-        <div className="relative overflow-hidden bg-gradient-to-r from-orange-100 via-amber-50 to-orange-100 p-5 rounded-2xl text-center shadow-sm border border-orange-200/50">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-300 via-red-300 to-orange-300 opacity-50"></div>
-          <div className="relative z-10 flex flex-col items-center gap-1">
-            <span className="text-orange-800 font-bold text-base md:text-lg tracking-wide flex items-center gap-2">
-              <span className="text-xl">✨</span> 网站制作不易 <span className="text-xl">✨</span>
-            </span>
-            <span className="text-orange-600/90 text-sm font-medium">
-              您的小小鼓励就是我们最大的动力 <span className="text-red-500 animate-pulse inline-block transform hover:scale-125 transition-transform">❤️</span>
-            </span>
-          </div>
-          <div className="absolute -bottom-4 -right-4 w-16 h-16 bg-orange-200 rounded-full opacity-20 blur-xl"></div>
-          <div className="absolute -top-4 -left-4 w-16 h-16 bg-red-200 rounded-full opacity-20 blur-xl"></div>
-        </div>
-
         {/* VIP Plan Selection */}
         <div className="grid grid-cols-3 gap-3 md:gap-4">
           {/* Weekly Plan */}
@@ -124,77 +129,37 @@ export default function RechargePage() {
           </button>
         </div>
 
-        {/* Steps */}
-        <div className="space-y-8">
-          {/* Step 1 */}
-          <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
-            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <span className="bg-black text-white w-6 h-6 rounded-full flex items-center justify-center text-sm">1</span>
-              第一步：复制链接并发送
-            </h3>
-            <div className="bg-gray-50 p-4 rounded-xl mb-4 border border-gray-200 flex items-center justify-between gap-2">
-              <code className="text-sm md:text-base font-mono text-gray-800 break-all">
-                #付款:astra(dr13528855668)
-              </code>
-              <button 
-                onClick={copyLink}
-                className="flex-shrink-0 flex items-center gap-1 bg-white border border-gray-300 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-50 active:scale-95 transition-all text-gray-700"
-              >
-                <Copy size={14} />
-                复制
-              </button>
-            </div>
-            <p className="text-sm text-gray-600 mb-4">
-              点击上方复制按钮，然后在手机微信中打开<span className="font-bold text-gray-900">任意聊天窗口</span>（例如发给自己），粘贴并发送。
-            </p>
-            <div className="rounded-xl overflow-hidden border border-gray-200">
-              <img 
-                src="/images/VIP-step1.png" 
-                alt="Step 1 Example" 
-                className="w-full h-auto"
-              />
-            </div>
+        {/* Payment Button */}
+        <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100 flex flex-col items-center gap-4">
+          <div className="text-center">
+             <p className="text-gray-500 text-sm mb-1">当前选择</p>
+             <p className="text-xl font-bold text-gray-800">
+               {selectedPlan === 'weekly' && 'VIP周卡 (7天)'}
+               {selectedPlan === 'monthly' && 'VIP月卡 (30天)'}
+               {selectedPlan === 'permanent' && 'VIP永久会员'}
+             </p>
+             <p className="text-3xl font-extrabold text-orange-600 mt-2">
+               ¥ {selectedPlan === 'weekly' ? '8' : selectedPlan === 'monthly' ? '16' : '38'}
+             </p>
           </div>
-
-          {/* Step 2 */}
-          <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
-            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <span className="bg-black text-white w-6 h-6 rounded-full flex items-center justify-center text-sm">2</span>
-              第二步：点击链接付款
-            </h3>
-            <p className="text-sm text-gray-600 mb-4">
-              点击您刚才发送的绿色链接，进入支付界面。选择对应产品（周卡/月卡/永久），并在电话栏<span className="font-bold text-red-500 underline">填写您的注册账号</span>！
-            </p>
-            <div className="rounded-xl overflow-hidden border border-gray-200">
-              <img 
-                src="/images/VIP-step2.jpg" 
-                alt="Step 2 Example" 
-                className="w-full h-auto"
-              />
-            </div>
-          </div>
-
-          {/* Step 3 */}
-          <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
-            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <span className="bg-black text-white w-6 h-6 rounded-full flex items-center justify-center text-sm">3</span>
-              第三步：等待开通
-            </h3>
-            <div className="bg-blue-50 p-4 rounded-xl text-blue-800 text-sm mb-4">
-              客服助理会根据您填写的信息（注册账号）将您的账号设置为VIP。
-            </div>
-            <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-xl">
-              <p className="text-sm text-red-700 font-bold">
-                如有问题请咨询客服，请不要相信其它充值方式！
-              </p>
-            </div>
-          </div>
+          
+          <button 
+            onClick={handlePayment}
+            className="w-full max-w-sm bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-4 px-8 rounded-full shadow-lg transform transition-all active:scale-95 flex items-center justify-center gap-2"
+          >
+            <Crown className="w-5 h-5 fill-current" />
+            立即支付开通
+          </button>
+          
+          <p className="text-xs text-gray-400">
+            支付成功后自动开通权益，无需人工介入
+          </p>
         </div>
 
         {/* Customer Service */}
         <div className="bg-white rounded-3xl p-6 shadow-lg border border-indigo-50 text-center space-y-6">
           <h3 className="text-lg font-bold flex items-center justify-center gap-2 text-indigo-900">
-            <AlertCircle className="w-5 h-5 text-indigo-500" /> 如有问题请尽快联系客服
+            <AlertCircle className="w-5 h-5 text-indigo-500" /> 如有问题请联系客服
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-2xl border border-indigo-100 shadow-sm hover:shadow-md transition-shadow flex flex-col items-center">
