@@ -15,6 +15,12 @@ export interface IUser extends Document {
   petType: 'cat' | 'dog' | 'chicken' | 'rabbit' | 'panda' | 'hamster' | 'koala' | 'fox' | 'lion' | null;
   petName: string | null;
   lastLoginAt: Date;
+  currentSessionToken?: string;
+  loginHistory: {
+    ip: string;
+    timestamp: Date;
+    device?: string;
+  }[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -79,7 +85,16 @@ const userSchema = new mongoose.Schema({
   lastLoginAt: {
     type: Date,
     default: Date.now,
-  }
+  },
+  currentSessionToken: {
+    type: String,
+    default: null
+  },
+  loginHistory: [{
+    ip: String,
+    timestamp: { type: Date, default: Date.now },
+    device: String
+  }]
 }, {
   timestamps: true,
 });

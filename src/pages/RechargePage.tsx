@@ -2,11 +2,18 @@ import { useState } from 'react';
 import { ArrowLeft, Crown, AlertCircle, Check, Copy } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { useAuthStore } from '../store/useAuthStore';
 
 export default function RechargePage() {
   const [selectedPlan, setSelectedPlan] = useState<'weekly' | 'monthly' | 'permanent'>('monthly');
+  const { user } = useAuthStore();
 
   const handlePayment = async () => {
+    if (!user) {
+      toast.error('请先登录');
+      return;
+    }
+
     try {
       const response = await fetch('/api/payment/create', {
         method: 'POST',
@@ -17,7 +24,7 @@ export default function RechargePage() {
           method: 'epay',
           type: 'vip',
           plan: selectedPlan,
-          // In a real app, you might want to pass the user ID here if not handled by session/cookie
+          userId: user.phone || user.id // Pass user identifier
         }),
       });
 

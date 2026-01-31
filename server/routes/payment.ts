@@ -3,6 +3,9 @@ import { Router, type Request, type Response } from 'express'
 import { v4 as uuidv4 } from 'uuid'
 import { createEPayOrder, verifyEPayNotify } from '../services/epay.js'
 
+import User from '../models/User.js'
+import connectDB from '../config/db.js'
+
 const router = Router()
 
 const VIP_PLANS = {
@@ -19,6 +22,7 @@ const orders: Record<string, {
   method: 'epay';
   type: 'report' | 'vip';
   plan?: keyof typeof VIP_PLANS;
+  userId?: string; // Store userId
   createdAt: number;
 }> = {}
 
@@ -28,7 +32,7 @@ const orders: Record<string, {
  */
 router.post('/create', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { method = 'epay', platform = 'mobile', type = 'report', plan } = req.body
+    const { method = 'epay', platform = 'mobile', type = 'report', plan, userId } = req.body
     const orderId = uuidv4().replace(/-/g, '') 
     
     let amount = 16.60
@@ -53,6 +57,7 @@ router.post('/create', async (req: Request, res: Response): Promise<void> => {
       method: 'epay',
       type,
       plan,
+      userId,
       createdAt: Date.now()
     }
 
@@ -144,27 +149,36 @@ const handleEPayNotify = async (req: Request, res: Response) => {
       console.log(`[EPay] Order ${orderId} paid successfully`)
 
       // If it's a VIP order, update user VIP status
-      // Note: In a real app, you need to associate the order with a user ID.
-      // Since we don't have user ID in the notify callback (unless passed in params),
-      // we usually pass userId in `param` or `attach` field when creating order,
-      // OR we stored userId in our `orders` DB when creating the order.
-      // 
-      // Assuming `orders[orderId]` has user info or we can find it.
-      // Currently `orders` is in-memory and doesn't store userId.
-      // Let's assume we can't update User DB here without userId.
-      // 
-      // TODO: You should add `userId` to `orders` object and pass it from frontend /create.
-      
-      // For now, let's just log it. The actual update should happen if we had the User model integrated.
-      // If we want to implement it now, we need to know WHICH user paid.
-      // The current /create endpoint doesn't take userId?
-      // Let's check... it doesn't.
-      
-      // However, the previous code mentions `user_profile` in report.ts.
-      // Let's assume the user is logged in and we have their session/token,
-      // but notify is a server-to-server callback, no session.
-      
-      // We should use the `param` field in EPay to pass userId.
+      const order = orders[orderId]
+      if (order.type === 'vip' && order.userId && order.plan) {
+        try {
+          await connectDB()
+          const user = await User.findOne({ id: order.userId }) || await User.findOne({ phone: order.userId })
+          
+          if (user) {
+             const planConfig = VIP_PLANS[order.plan]
+             const now = new Date()
+             // If already VIP and not expired, extend
+             const currentExpires = user.vipExpiresAt ? new Date(user.vipExpiresAt) : new Date(0)
+             let newExpires: Date
+             
+             if (user.isVip && currentExpires > now) {
+               newExpires = new Date(currentExpires.getTime() + planConfig.duration * 24 * 60 * 60 * 1000)
+             } else {
+               newExpires = new Date(now.getTime() + planConfig.duration * 24 * 60 * 60 * 1000)
+             }
+             
+             user.isVip = true
+             user.vipExpiresAt = newExpires
+             await user.save()
+             console.log(`[VIP] Updated user ${user.phone} VIP to ${newExpires.toISOString()}`)
+          } else {
+             console.error(`[VIP] User not found for order ${orderId} (userId: ${order.userId})`)
+          }
+        } catch (dbError) {
+          console.error(`[VIP] DB Update Error:`, dbError)
+        }
+      }
     }
     res.send('success')
   } catch (e: any) {

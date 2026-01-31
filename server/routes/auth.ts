@@ -64,8 +64,17 @@ router.post('/send-code', async (req: Request, res: Response) => {
   }
 });
 
+import { v4 as uuidv4 } from 'uuid';
+
+// Helper to get client IP
+const getClientIp = (req: Request): string => {
+  return (req.headers['x-forwarded-for'] as string || '').split(',')[0].trim() || req.ip || '127.0.0.1';
+};
+
 router.post('/login', async (req: Request, res: Response) => {
   const { phone, password } = req.body;
+  const ip = getClientIp(req);
+  const device = req.headers['user-agent'] || 'Unknown Device';
   
   if (!phone || !/^1[3-9]\d{9}$/.test(phone)) {
     res.status(400).json({ error: '请输入有效的11位手机号码' });
@@ -111,18 +120,54 @@ router.post('/login', async (req: Request, res: Response) => {
       }
     }
 
-    // Update last login time
+    // --- Login Security Check: Frequent IP Changes ---
+    // Rule: If login from > 3 distinct IPs in last 1 minute, auto-ban.
+    const oneMinuteAgo = new Date(Date.now() - 60 * 1000);
+    const recentLogins = user.loginHistory.filter(h => h.timestamp > oneMinuteAgo);
+    const distinctIps = new Set(recentLogins.map(h => h.ip));
+    
+    // Add current IP to the set to check
+    distinctIps.add(ip);
+
+    if (distinctIps.size > 3) {
+      user.isBlacklisted = true;
+      await user.save();
+      res.status(403).json({ error: '账号异常：短时间内IP变动过于频繁，系统已自动封禁。请联系客服解封。' });
+      return;
+    }
+
+    // --- Single Session Logic ---
+    // Generate a new unique token for this session
+    const sessionToken = uuidv4();
+    user.currentSessionToken = sessionToken;
+
+    // Update last login time and history
     user.lastLoginAt = new Date();
+    user.loginHistory.push({
+      ip,
+      timestamp: new Date(),
+      device
+    });
+    
+    // Limit history size to last 50 entries to save space
+    if (user.loginHistory.length > 50) {
+      user.loginHistory = user.loginHistory.slice(-50);
+    }
+
     await user.save();
     
     // Return user without password
     const userObj = user.toObject();
     const { password: _, ...userWithoutPassword } = userObj;
     
+    // We append the sessionToken to the mock token so middleware can verify it
+    // Format: "mock-token-PHONE:SESSION_TOKEN"
+    const authToken = `mock-token-${phone}:${sessionToken}`;
+
     res.json({
       success: true,
       user: userWithoutPassword,
-      token: 'mock-token-' + phone
+      token: authToken
     });
   } catch (error: any) {
     console.error('Login error:', error);
@@ -133,6 +178,8 @@ router.post('/login', async (req: Request, res: Response) => {
 
 router.post('/register', async (req: Request, res: Response) => {
   const { phone, password, avatar, email, code } = req.body;
+  const ip = getClientIp(req);
+  const device = req.headers['user-agent'] || 'Unknown Device';
   
   if (!phone || !/^1[3-9]\d{9}$/.test(phone)) {
     res.status(400).json({ error: '请输入有效的11位手机号码' });
@@ -170,6 +217,9 @@ router.post('/register', async (req: Request, res: Response) => {
       return;
     }
 
+    // Initial Session Token
+    const sessionToken = uuidv4();
+
     // Register: Create new user
     const user = await User.create({
       id: Date.now().toString(36) + Math.random().toString(36).substring(2, 5), // Unique ID
@@ -179,17 +229,26 @@ router.post('/register', async (req: Request, res: Response) => {
       phone,
       email: email || undefined,
       isVip: false,
-      avatar: avatar || ''
+      avatar: avatar || '',
+      currentSessionToken: sessionToken,
+      lastLoginAt: new Date(),
+      loginHistory: [{
+        ip,
+        timestamp: new Date(),
+        device
+      }]
     });
     
     // Return user without password
     const userObj = user.toObject();
     const { password: _, ...userWithoutPassword } = userObj;
     
+    const authToken = `mock-token-${phone}:${sessionToken}`;
+
     res.json({
       success: true,
       user: userWithoutPassword,
-      token: 'mock-token-' + phone
+      token: authToken
     });
   } catch (error: any) {
     console.error('Register error:', error);
@@ -206,11 +265,11 @@ router.get('/me', async (req: Request, res: Response) => {
     return;
   }
 
-  // In a real app, verify JWT here. 
-  // For this mock, we extract phone/id from the mock token or just rely on a query param/header if we had one.
-  // Since our mock token is "mock-token-PHONE", let's extract the phone.
+  // Token format: "mock-token-PHONE:SESSION_TOKEN"
   const token = authHeader.split(' ')[1];
-  const phone = token.replace('mock-token-', '');
+  const tokenParts = token.replace('mock-token-', '').split(':');
+  const phone = tokenParts[0];
+  const sessionToken = tokenParts[1]; // Might be undefined for old clients
 
   try {
     await connectDB();
@@ -219,6 +278,24 @@ router.get('/me', async (req: Request, res: Response) => {
     if (!user) {
       res.status(404).json({ error: 'User not found' });
       return;
+    }
+
+    // --- Single Session Check ---
+    // If user has a currentSessionToken set in DB, but the request token doesn't match
+    // it means this device is using an old or invalid token.
+    if (user.currentSessionToken && sessionToken !== user.currentSessionToken) {
+      // Allow old tokens momentarily if sessionToken is undefined (migration) 
+      // OR strictly enforce:
+      if (sessionToken) {
+        res.status(401).json({ error: '您的账号已在其他设备登录，当前会话已失效。' });
+        return;
+      }
+      // If sessionToken is missing (old client), we might optionally allow it or force logout.
+      // For security, let's force logout if DB has a token.
+      if (user.currentSessionToken) {
+         res.status(401).json({ error: '您的账号已在其他设备登录，当前会话已失效。' });
+         return;
+      }
     }
 
     // Check VIP expiration

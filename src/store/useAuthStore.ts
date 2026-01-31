@@ -6,6 +6,7 @@ export type PetType = 'cat' | 'dog' | 'chicken' | 'rabbit' | 'hamster' | 'fox';
 interface User {
   id: string;
   username: string; // LinXXXX
+  phone?: string;
   nickname: string;
   isVip?: boolean;
   avatar?: string;
