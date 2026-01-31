@@ -3,6 +3,7 @@ import User from '../models/User.js';
 import VerificationCode from '../models/VerificationCode.js';
 import connectDB from '../config/db.js';
 import { sendVerificationEmail } from '../services/email.js';
+import { v4 as uuidv4 } from 'uuid';
 
 const router = Router();
 
@@ -63,8 +64,6 @@ router.post('/send-code', async (req: Request, res: Response) => {
     res.status(500).json({ error: '服务器错误' });
   }
 });
-
-import { v4 as uuidv4 } from 'uuid';
 
 // Helper to get client IP
 const getClientIp = (req: Request): string => {
@@ -324,7 +323,9 @@ router.post('/pet', async (req: Request, res: Response) => {
   }
 
   const token = authHeader.split(' ')[1];
-  const phone = token.replace('mock-token-', '');
+  const tokenParts = token.replace('mock-token-', '').split(':');
+  const phone = tokenParts[0];
+  const sessionToken = tokenParts[1];
   const { petType, petName } = req.body;
 
   try {
@@ -334,6 +335,14 @@ router.post('/pet', async (req: Request, res: Response) => {
     if (!user) {
       res.status(404).json({ error: 'User not found' });
       return;
+    }
+
+    // Session Check
+    if (user.currentSessionToken && sessionToken !== user.currentSessionToken) {
+       if (sessionToken || user.currentSessionToken) {
+          res.status(401).json({ error: 'Session expired' });
+          return;
+       }
     }
 
     user.petType = petType;

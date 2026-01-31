@@ -212,7 +212,7 @@ export default function SimpleAuthModal() {
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="必填，用于找回密码"
+                      placeholder="必填，用于接收验证码"
                       className="w-full pl-24 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-bold text-lg placeholder:font-normal placeholder:text-gray-400"
                     />
                   </div>
