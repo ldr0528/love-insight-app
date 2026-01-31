@@ -87,7 +87,7 @@ export default function RechargePage() {
           
           <div className="text-sm text-gray-700 space-y-1 flex-1">
             <p className="font-bold text-gray-800 hidden md:block">
-              制作不易，您的小小鼓励是我们最大的动力！❤️
+              网站制作不易，您的小小鼓励是我们最大的动力！❤️
             </p>
             <p className="text-gray-500 text-xs leading-relaxed">
               为了保障权益，请务必使用 <span className="text-pink-600 font-medium">正规浏览器</span> (Chrome/Safari) 支付。
@@ -171,7 +171,7 @@ export default function RechargePage() {
             </h3>
             <div className="flex items-baseline gap-1">
               <span className="text-sm font-medium text-gray-500">¥</span>
-              <span className={`text-2xl md:text-3xl font-extrabold ${selectedPlan === 'permanent' ? 'text-amber-600' : 'text-gray-800'}`}>38</span>
+              <span className={`text-2xl md:text-3xl font-extrabold ${selectedPlan === 'permanent' ? 'text-amber-600' : 'text-gray-800'}`}>68</span>
             </div>
             <p className="text-[10px] md:text-xs text-gray-400">终身有效</p>
           </button>
@@ -187,7 +187,7 @@ export default function RechargePage() {
                {selectedPlan === 'permanent' && 'VIP永久会员'}
              </p>
              <p className="text-3xl font-extrabold text-orange-600 mt-2">
-               ¥ {selectedPlan === 'weekly' ? '8' : selectedPlan === 'monthly' ? '16' : '38'}
+               ¥ {selectedPlan === 'weekly' ? '8' : selectedPlan === 'monthly' ? '16' : '68'}
              </p>
           </div>
           
