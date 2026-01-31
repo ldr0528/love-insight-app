@@ -12,7 +12,7 @@ const router = Router()
 const VIP_PLANS = {
   weekly: { amount: 8.00, name: 'VIP周卡', duration: 7 },
   monthly: { amount: 16.00, name: 'VIP月卡', duration: 30 },
-  permanent: { amount: 58.00, name: 'VIP年卡', duration: 365 } // Changed from permanent to yearly as requested
+  yearly: { amount: 58.00, name: 'VIP年卡', duration: 365 }
 };
 
 /**

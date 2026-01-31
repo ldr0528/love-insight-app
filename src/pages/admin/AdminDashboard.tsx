@@ -51,7 +51,7 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleSetVip = async (type: 'weekly' | 'monthly' | 'permanent' | 'remove') => {
+  const handleSetVip = async (type: 'weekly' | 'monthly' | 'yearly' | 'remove') => {
     if (!selectedUser) return;
     
     let expiresAt = null;
@@ -62,6 +62,10 @@ export default function AdminDashboard() {
     } else if (type === 'weekly') {
       const date = new Date();
       date.setDate(date.getDate() + 7);
+      expiresAt = date.toISOString();
+    } else if (type === 'yearly') {
+      const date = new Date();
+      date.setDate(date.getDate() + 365);
       expiresAt = date.toISOString();
     }
     
@@ -347,7 +351,7 @@ export default function AdminDashboard() {
               </button>
 
               <button
-                onClick={() => handleSetVip('permanent')}
+                onClick={() => handleSetVip('yearly')}
                 className="w-full flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-amber-400 hover:bg-amber-50 transition-all group"
               >
                 <div className="flex items-center gap-3">

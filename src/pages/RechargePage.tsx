@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import { useAuthStore } from '../store/useAuthStore';
 
 export default function RechargePage() {
-  const [selectedPlan, setSelectedPlan] = useState<'weekly' | 'monthly' | 'permanent'>('monthly');
+  const [selectedPlan, setSelectedPlan] = useState<'weekly' | 'monthly' | 'yearly'>('monthly');
   const { user, refreshProfile } = useAuthStore();
   const [searchParams] = useSearchParams();
   const processedRef = useRef(false);
@@ -147,33 +147,33 @@ export default function RechargePage() {
             <p className="text-[10px] md:text-xs text-gray-400">有效期 30 天</p>
           </button>
 
-          {/* Permanent Plan */}
+          {/* Yearly Plan */}
           <button
-            onClick={() => setSelectedPlan('permanent')}
+            onClick={() => setSelectedPlan('yearly')}
             className={`relative p-4 md:p-6 rounded-2xl border-2 transition-all flex flex-col items-center justify-center gap-2 ${
-              selectedPlan === 'permanent' 
+              selectedPlan === 'yearly' 
                 ? 'bg-gradient-to-br from-yellow-100 to-amber-100 border-amber-500 shadow-md transform scale-[1.02]' 
                 : 'bg-white border-gray-100 hover:border-yellow-200'
             }`}
           >
-            {selectedPlan === 'permanent' && (
+            {selectedPlan === 'yearly' && (
               <div className="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-xl rounded-tr-xl">
                 超值推荐
               </div>
             )}
-            {selectedPlan === 'permanent' && (
+            {selectedPlan === 'yearly' && (
               <div className="absolute top-2 right-2 mt-5 bg-amber-500 text-white p-1 rounded-full">
                 <Check size={12} strokeWidth={3} />
               </div>
             )}
-            <h3 className={`font-bold text-base md:text-lg ${selectedPlan === 'permanent' ? 'text-amber-800' : 'text-gray-600'}`}>
-              VIP永久
+            <h3 className={`font-bold text-base md:text-lg ${selectedPlan === 'yearly' ? 'text-amber-800' : 'text-gray-600'}`}>
+              VIP年卡
             </h3>
             <div className="flex items-baseline gap-1">
               <span className="text-sm font-medium text-gray-500">¥</span>
-              <span className={`text-2xl md:text-3xl font-extrabold ${selectedPlan === 'permanent' ? 'text-amber-600' : 'text-gray-800'}`}>38</span>
+              <span className={`text-2xl md:text-3xl font-extrabold ${selectedPlan === 'yearly' ? 'text-amber-600' : 'text-gray-800'}`}>58</span>
             </div>
-            <p className="text-[10px] md:text-xs text-gray-400">终身有效</p>
+            <p className="text-[10px] md:text-xs text-gray-400">有效期 365 天</p>
           </button>
         </div>
 
@@ -184,10 +184,10 @@ export default function RechargePage() {
              <p className="text-xl font-bold text-gray-800">
                {selectedPlan === 'weekly' && 'VIP周卡 (7天)'}
                {selectedPlan === 'monthly' && 'VIP月卡 (30天)'}
-               {selectedPlan === 'permanent' && 'VIP永久会员'}
+               {selectedPlan === 'yearly' && 'VIP年卡 (365天)'}
              </p>
              <p className="text-3xl font-extrabold text-orange-600 mt-2">
-               ¥ {selectedPlan === 'weekly' ? '8' : selectedPlan === 'monthly' ? '16' : '38'}
+               ¥ {selectedPlan === 'weekly' ? '8' : selectedPlan === 'monthly' ? '16' : '58'}
              </p>
           </div>
           

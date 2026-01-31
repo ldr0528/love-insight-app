@@ -7,7 +7,7 @@ export interface IOrder extends Document {
   status: 'pending' | 'paid' | 'failed';
   method: 'epay';
   type: 'report' | 'vip';
-  plan?: string; // 'weekly' | 'monthly' | 'permanent'
+  plan?: string; // 'weekly' | 'monthly' | 'yearly'
   createdAt: Date;
   updatedAt: Date;
 }
