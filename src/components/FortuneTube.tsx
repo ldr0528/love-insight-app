@@ -123,11 +123,11 @@ function TubeModel({ shaking, stickUp, onDraw, hovered, setHovered }: { shaking:
   }), []);
   
   const bandMaterial = useMemo(() => new THREE.MeshPhysicalMaterial({
-    color: '#C41E3A', // 中国红
+    color: '#D4AF37', // 这里的颜色改为金色，更符合传统签筒的装饰
     roughness: 0.3,
-    metalness: 0.3,
+    metalness: 0.8, // 增加金属感
     clearcoat: 0.8,
-    emissive: '#500000',
+    emissive: '#B8860B',
     emissiveIntensity: 0.2
   }), []);
 
@@ -148,11 +148,27 @@ function TubeModel({ shaking, stickUp, onDraw, hovered, setHovered }: { shaking:
          <meshStandardMaterial color="#3d2616" roughness={0.9} side={THREE.BackSide} />
       </Cylinder>
 
-      {/* 装饰红圈 */}
-      <Cylinder args={[0.71, 0.71, 0.15, 64]} position={[0, 0.1, 0]} material={bandMaterial} />
+      {/* 装饰金圈 - 顶部 */}
+      <Cylinder args={[0.71, 0.71, 0.1, 64]} position={[0, 0.2, 0]} material={bandMaterial} />
+      
+      {/* 装饰金圈 - 底部 */}
+      <Cylinder args={[0.68, 0.68, 0.1, 64]} position={[0, -1.4, 0]} material={bandMaterial} />
 
       {/* 筒底 */}
       <Cylinder args={[0.65, 0.65, 0.1, 64]} position={[0, -1.55, 0]} material={woodMaterial} />
+
+      {/* 签筒正面 "签" 字牌 */}
+      <group position={[0, -0.6, 0.7]} rotation={[0, 0, 0]}>
+        <mesh>
+          <cylinderGeometry args={[0.25, 0.25, 0.05, 32]} rotation={[Math.PI / 2, 0, 0]} />
+          <meshPhysicalMaterial color="#D4AF37" metalness={0.8} roughness={0.3} />
+        </mesh>
+        {/* 这里可以用纹理贴图或者简单的几何图形拼一个 "签" 字，为了性能和简洁，这里用一个菱形红纸代替 */}
+        <mesh position={[0, 0, 0.03]} rotation={[0, 0, Math.PI / 4]}>
+           <boxGeometry args={[0.15, 0.15, 0.01]} />
+           <meshBasicMaterial color="#C41E3A" />
+        </mesh>
+      </group>
 
       {/* 顶部边缘 - 使用圆环模拟口沿，避免封口 */}
       <mesh position={[0, 0.4, 0]} rotation={[Math.PI / 2, 0, 0]}>
