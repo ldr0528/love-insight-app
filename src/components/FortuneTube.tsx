@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { Sparkles, X, Loader2, AlertCircle } from 'lucide-react';
 import DailyCheckIn from '@/components/DailyCheckIn';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Cylinder, Environment, ContactShadows, Html } from '@react-three/drei';
+import { Cylinder, Environment, ContactShadows, Html, Text } from '@react-three/drei';
 import * as THREE from 'three';
 import { useAuthStore } from '@/store/useAuthStore';
 
@@ -115,11 +115,11 @@ function TubeModel({ shaking, stickUp, onDraw, hovered, setHovered }: { shaking:
 
   // 材质 - 使用 useMemo 避免重复创建
   const woodMaterial = useMemo(() => new THREE.MeshPhysicalMaterial({
-    color: '#D66853', // 改为淡红木色/朱砂红，更喜庆且不深沉
-    roughness: 0.4,
+    color: '#E53E3E', // 改为更鲜艳的中国红
+    roughness: 0.3,   // 降低粗糙度，增加光泽
     metalness: 0.1,
-    clearcoat: 0.3, // 降低清漆感，更自然
-    clearcoatRoughness: 0.4,
+    clearcoat: 0.6,   // 增加清漆感，看起来更像烤漆木
+    clearcoatRoughness: 0.2,
   }), []);
   
   const bandMaterial = useMemo(() => new THREE.MeshPhysicalMaterial({
@@ -163,11 +163,25 @@ function TubeModel({ shaking, stickUp, onDraw, hovered, setHovered }: { shaking:
           <cylinderGeometry args={[0.25, 0.25, 0.05, 32]} />
           <meshPhysicalMaterial color="#D4AF37" metalness={0.8} roughness={0.3} />
         </mesh>
-        {/* 这里可以用纹理贴图或者简单的几何图形拼一个 "签" 字，为了性能和简洁，这里用一个菱形红纸代替 */}
-        <mesh position={[0, 0, 0.03]} rotation={[0, 0, Math.PI / 4]}>
-           <boxGeometry args={[0.15, 0.15, 0.01]} />
+        
+        {/* 红纸背景 */}
+        <mesh position={[0, 0, 0.026]} rotation={[0, 0, Math.PI / 4]}>
+           <boxGeometry args={[0.18, 0.18, 0.01]} />
            <meshBasicMaterial color="#C41E3A" />
         </mesh>
+
+        {/* "签" 字 */}
+        <Text
+          position={[0, -0.02, 0.04]}
+          fontSize={0.15}
+          color="#FFD700" // 金色字体
+          anchorX="center"
+          anchorY="middle"
+          font="https://fonts.gstatic.com/s/notosanssc/v26/k3kXo84MPvpLmixcA63oeALhLOCT-xWtmhE.woff2" // 使用 Noto Sans SC 作为后备，或使用本地字体
+          characters="签"
+        >
+          签
+        </Text>
       </group>
 
       {/* 顶部边缘 - 使用圆环模拟口沿，避免封口 */}
