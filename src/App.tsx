@@ -28,12 +28,12 @@ function AuthEffect() {
       refreshProfile();
     }
 
-    // Poll every 30 seconds to keep VIP status updated
+    // Poll every 5 seconds to keep VIP status/Ban status updated in near real-time
     const interval = setInterval(() => {
       if (useAuthStore.getState().isAuthenticated) {
         refreshProfile();
       }
-    }, 30000);
+    }, 5000);
 
     // Refresh when window regains focus
     const handleFocus = () => {

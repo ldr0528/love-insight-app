@@ -1,12 +1,28 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowLeft, Crown, AlertCircle, Check, Copy } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuthStore } from '../store/useAuthStore';
 
 export default function RechargePage() {
   const [selectedPlan, setSelectedPlan] = useState<'weekly' | 'monthly' | 'permanent'>('monthly');
-  const { user } = useAuthStore();
+  const { user, refreshProfile } = useAuthStore();
+  const [searchParams] = useSearchParams();
+
+  // Auto-refresh profile if returning from payment
+  useEffect(() => {
+    const status = searchParams.get('status');
+    if (status === 'paid') {
+      const toastId = toast.loading('正在确认支付结果...');
+      // Delay slightly to ensure server DB update propagates
+      setTimeout(() => {
+        refreshProfile().then(() => {
+          toast.dismiss(toastId);
+          toast.success('VIP权益已开通！');
+        });
+      }, 1000);
+    }
+  }, [searchParams, refreshProfile]);
 
   const handlePayment = async () => {
     if (!user) {
