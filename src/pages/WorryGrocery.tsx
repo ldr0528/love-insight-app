@@ -5,6 +5,7 @@ import { ArrowLeft, Send, Sparkles, Store, Mic, MicOff, Check } from 'lucide-rea
 import ThreePet from '@/components/ThreePet';
 import { useAuthStore, PetType } from '@/store/useAuthStore';
 import toast from 'react-hot-toast';
+import request from '@/utils/request';
 
 // Memoize Pet Buttons to prevent unnecessary re-renders and image flickering
 const PetOptionButton = memo(({ type, selectedType, onSelect, imgSrc, label, colorClass, borderColorClass, iconColorClass }: any) => (
@@ -75,13 +76,9 @@ export default function DigitalPetShop() {
 
     // Also update backend to persist the reset
     try {
-      await fetch('/api/auth/pet', {
+      await request('/api/auth/pet', {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ petType: null, petName: null })
+        data: { petType: null, petName: null }
       });
     } catch (e) {
       console.error("Failed to reset pet on server", e);
@@ -136,15 +133,10 @@ export default function DigitalPetShop() {
 
     setIsSubmittingPet(true);
     try {
-      const res = await fetch('/api/auth/pet', {
+      const data = await request<{ success: boolean; user: any; error?: string }>('/api/auth/pet', {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ petType: selectedPetType, petName: petName })
+        data: { petType: selectedPetType, petName: petName }
       });
-      const data = await res.json();
       
       if (data.success) {
         login(data.user, token); // Update local user store
@@ -187,13 +179,11 @@ export default function DigitalPetShop() {
     setShowQuote(false);
 
     try {
-      const res = await fetch('/api/worry/consult', {
+      const data = await request<{ success: boolean; data: any }>('/api/worry/consult', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: input, petType: user?.petType, petName: user?.petName }),
+        data: { content: input, petType: user?.petType, petName: user?.petName },
       });
       
-      const data = await res.json();
       if (data.success) {
         setResponse(data.data);
       }

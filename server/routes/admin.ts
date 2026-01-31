@@ -1,11 +1,23 @@
-import { Router, type Request, type Response } from 'express';
+import { Router, type Request, type Response, type NextFunction } from 'express';
 import User from '../models/User.js';
 import connectDB from '../config/db.js';
 import { sendVIPNotificationEmail } from '../services/email.js';
 
 const router = Router();
 
-// Admin Login
+// Admin Authentication Middleware
+const adminAuth = (req: Request, res: Response, next: NextFunction) => {
+  const authHeader = req.headers.authorization;
+  // Simple check for the admin mock token
+  // In a real app, this should validate a proper JWT with 'admin' role
+  if (authHeader === 'Bearer admin-mock-token') {
+    next();
+  } else {
+    res.status(401).json({ success: false, message: 'Unauthorized: Admin access required' });
+  }
+};
+
+// Admin Login (Public)
 router.post('/login', (req: Request, res: Response) => {
   const { username, password } = req.body;
   if (username === 'admin' && password === 'admin888') {
@@ -14,6 +26,9 @@ router.post('/login', (req: Request, res: Response) => {
     res.status(401).json({ success: false, message: 'Invalid credentials' });
   }
 });
+
+// Protect all following routes
+router.use(adminAuth);
 
 // Get Users
 router.get('/users', async (req: Request, res: Response) => {

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import request from '../utils/request';
 
 export type PetType = 'cat' | 'dog' | 'chicken' | 'rabbit' | 'hamster' | 'fox';
 
@@ -45,18 +46,15 @@ export const useAuthStore = create<AuthState>()(
         if (!user || !token) return;
 
         try {
-          const res = await fetch('/api/auth/me', {
-            headers: { Authorization: `Bearer ${token}` }
-          });
-          const data = await res.json();
+          // Use centralized request utility
+          const data = await request<{ success: boolean; user: User; error?: string }>('/api/auth/me');
+          
           if (data.success) {
             set({ user: data.user });
-          } else if (data.error === 'Unauthorized' || res.status === 401) {
-             // Token invalid or session expired (e.g. kicked out)
-             set({ user: null, token: null, isAuthenticated: false });
           }
         } catch (e) {
-          console.error('Failed to refresh profile');
+          console.error('Failed to refresh profile', e);
+          // If 401, request.ts already called logout()
         }
       }
     }),
