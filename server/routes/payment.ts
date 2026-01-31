@@ -187,6 +187,11 @@ const handleEPayNotify = async (req: Request, res: Response) => {
              user.vipExpiresAt = newExpires
              await user.save()
              console.log(`[VIP] Updated user ${user.phone} VIP to ${newExpires.toISOString()}`)
+             
+             // Clean up: Delete the completed order immediately as requested
+             // We don't need to keep order history
+             await Order.deleteOne({ orderId })
+             console.log(`[Order] Deleted completed order ${orderId}`)
           } else {
              console.error(`[VIP] User not found for order ${orderId} (userId: ${order.userId})`)
           }

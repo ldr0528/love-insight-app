@@ -48,6 +48,11 @@ const orderSchema = new mongoose.Schema({
   timestamps: true,
 });
 
+// Auto-delete orders after 24 hours (86400 seconds)
+// This serves as a safety net for abandoned/pending orders.
+// Successful orders will be deleted immediately by the application logic.
+orderSchema.index({ createdAt: 1 }, { expireAfterSeconds: 86400 });
+
 const Order = mongoose.model<IOrder>('Order', orderSchema);
 
 export default Order;
