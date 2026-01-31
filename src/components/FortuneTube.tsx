@@ -159,8 +159,8 @@ function TubeModel({ shaking, stickUp, onDraw, hovered, setHovered }: { shaking:
 
       {/* 签筒正面 "签" 字牌 */}
       <group position={[0, -0.6, 0.7]} rotation={[0, 0, 0]}>
-        <mesh>
-          <cylinderGeometry args={[0.25, 0.25, 0.05, 32]} rotation={[Math.PI / 2, 0, 0]} />
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.25, 0.25, 0.05, 32]} />
           <meshPhysicalMaterial color="#D4AF37" metalness={0.8} roughness={0.3} />
         </mesh>
         {/* 这里可以用纹理贴图或者简单的几何图形拼一个 "签" 字，为了性能和简洁，这里用一个菱形红纸代替 */}
