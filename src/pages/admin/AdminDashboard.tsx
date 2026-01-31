@@ -245,7 +245,7 @@ export default function AdminDashboard() {
                                 : 'bg-indigo-100 text-indigo-700'
                             }`}>
                               <Crown size={12} className="fill-current" /> 
-                              {!user.vipExpiresAt ? 'Permanent VIP' : 'VIP Member'}
+                              {!user.vipExpiresAt ? 'Yearly VIP' : 'VIP Member'}
                             </span>
                             {user.vipExpiresAt && (
                               <span className="text-[10px] text-gray-400 pl-1">
@@ -355,8 +355,8 @@ export default function AdminDashboard() {
                     <Crown size={20} className="fill-current" />
                   </div>
                   <div className="text-left">
-                    <div className="font-bold text-gray-900 group-hover:text-amber-700">Permanent VIP</div>
-                    <div className="text-xs text-gray-500">Never expires</div>
+                    <div className="font-bold text-gray-900 group-hover:text-amber-700">Yearly VIP</div>
+                    <div className="text-xs text-gray-500">Valid for 365 days</div>
                   </div>
                 </div>
               </button>
