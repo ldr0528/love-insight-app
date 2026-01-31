@@ -12,8 +12,8 @@ const NAME_STYLES = ['古风', '现代', '文雅', '大气', '清爽', '独特']
 const NAME_MEANINGS = ['品德', '智慧', '健康', '勇敢', '温柔', '自由'];
 
 // Company Naming Options
-const BRAND_TONES = ['专业', '年轻', '高端', '亲民', '科技', '国潮'];
-const TARGET_AUDIENCES = ['B端', '大众', '女性向', '男性向', '亲子'];
+const BRAND_TONES = ['专业', '年轻', '高端', '亲民', '科技', '国潮', '稳重', '创新', '奢华', '极简', '活力', '温暖'];
+const TARGET_AUDIENCES = ['B端企业', '大众消费者', '女性群体', '男性群体', '亲子家庭', 'Z世代', '银发族', '极客/发烧友', '高端商务'];
 const BRAND_LANGUAGES = ['中文', '中英混合', '英文'];
 
 export default function NamingMaster() {
@@ -382,10 +382,21 @@ export default function NamingMaster() {
                   >
                     <option value="">请选择行业...</option>
                     <option value="tech">科技/互联网</option>
+                    <option value="telecom">通信/网络</option>
+                    <option value="semiconductor">半导体/芯片</option>
+                    <option value="ai">人工智能/大数据</option>
+                    <option value="manufacturing">智能制造/工业</option>
                     <option value="food">餐饮/食品</option>
+                    <option value="beauty">美妆/护肤</option>
                     <option value="fashion">服装/时尚</option>
                     <option value="education">教育/培训</option>
                     <option value="finance">金融/投资</option>
+                    <option value="medical">医疗/健康</option>
+                    <option value="realestate">房地产/建筑</option>
+                    <option value="media">文化/传媒</option>
+                    <option value="logistics">物流/运输</option>
+                    <option value="energy">新能源/环保</option>
+                    <option value="service">生活服务</option>
                     <option value="other">其他</option>
                   </select>
                   <div className="absolute right-3 top-3.5 pointer-events-none text-gray-400">
