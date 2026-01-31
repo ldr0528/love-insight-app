@@ -100,7 +100,7 @@ export default function SimpleAuthModal() {
       const data = await res.json();
       
       if (res.ok) {
-        login(data.user);
+        login(data.user, data.token); // Pass token to login
         toast.success(isLoginMode ? '登录成功' : '注册成功');
         closeAuthModal();
         setPhone('');

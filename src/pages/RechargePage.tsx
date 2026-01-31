@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, Crown, AlertCircle, Check, Copy } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -8,11 +8,13 @@ export default function RechargePage() {
   const [selectedPlan, setSelectedPlan] = useState<'weekly' | 'monthly' | 'permanent'>('monthly');
   const { user, refreshProfile } = useAuthStore();
   const [searchParams] = useSearchParams();
+  const processedRef = useRef(false);
 
   // Auto-refresh profile if returning from payment
   useEffect(() => {
     const status = searchParams.get('status');
-    if (status === 'paid') {
+    if (status === 'paid' && !processedRef.current) {
+      processedRef.current = true;
       const toastId = toast.loading('正在确认支付结果...');
       // Delay slightly to ensure server DB update propagates
       setTimeout(() => {
