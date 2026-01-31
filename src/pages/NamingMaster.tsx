@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { ArrowLeft, PenTool, Sparkles, User, Briefcase, Wand2, ChevronDown, ChevronUp, Copy, RefreshCcw, Heart, Info, X, Crown } from 'lucide-react';
+import React, { useEffect, useState, useRef } from 'react';
+import { ArrowLeft, PenTool, Sparkles, User, Briefcase, Wand2, ChevronDown, ChevronUp, Copy, RefreshCcw, Heart, Info, X, Crown, CheckCircle } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { generateName } from '@/services/aiNaming';
 import { useAuthStore } from '@/store/useAuthStore';
+import toast from 'react-hot-toast';
 
 type NamingType = 'baby' | 'company' | 'brand';
 
@@ -25,6 +26,7 @@ export default function NamingMaster() {
   const [error, setError] = useState<string | null>(null);
   const [showPreferences, setShowPreferences] = useState(false);
   const [showTimeInput, setShowTimeInput] = useState(false);
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!user) {
@@ -91,6 +93,15 @@ export default function NamingMaster() {
         
       const data = await generateName(params);
       setResult(data);
+      
+      // Auto-scroll to results with a slight delay to ensure rendering
+      setTimeout(() => {
+        if (resultsRef.current) {
+          resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          toast.success('好名已生成！👇', { duration: 3000 });
+        }
+      }, 100);
+      
     } catch (err: any) {
       console.error("Naming generation failed:", err);
       setError(err.message || '生成失败，请稍后重试');
@@ -519,7 +530,15 @@ export default function NamingMaster() {
 
         {/* Results */}
         {result && (
-          <div className="space-y-6 animate-fade-in pb-12">
+          <div ref={resultsRef} className="space-y-6 animate-fade-in pb-12 scroll-mt-20">
+            <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3 animate-pulse">
+               <CheckCircle className="w-6 h-6 text-green-600" />
+               <div>
+                 <h3 className="font-bold text-green-800">已为您生成 10 个精选好名</h3>
+                 <p className="text-sm text-green-700">请向下查看大师解析与详细评分</p>
+               </div>
+            </div>
+
             <div className="flex items-center justify-between">
                <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
                  <Sparkles className="w-5 h-5 text-purple-500" /> 推荐结果
