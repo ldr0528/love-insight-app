@@ -75,16 +75,24 @@ export default function RechargePage() {
       <main className="flex-1 max-w-3xl w-full mx-auto p-4 md:p-6 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
         
         {/* Notice Banner */}
-        <div className="bg-gradient-to-r from-pink-50 to-orange-50 border border-pink-100 rounded-2xl p-4 shadow-sm flex items-start gap-3">
-          <div className="bg-pink-100 p-2 rounded-full flex-shrink-0">
-            <AlertCircle className="w-5 h-5 text-pink-500" />
+        <div className="bg-gradient-to-r from-pink-50 to-orange-50 border border-pink-100 rounded-2xl p-4 shadow-sm flex flex-col md:flex-row items-start md:items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3 w-full md:w-auto">
+            <div className="bg-pink-100 p-2 rounded-full flex-shrink-0">
+              <AlertCircle className="w-5 h-5 text-pink-500" />
+            </div>
+            <p className="font-bold text-gray-800 text-sm md:hidden">
+              制作不易，鼓励一下！❤️
+            </p>
           </div>
-          <div className="text-sm text-gray-700 space-y-1">
-            <p className="font-bold text-gray-800">
+          
+          <div className="text-sm text-gray-700 space-y-1 flex-1">
+            <p className="font-bold text-gray-800 hidden md:block">
               制作不易，您的小小鼓励是我们最大的动力！❤️
             </p>
-            <p className="text-gray-500 text-xs">
-              为了保障您的权益，请确保使用 <span className="text-pink-600 font-medium">正规浏览器</span> (如Chrome, Safari, Edge) 进行支付，避免在第三方APP内直接打开可能导致支付失败。
+            <p className="text-gray-500 text-xs leading-relaxed">
+              为了保障权益，请务必使用 <span className="text-pink-600 font-medium">正规浏览器</span> (Chrome/Safari) 支付。
+              <br className="md:hidden" />
+              <span className="opacity-80">⚠️ 避免在微信/抖音等APP内直接打开，可能导致支付失败。</span>
             </p>
           </div>
         </div>
