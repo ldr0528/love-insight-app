@@ -75,7 +75,8 @@ export const createEPayOrder = async (order: EPayOrder): Promise<string> => {
     return_url: order.return_url,
     name: order.name,
     money: order.money,
-    sitename: 'LoveInsight'
+    sitename: 'LoveInsight',
+    timestamp: Math.floor(Date.now() / 1000).toString()
   }
 
   if (privateKey) {
