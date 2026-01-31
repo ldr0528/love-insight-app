@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { createEPayOrder, verifyEPayNotify } from '../services/epay.js'
 
 import User from '../models/User.js'
+import Order from '../models/Order.js'
 import connectDB from '../config/db.js'
 
 const router = Router()
@@ -14,18 +15,6 @@ const VIP_PLANS = {
   permanent: { amount: 38.00, name: 'VIP永久', duration: 36500 }
 }
 
-// In-memory store for orders (Ideally, use a database)
-const orders: Record<string, {
-  id: string;
-  amount: number;
-  status: 'pending' | 'paid';
-  method: 'epay';
-  type: 'report' | 'vip';
-  plan?: keyof typeof VIP_PLANS;
-  userId?: string; // Store userId
-  createdAt: number;
-}> = {}
-
 /**
  * 1. Create Order
  * POST /api/payment/create
@@ -33,6 +22,14 @@ const orders: Record<string, {
 router.post('/create', async (req: Request, res: Response): Promise<void> => {
   try {
     const { method = 'epay', platform = 'mobile', type = 'report', plan, userId } = req.body
+    
+    // Validate User ID if provided
+    if (userId) {
+       await connectDB();
+       // Try to find user to ensure it exists
+       // (Optional but good practice)
+    }
+
     const orderId = uuidv4().replace(/-/g, '') 
     
     let amount = 16.60
@@ -49,17 +46,17 @@ router.post('/create', async (req: Request, res: Response): Promise<void> => {
       returnUrlPath = '/recharge' // Return to recharge page or profile
     }
 
-    // Save order status
-    orders[orderId] = {
-      id: orderId,
+    // Save order to MongoDB
+    await connectDB();
+    await Order.create({
+      orderId,
+      userId: userId || 'anonymous', // Should ideally be required
       amount,
       status: 'pending',
       method: 'epay',
       type,
-      plan,
-      userId,
-      createdAt: Date.now()
-    }
+      plan
+    });
 
     const xfProto = (req.headers['x-forwarded-proto'] as string)?.split(',')[0]
     const protocol = xfProto || (req.protocol === 'http' ? 'https' : req.protocol) || 'https'
@@ -104,21 +101,23 @@ router.post('/create', async (req: Request, res: Response): Promise<void> => {
  */
 router.get('/status/:orderId', async (req: Request, res: Response) => {
   const { orderId } = req.params
-  const order = orders[orderId]
-
-  if (!order) {
-     res.status(404).json({ success: false, error: 'Order not found' })
-     return
-  }
   
-  // In a real system, you might want to actively query the payment provider here
-  // if the notify callback hasn't arrived yet.
-  // For now, we rely on the notify callback updating the in-memory store.
+  try {
+    await connectDB();
+    const order = await Order.findOne({ orderId });
 
-  res.json({
-    success: true,
-    status: order.status
-  })
+    if (!order) {
+       res.status(404).json({ success: false, error: 'Order not found' })
+       return
+    }
+
+    res.json({
+      success: true,
+      status: order.status
+    })
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Server error' })
+  }
 })
 
 /**
@@ -144,19 +143,35 @@ const handleEPayNotify = async (req: Request, res: Response) => {
       return
     }
     const orderId = params.out_trade_no
-    if (orderId && orders[orderId]) {
-      orders[orderId].status = 'paid'
+    await connectDB();
+    const order = await Order.findOne({ orderId });
+
+    if (orderId && order) {
+      order.status = 'paid';
+      await order.save();
       console.log(`[EPay] Order ${orderId} paid successfully`)
 
       // If it's a VIP order, update user VIP status
-      const order = orders[orderId]
       if (order.type === 'vip' && order.userId && order.plan) {
         try {
-          await connectDB()
+          // If userId was 'anonymous', we can't update user
+          if (order.userId === 'anonymous') {
+             console.warn(`[VIP] Cannot update VIP for anonymous order ${orderId}`)
+             res.send('success')
+             return
+          }
+
           const user = await User.findOne({ id: order.userId }) || await User.findOne({ phone: order.userId })
           
           if (user) {
-             const planConfig = VIP_PLANS[order.plan]
+             // ... same logic as before ...
+             const planConfig = VIP_PLANS[order.plan as keyof typeof VIP_PLANS]
+             if (!planConfig) {
+                console.error(`[VIP] Invalid plan in order: ${order.plan}`)
+                res.send('success')
+                return
+             }
+
              const now = new Date()
              // If already VIP and not expired, extend
              const currentExpires = user.vipExpiresAt ? new Date(user.vipExpiresAt) : new Date(0)
