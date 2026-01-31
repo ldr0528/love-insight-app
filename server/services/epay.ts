@@ -7,6 +7,7 @@ export interface EPayOrder {
   type: 'alipay' | 'wxpay' | 'qqpay'
   notify_url: string
   return_url: string
+  clientip: string
 }
 
 const getEnv = (k: string) => process.env[k] || ''
@@ -75,6 +76,7 @@ export const createEPayOrder = async (order: EPayOrder): Promise<string> => {
     return_url: order.return_url,
     name: order.name,
     money: order.money,
+    clientip: order.clientip,
     sitename: 'LoveInsight',
     timestamp: Math.floor(Date.now() / 1000).toString()
   }

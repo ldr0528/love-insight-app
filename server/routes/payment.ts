@@ -60,6 +60,7 @@ router.post('/create', async (req: Request, res: Response): Promise<void> => {
     const protocol = xfProto || (req.protocol === 'http' ? 'https' : req.protocol) || 'https'
     const xfHost = (req.headers['x-forwarded-host'] as string)?.split(',')[0]
     const host = xfHost || req.get('host') || process.env.PUBLIC_HOST || ''
+    const clientIp = (req.headers['x-forwarded-for'] as string || '').split(',')[0].trim() || req.ip || '127.0.0.1'
     let payUrl = ''
 
     if (method === 'epay') {
@@ -73,7 +74,8 @@ router.post('/create', async (req: Request, res: Response): Promise<void> => {
         notify_url: notifyUrl,
         return_url: returnUrl,
         money: amount.toFixed(2),
-        type: 'wxpay' // Default to wxpay or pass from frontend
+        type: 'wxpay', // Default to wxpay or pass from frontend
+        clientip: clientIp
       })
     } else {
       throw new Error('Unsupported payment method')
