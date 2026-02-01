@@ -26,19 +26,21 @@ export default function ContactUs() {
             </h3>
             <div className="text-gray-600 leading-relaxed space-y-4">
               <p>
-                欢迎来到「灵犀指引」，一个让古老东方智慧与现代 AI 科技温柔相遇的静谧宇宙。
+                欢迎来到「灵犀指引」，这是一处古老东方智慧与现代 AI 科技温柔共鸣的静谧宇宙。
               </p>
               <p>
-                在这里，玄学不再是晦涩的符咒，科技也不再是冰冷的代码。我们致力于搭建一座桥梁，连接你的内心世界与浩瀚的命运星空。
+                在这里，玄学褪去了晦涩的外衣，科技也注入了温暖的灵魂。我们愿做那一座桥梁，连接您的内心世界与浩瀚的命运星空。
               </p>
               <p>
-                你可以通过 <strong>MBTI</strong> 与 <strong>缘分探索</strong> 厘清灵魂的脉络与缘分的红线；让 <strong>AI 手相</strong> 与 <strong>周公解梦</strong> 替你翻译命运的掌纹与潜意识的低语。当你感到迷茫或孤独，<strong>解忧杂货铺</strong> 与 <strong>恋爱军师</strong> 永远为你敞开，倾听你的心事，提供温暖的锦囊。
+                您可以借助 <span className="font-bold text-indigo-500">MBTI</span> 与 <span className="font-bold text-pink-500">缘分探索</span> 厘清情感脉络，
+                让 <span className="font-bold text-orange-500">AI 手相</span> 与 <span className="font-bold text-purple-500">周公解梦</span> 破译命运的掌纹与潜意识的低语。
               </p>
               <p>
-                不仅如此，你还能体验 <strong>AI 取名</strong> 赋予文字的新生，在 <strong>灵签</strong> 摇落间寻求神性的指引，或是领养一只专属的 <strong>电子守护灵</strong>，陪伴你度过每一个日夜。
+                当您感到迷茫，<span className="font-bold text-amber-600">解忧杂货铺</span> 与 <span className="font-bold text-rose-500">恋爱军师</span> 永远为您敞开；
+                更有 <span className="font-bold text-purple-600">缘名堂取名</span> 赋予新生，<span className="font-bold text-red-500">灵签</span> 摇落神谕，<span className="font-bold text-green-600">电子守护灵</span> 长情相伴。
               </p>
-              <p>
-                愿这点点汇聚了传统与科技的微光，能穿透生活的迷雾，为你照亮前行的路，带来些许温暖、启发与治愈。
+              <p className="flex items-center gap-2 font-medium text-gray-700">
+                愿这点点汇聚了传统与科技的微光，能穿透生活的迷雾，为您照亮前行的路，带来最温柔的治愈与指引 <Sparkles className="w-4 h-4 text-yellow-500 animate-pulse" />
               </p>
             </div>
           </div>
