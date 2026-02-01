@@ -184,15 +184,15 @@ export default function SimpleAuthModal() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl relative max-h-[90vh] overflow-y-auto scrollbar-hide">
+      <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl relative max-h-[90vh] flex flex-col overflow-hidden">
          <button 
           onClick={closeAuthModal}
-          className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 rounded-full transition-colors z-10"
+          className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 rounded-full transition-colors z-50"
         >
           <X size={20} />
         </button>
         
-        <div className="p-8">
+        <div className="p-8 overflow-y-auto scrollbar-hide">
           <div className="text-center mb-6">
             <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-colors duration-300 ${isForgotPasswordMode ? 'bg-indigo-100 text-indigo-500' : (isLoginMode ? 'bg-pink-100 text-pink-500' : 'bg-purple-100 text-purple-500')} overflow-hidden`}>
               {isLoginMode || isForgotPasswordMode ? <User size={32} /> : (
