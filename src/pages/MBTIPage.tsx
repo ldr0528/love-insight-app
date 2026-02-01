@@ -116,7 +116,10 @@ export default function MBTIPage() {
                 >
                   <RefreshCcw className="w-4 h-4" /> 重测
                 </button>
-                <button className="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-colors shadow-lg flex items-center justify-center gap-2">
+                <button 
+                  onClick={handleShare}
+                  className="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-colors shadow-lg flex items-center justify-center gap-2"
+                >
                   <Share2 className="w-4 h-4" /> 分享结果
                 </button>
               </div>

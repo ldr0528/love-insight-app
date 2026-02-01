@@ -39,7 +39,8 @@ export default function SimpleAuthModal() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           email,
-          type: isForgotPasswordMode ? 'reset' : 'register'
+          type: isForgotPasswordMode ? 'reset' : 'register',
+          phone: isForgotPasswordMode ? phone : undefined
         })
       });
       const data = await res.json();

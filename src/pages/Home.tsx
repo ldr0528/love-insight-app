@@ -32,7 +32,7 @@ export default function Home() {
             className="flex-shrink-0 flex items-center gap-1 md:gap-2 px-2 py-1.5 md:px-3 rounded-full text-gray-700 hover:bg-gray-100 transition-all whitespace-nowrap"
           >
             <MessageCircle size={16} className="md:w-[18px] md:h-[18px]" />
-            <span className="text-xs md:text-sm font-medium">联系我们</span>
+            <span className="text-xs md:text-sm font-medium">关于灵犀</span>
           </Link>
 
           <div className="flex-shrink-0 w-px h-3 md:h-4 bg-gray-200"></div>

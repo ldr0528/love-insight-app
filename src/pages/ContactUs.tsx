@@ -33,7 +33,7 @@ export default function ContactUs() {
               </p>
               <p>
                 您可以借助 <span className="font-bold text-indigo-500">MBTI</span> 与 <span className="font-bold text-pink-500">缘分探索</span> 厘清情感脉络，
-                让 <span className="font-bold text-orange-500">AI 手相</span> 与 <span className="font-bold text-purple-500">周公解梦</span> 破译命运的掌纹与潜意识的低语。
+                让 <span className="font-bold text-orange-500">智能手相大师</span> 与 <span className="font-bold text-purple-500">周公解梦</span> 破译命运的掌纹与潜意识的低语。
               </p>
               <p>
                 当您感到迷茫，<span className="font-bold text-amber-600">解忧杂货铺</span> 与 <span className="font-bold text-rose-500">恋爱军师</span> 永远为您敞开；

@@ -53,13 +53,13 @@ export default function FortuneTypeSelectionStep() {
             onClick={() => handleSelect(option.id)}
             className={`w-full p-6 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-between group relative overflow-hidden ${option.color}`}
           >
-            {/* VIP Badge */}
-            <div className="absolute top-3 right-3 z-20">
+            {/* VIP Badge - Only for Monthly if needed, or remove completely */}
+            {/* <div className="absolute top-3 right-3 z-20">
               <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm flex items-center gap-1">
                 <Crown size={10} fill="currentColor" />
                 VIP
               </div>
-            </div>
+            </div> */}
 
             <div className="flex items-center gap-4">
               <div className="p-3 bg-white rounded-xl shadow-sm">

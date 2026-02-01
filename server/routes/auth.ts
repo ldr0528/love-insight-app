@@ -74,7 +74,7 @@ router.post('/send-code', async (req: Request, res: Response) => {
 });
 
 router.post('/reset-password', async (req: Request, res: Response) => {
-  const { email, code, newPassword } = req.body;
+  const { email, code, newPassword, phone } = req.body;
 
   if (!email || !code || !newPassword) {
     res.status(400).json({ error: '缺少必要参数' });
@@ -92,9 +92,14 @@ router.post('/reset-password', async (req: Request, res: Response) => {
     }
 
     // Find user
-    const user = await User.findOne({ email });
+    const query: any = { email };
+    if (phone) {
+      query.phone = phone;
+    }
+    
+    const user = await User.findOne(query);
     if (!user) {
-      res.status(404).json({ error: '用户不存在' });
+      res.status(404).json({ error: '用户不存在或信息不匹配' });
       return;
     }
 
