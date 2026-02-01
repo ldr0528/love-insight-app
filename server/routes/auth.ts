@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 const router = Router();
 
 router.post('/send-code', async (req: Request, res: Response) => {
-  const { email } = req.body;
+  const { email, type = 'register' } = req.body;
   
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     res.status(400).json({ error: '请输入有效的邮箱地址' });
