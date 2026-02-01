@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 const router = Router();
 
 router.post('/send-code', async (req: Request, res: Response) => {
-  const { email, type = 'register' } = req.body;
+  const { email } = req.body;
   
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     res.status(400).json({ error: '请输入有效的邮箱地址' });
@@ -61,48 +61,6 @@ router.post('/send-code', async (req: Request, res: Response) => {
     }
   } catch (error: any) {
     console.error('Send code error:', error);
-    res.status(500).json({ error: '服务器错误' });
-  }
-});
-
-// Reset Password
-router.post('/reset-password', async (req: Request, res: Response) => {
-  const { email, code, newPassword } = req.body;
-
-  if (!email || !code || !newPassword) {
-    res.status(400).json({ error: '请填写所有必填项' });
-    return;
-  }
-
-  try {
-    await connectDB();
-
-    // Verify code
-    const validCode = await VerificationCode.findOne({ email, code });
-    if (!validCode) {
-      res.status(400).json({ error: '验证码错误或已过期' });
-      return;
-    }
-
-    // Find user
-    const user = await User.findOne({ email });
-    if (!user) {
-      res.status(404).json({ error: '用户不存在' });
-      return;
-    }
-
-    // Update password
-    user.password = newPassword;
-    // Clear session tokens to force re-login on all devices (security best practice)
-    user.currentSessionToken = undefined; 
-    await user.save();
-
-    // Clean up used code
-    await VerificationCode.deleteOne({ _id: validCode._id });
-
-    res.json({ success: true, message: '密码重置成功，请重新登录' });
-  } catch (error: any) {
-    console.error('Reset password error:', error);
     res.status(500).json({ error: '服务器错误' });
   }
 });
