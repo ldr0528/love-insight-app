@@ -246,6 +246,23 @@ export default function SimpleAuthModal() {
                 </div>
               )}
 
+              {/* Register Email Input (Register Only) */}
+              {!isLoginMode && !isForgotPasswordMode && (
+                <div className="relative flex items-center">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center z-10 w-24">
+                    <span className="text-gray-500 font-bold text-sm w-10 text-center">邮箱</span>
+                    <div className="h-6 w-px bg-gray-300 mx-3"></div>
+                  </div>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="必填，用于接收验证码"
+                    className="w-full pl-24 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-bold text-lg placeholder:font-normal placeholder:text-gray-400"
+                  />
+                </div>
+              )}
+
               {/* Forgot Password Email Input */}
               {isForgotPasswordMode && (
                 <div className="relative flex items-center">
@@ -302,23 +319,6 @@ export default function SimpleAuthModal() {
                   className="w-full pl-24 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-bold text-lg placeholder:font-normal placeholder:text-gray-400"
                 />
               </div>
-
-              {/* Register Email Input (Register Only) */}
-              {!isLoginMode && !isForgotPasswordMode && (
-                <div className="relative flex items-center">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center z-10 w-24">
-                    <span className="text-gray-500 font-bold text-sm w-10 text-center">邮箱</span>
-                    <div className="h-6 w-px bg-gray-300 mx-3"></div>
-                  </div>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="必填，用于接收验证码"
-                    className="w-full pl-24 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-bold text-lg placeholder:font-normal placeholder:text-gray-400"
-                  />
-                </div>
-              )}
 
               {/* Login Only: Forgot Password Link */}
               {isLoginMode && (
