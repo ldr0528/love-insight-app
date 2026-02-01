@@ -187,7 +187,8 @@ export default function SimpleAuthModal() {
       <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl relative max-h-[90vh] flex flex-col overflow-hidden">
          <button 
           onClick={closeAuthModal}
-          className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 rounded-full transition-colors z-50"
+          type="button"
+          className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 rounded-full transition-colors z-[100] cursor-pointer"
         >
           <X size={20} />
         </button>
