@@ -102,9 +102,27 @@ export default function Home() {
             指引
           </h1>
           
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed flex items-center justify-center gap-2">
-            探索独属于你的小小宇宙 <Sparkles className="w-5 h-5 text-indigo-400 animate-pulse" />
-          </p>
+          <div className="max-w-3xl mx-auto space-y-4 text-center">
+            <p className="text-lg text-gray-700 font-medium">
+              欢迎来到「灵犀指引」，这是一处古老东方智慧与现代 AI 科技温柔共鸣的静谧宇宙。
+            </p>
+            <div className="text-base text-gray-500 space-y-2">
+              <p>
+                在这里，玄学褪去了晦涩的外衣，科技也注入了温暖的灵魂。我们愿做那一座桥梁，连接您的内心世界与浩瀚的命运星空。
+              </p>
+              <p>
+                您可以借助 <span className="font-bold text-indigo-500">MBTI</span> 与 <span className="font-bold text-pink-500">缘分探索</span> 厘清情感脉络，
+                让 <span className="font-bold text-orange-500">AI 手相</span> 与 <span className="font-bold text-purple-500">周公解梦</span> 破译命运的掌纹与潜意识的低语。
+              </p>
+              <p>
+                当您感到迷茫，<span className="font-bold text-amber-600">解忧杂货铺</span> 与 <span className="font-bold text-rose-500">恋爱军师</span> 永远为您敞开；
+                更有 <span className="font-bold text-purple-600">缘名堂取名</span> 赋予新生，<span className="font-bold text-red-500">灵签</span> 摇落神谕，<span className="font-bold text-green-600">电子守护灵</span> 长情相伴。
+              </p>
+            </div>
+            <p className="text-base font-medium text-gray-600 pt-2 flex items-center justify-center gap-2">
+              愿这点点汇聚了传统与科技的微光，能穿透生活的迷雾，为您照亮前行的路，带来最温柔的治愈与指引 <Sparkles className="w-4 h-4 text-yellow-500 animate-pulse" />
+            </p>
+          </div>
         </div>
 
         {/* Fortune Tube & Worry Grocery */}
@@ -199,7 +217,7 @@ export default function Home() {
               <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center text-pink-600 mb-4">
                 <Store className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">年运来福</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">运报客栈</h3>
               <p className="text-gray-500 text-sm mb-6 flex-grow">
                 进店领取你的专属周运、月运与年运，解锁今日宜忌，为生活趋吉避凶。
               </p>
