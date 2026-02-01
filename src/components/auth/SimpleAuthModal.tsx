@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 export default function SimpleAuthModal() {
   const { isAuthModalOpen, closeAuthModal, login } = useAuthStore();
   const [isLoginMode, setIsLoginMode] = useState(true);
+  const [isForgotPasswordMode, setIsForgotPasswordMode] = useState(false);
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
@@ -36,7 +37,10 @@ export default function SimpleAuthModal() {
       const res = await fetch('/api/auth/send-code', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ 
+          email,
+          type: isForgotPasswordMode ? 'reset' : 'register'
+        })
       });
       const data = await res.json();
       
@@ -65,6 +69,40 @@ export default function SimpleAuthModal() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Forgot Password Logic
+    if (isForgotPasswordMode) {
+      if (!email) { toast.error('请输入邮箱'); return; }
+      if (!verificationCode) { toast.error('请输入验证码'); return; }
+      if (!password) { toast.error('请设置新密码'); return; }
+
+      setIsLoading(true);
+      try {
+        const res = await fetch('/api/auth/reset-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, code: verificationCode, newPassword: password })
+        });
+        const data = await res.json();
+        
+        if (res.ok) {
+          toast.success('密码重置成功，请登录');
+          setIsForgotPasswordMode(false);
+          setIsLoginMode(true);
+          setPassword('');
+          setVerificationCode('');
+          setEmail('');
+        } else {
+          toast.error(data.error || '重置失败');
+        }
+      } catch (error) {
+        toast.error('网络错误');
+      } finally {
+        setIsLoading(false);
+      }
+      return;
+    }
+
     if (!/^1[3-9]\d{9}$/.test(phone)) {
       toast.error('请输入有效的11位手机号码');
       return;
@@ -119,6 +157,25 @@ export default function SimpleAuthModal() {
 
   const toggleMode = () => {
     setIsLoginMode(!isLoginMode);
+    setIsForgotPasswordMode(false);
+    setPhone('');
+    setPassword('');
+    setEmail('');
+    setVerificationCode('');
+  };
+
+  const switchToForgotPassword = () => {
+    setIsForgotPasswordMode(true);
+    setIsLoginMode(false); // Hide login form
+    setPhone('');
+    setPassword('');
+    setEmail('');
+    setVerificationCode('');
+  };
+
+  const backToLogin = () => {
+    setIsForgotPasswordMode(false);
+    setIsLoginMode(true);
     setPhone('');
     setPassword('');
     setEmail('');
@@ -137,20 +194,20 @@ export default function SimpleAuthModal() {
         
         <div className="p-8">
           <div className="text-center mb-6">
-            <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-colors duration-300 ${isLoginMode ? 'bg-pink-100 text-pink-500' : 'bg-purple-100 text-purple-500'} overflow-hidden`}>
-              {isLoginMode ? <User size={32} /> : (
+            <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-colors duration-300 ${isForgotPasswordMode ? 'bg-indigo-100 text-indigo-500' : (isLoginMode ? 'bg-pink-100 text-pink-500' : 'bg-purple-100 text-purple-500')} overflow-hidden`}>
+              {isLoginMode || isForgotPasswordMode ? <User size={32} /> : (
                  <img src={selectedAvatar} alt="Avatar" className="w-full h-full object-cover" />
               )}
             </div>
             <h2 className="text-2xl font-bold text-gray-900 transition-all duration-300">
-              {isLoginMode ? '欢迎回来' : '创建账号'}
+              {isForgotPasswordMode ? '重置密码' : (isLoginMode ? '欢迎回来' : '创建账号')}
             </h2>
             <p className="text-gray-500 text-sm mt-2">
-              {isLoginMode ? '请输入您的灵犀账号' : '设置您的专属灵犀账号'}
+              {isForgotPasswordMode ? '通过邮箱验证找回密码' : (isLoginMode ? '请输入您的灵犀账号' : '设置您的专属灵犀账号')}
             </p>
           </div>
 
-          {!isLoginMode && (
+          {!isLoginMode && !isForgotPasswordMode && (
             <div className="mb-6">
               <p className="text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider text-center">选择头像</p>
               <div className="grid grid-cols-5 gap-2 max-h-32 overflow-y-auto p-1">
@@ -170,21 +227,66 @@ export default function SimpleAuthModal() {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-4">
-              <div className="relative flex items-center">
-                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center z-10 w-24">
-                   <span className="text-gray-500 font-bold text-sm w-10 text-center">账号</span>
-                   <div className="h-6 w-px bg-gray-300 mx-3"></div>
-                 </div>
-                 <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 11))}
-                  placeholder="请输入11位手机号码"
-                  className="w-full pl-24 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-bold text-lg placeholder:font-normal placeholder:text-gray-400"
-                  autoFocus
-                />
-              </div>
+              
+              {/* Login / Register Phone Input */}
+              {!isForgotPasswordMode && (
+                <div className="relative flex items-center">
+                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center z-10 w-24">
+                     <span className="text-gray-500 font-bold text-sm w-10 text-center">账号</span>
+                     <div className="h-6 w-px bg-gray-300 mx-3"></div>
+                   </div>
+                   <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 11))}
+                    placeholder="请输入11位手机号码"
+                    className="w-full pl-24 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-bold text-lg placeholder:font-normal placeholder:text-gray-400"
+                    autoFocus
+                  />
+                </div>
+              )}
 
+              {/* Forgot Password Email Input */}
+              {isForgotPasswordMode && (
+                <div className="relative flex items-center">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center z-10 w-24">
+                    <span className="text-gray-500 font-bold text-sm w-10 text-center">邮箱</span>
+                    <div className="h-6 w-px bg-gray-300 mx-3"></div>
+                  </div>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="请输入注册邮箱"
+                    className="w-full pl-24 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-bold text-lg placeholder:font-normal placeholder:text-gray-400"
+                  />
+                </div>
+              )}
+
+              {/* Verification Code Input (Register & Forgot Password) */}
+              {(!isLoginMode || isForgotPasswordMode) && (
+                <div className="flex gap-2">
+                  <div className="relative flex items-center flex-1">
+                    <input
+                      type="text"
+                      value={verificationCode}
+                      onChange={(e) => setVerificationCode(e.target.value)}
+                      placeholder="请输入邮箱验证码"
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-bold text-lg placeholder:font-normal placeholder:text-gray-400"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleSendCode}
+                    disabled={countdown > 0 || isLoading || !email}
+                    className="px-4 py-3 bg-pink-100 text-pink-600 rounded-xl font-bold whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed hover:bg-pink-200 transition-colors"
+                  >
+                    {countdown > 0 ? `${countdown}s` : '发送验证码'}
+                  </button>
+                </div>
+              )}
+
+              {/* Password Input (All Modes) */}
               <div className="relative flex items-center">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-500 z-10 w-24">
                   <div className="w-10 flex justify-center">
@@ -196,74 +298,78 @@ export default function SimpleAuthModal() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder={isLoginMode ? "请输入密码" : "请设置密码"}
+                  placeholder={isForgotPasswordMode ? "请设置新密码" : (isLoginMode ? "请输入密码" : "请设置密码")}
                   className="w-full pl-24 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-bold text-lg placeholder:font-normal placeholder:text-gray-400"
                 />
               </div>
 
-              {!isLoginMode && (
-                <>
-                  <div className="relative flex items-center">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center z-10 w-24">
-                      <span className="text-gray-500 font-bold text-sm w-10 text-center">邮箱</span>
-                      <div className="h-6 w-px bg-gray-300 mx-3"></div>
-                    </div>
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="必填，用于接收验证码"
-                      className="w-full pl-24 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-bold text-lg placeholder:font-normal placeholder:text-gray-400"
-                    />
+              {/* Register Email Input (Register Only) */}
+              {!isLoginMode && !isForgotPasswordMode && (
+                <div className="relative flex items-center">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center z-10 w-24">
+                    <span className="text-gray-500 font-bold text-sm w-10 text-center">邮箱</span>
+                    <div className="h-6 w-px bg-gray-300 mx-3"></div>
                   </div>
-
-                  <div className="flex gap-2">
-                    <div className="relative flex items-center flex-1">
-                      <input
-                        type="text"
-                        value={verificationCode}
-                        onChange={(e) => setVerificationCode(e.target.value)}
-                        placeholder="请输入邮箱验证码"
-                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-bold text-lg placeholder:font-normal placeholder:text-gray-400"
-                      />
-                    </div>
-                    <button
-                      type="button"
-                      onClick={handleSendCode}
-                      disabled={countdown > 0 || isLoading || !email}
-                      className="px-4 py-3 bg-pink-100 text-pink-600 rounded-xl font-bold whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed hover:bg-pink-200 transition-colors"
-                    >
-                      {countdown > 0 ? `${countdown}s` : '发送验证码'}
-                    </button>
-                  </div>
-                </>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="必填，用于接收验证码"
+                    className="w-full pl-24 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-bold text-lg placeholder:font-normal placeholder:text-gray-400"
+                  />
+                </div>
               )}
+
+              {/* Login Only: Forgot Password Link */}
+              {isLoginMode && (
+                <div className="flex justify-end">
+                  <button
+                    type="button"
+                    onClick={switchToForgotPassword}
+                    className="text-xs text-gray-500 hover:text-pink-500 transition-colors"
+                  >
+                    忘记密码？
+                  </button>
+                </div>
+              )}
+
             </div>
 
             <button
               type="submit"
-              disabled={phone.length !== 11 || !password || isLoading || (!isLoginMode && (!email || !verificationCode))}
+              disabled={isLoading || (isForgotPasswordMode ? (!email || !verificationCode || !password) : (phone.length !== 11 || !password || (!isLoginMode && (!email || !verificationCode))))}
               className={`w-full py-3 px-4 text-white rounded-xl font-bold shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 ${
-                isLoginMode 
-                  ? 'bg-gradient-to-r from-pink-500 to-rose-500 shadow-pink-500/30 hover:shadow-pink-500/40' 
-                  : 'bg-gradient-to-r from-purple-500 to-indigo-500 shadow-purple-500/30 hover:shadow-purple-500/40'
+                isForgotPasswordMode
+                  ? 'bg-gradient-to-r from-indigo-500 to-blue-500 shadow-indigo-500/30 hover:shadow-indigo-500/40'
+                  : isLoginMode 
+                    ? 'bg-gradient-to-r from-pink-500 to-rose-500 shadow-pink-500/30 hover:shadow-pink-500/40' 
+                    : 'bg-gradient-to-r from-purple-500 to-indigo-500 shadow-purple-500/30 hover:shadow-purple-500/40'
               }`}
             >
-              {isLoading ? <Loader2 className="animate-spin" /> : (isLoginMode ? '登录' : '立即注册')}
+              {isLoading ? <Loader2 className="animate-spin" /> : (isForgotPasswordMode ? '重置密码' : (isLoginMode ? '登录' : '立即注册'))}
               {!isLoading && <ArrowRight size={18} />}
             </button>
           </form>
 
           <div className="mt-6 text-center">
-            <button 
-              onClick={toggleMode}
-              className="text-sm text-gray-500 hover:text-gray-800 transition-colors font-medium"
-            >
-              {isLoginMode ? '还没有账号？' : '已有账号？'} 
-              <span className={`underline ml-1 ${isLoginMode ? 'text-pink-500' : 'text-purple-500'}`}>
-                {isLoginMode ? '去注册' : '去登录'}
-              </span>
-            </button>
+            {isForgotPasswordMode ? (
+              <button 
+                onClick={backToLogin}
+                className="text-sm text-gray-500 hover:text-gray-800 transition-colors font-medium"
+              >
+                返回登录
+              </button>
+            ) : (
+              <button 
+                onClick={toggleMode}
+                className="text-sm text-gray-500 hover:text-gray-800 transition-colors font-medium"
+              >
+                {isLoginMode ? '还没有账号？' : '已有账号？'} 
+                <span className={`underline ml-1 ${isLoginMode ? 'text-pink-500' : 'text-purple-500'}`}>
+                  {isLoginMode ? '去注册' : '去登录'}
+                </span>
+              </button>
+            )}
           </div>
         </div>
       </div>
