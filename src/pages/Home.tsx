@@ -336,6 +336,25 @@ export default function Home() {
             </div>
           </Link>
 
+          {/* Compatibility Match */}
+          <Link to="/compatibility" className="group relative bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-red-50 overflow-hidden flex flex-col h-full">
+            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+              <Heart className="w-24 h-24 text-red-500" />
+            </div>
+            <div className="relative z-10 flex flex-col h-full justify-center">
+              <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center text-red-600 mb-4">
+                <Heart className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">情有可缘</h3>
+              <p className="text-gray-500 text-sm mb-6 flex-grow">
+                输入双方信息，多维度解析星座、姓名与性格契合度，探索你们的专属缘分。
+              </p>
+              <span className="inline-flex items-center text-red-600 font-bold group-hover:gap-2 transition-all">
+                开始缘分测试 <ArrowRight className="w-4 h-4 ml-1" />
+              </span>
+            </div>
+          </Link>
+
           {/* --- VIP SECTION --- */}
           
           {/* AI Naming Master (VIP) */}
