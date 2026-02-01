@@ -1,13 +1,24 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Compass, ArrowRight, Brain, Hand, Heart, Target, PenTool, Feather, User, Crown, Store, Cat, Sparkles, PawPrint, MessageCircle, CloudMoon } from 'lucide-react';
+import { Compass, ArrowRight, Brain, Hand, Heart, Target, PenTool, Feather, User, Crown, Store, Cat, Sparkles, PawPrint, MessageCircle, CloudMoon, X, Globe } from 'lucide-react';
 import FortuneTube from '@/components/FortuneTube';
 import { useAuthStore } from '@/store/useAuthStore';
 
 export default function Home() {
   const { user, openAuthModal, logout } = useAuthStore();
+  const [showBrowserTip, setShowBrowserTip] = useState(false);
 
   useEffect(() => {
+    // Show tip after 0.5 second
+    const timer = setTimeout(() => {
+      setShowBrowserTip(true);
+    }, 500);
+
+    // Auto close after 6 seconds
+    const closeTimer = setTimeout(() => {
+      setShowBrowserTip(false);
+    }, 6500);
+
     // 预加载图片
     const images = [
       '/images/ENFJ.jpg', '/images/ENFP.jpg', '/images/ENTJ.jpg', '/images/ENTP.jpg',
@@ -20,10 +31,50 @@ export default function Home() {
       img.src = src;
     });
     console.log('Home component mounted - v1.0.1');
+
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(closeTimer);
+    };
   }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex flex-col relative">
+      {/* Browser Tip Modal */}
+      {showBrowserTip && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="bg-white rounded-2xl p-6 max-w-xs w-full shadow-2xl relative animate-in zoom-in-95 duration-300 border border-pink-100">
+            <button 
+              onClick={() => setShowBrowserTip(false)}
+              className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 p-2 rounded-full hover:bg-gray-100 transition-colors"
+            >
+              <X size={20} />
+            </button>
+            
+            <div className="flex flex-col items-center text-center space-y-4 pt-2">
+              <div className="w-14 h-14 bg-pink-50 rounded-full flex items-center justify-center mb-1 ring-4 ring-pink-50/50">
+                <Globe className="w-7 h-7 text-pink-500" />
+              </div>
+              
+              <div>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">温馨提示</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  欢迎来到灵犀！为确保<span className="text-gray-900 font-semibold">支付与结果保存</span>功能正常，请务必点击右上角菜单，选择<br/>
+                  <span className="font-bold text-pink-600 text-base">“在浏览器中打开”</span>
+                </p>
+              </div>
+              
+              <button
+                onClick={() => setShowBrowserTip(false)}
+                className="w-full py-3 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-xl font-bold text-sm hover:shadow-lg hover:scale-[1.02] transition-all shadow-pink-500/25"
+              >
+                我知道了
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Top Navigation Bar */}
       <nav className="absolute top-0 left-0 right-0 z-50 flex items-center justify-center p-3 md:p-4">
         <div className="flex items-center gap-1 md:gap-4 bg-white/90 backdrop-blur-md px-1.5 py-1 md:px-3 md:py-2 rounded-full shadow-sm border border-pink-100 max-w-full overflow-x-auto scrollbar-hide">

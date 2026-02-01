@@ -1,13 +1,40 @@
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Brain, RefreshCcw, ArrowLeft, Share2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import MBTIQuiz from '@/components/MBTIQuiz';
 import MBTICharacter from '@/components/MBTICharacter';
+import html2canvas from 'html2canvas';
+import toast from 'react-hot-toast';
 
 export default function MBTIPage() {
   const [showQuiz, setShowQuiz] = useState(false);
   const [result, setResult] = useState<string | null>(null);
+  const resultRef = useRef<HTMLDivElement>(null);
+
+  const handleShare = async () => {
+    if (!resultRef.current) return;
+
+    const toastId = toast.loading('正在生成图片...');
+    
+    try {
+      const canvas = await html2canvas(resultRef.current, {
+        useCORS: true,
+        scale: 2,
+        backgroundColor: null,
+      });
+      
+      const link = document.createElement('a');
+      link.download = `灵犀-MBTI测试结果-${result}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      
+      toast.success('图片已保存', { id: toastId });
+    } catch (error) {
+      console.error('Failed to generate image:', error);
+      toast.error('保存失败，请重试', { id: toastId });
+    }
+  };
 
   const mbtiDescriptions: Record<string, string> = {
     INTJ: "建筑师 - 富有想象力和战略性的思想家，一切皆在计划之中。",
@@ -86,7 +113,7 @@ export default function MBTIPage() {
             </div>
           </div>
         ) : (
-          <div className="max-w-lg w-full bg-white rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in duration-500">
+          <div ref={resultRef} className="max-w-lg w-full bg-white rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in duration-500">
             <div className="bg-indigo-600 p-8 text-center text-white relative">
                <div className="absolute top-0 left-0 w-full h-full bg-indigo-600 opacity-50 z-0"></div>
                <div className="relative z-10 flex flex-col items-center">
