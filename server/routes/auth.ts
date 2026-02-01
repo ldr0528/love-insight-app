@@ -8,10 +8,10 @@ import { v4 as uuidv4 } from 'uuid';
 const router = Router();
 
 router.post('/send-code', async (req: Request, res: Response) => {
-  const { email } = req.body;
+  const { email, type = 'register' } = req.body;
+  console.log('[Auth] Send Code Request:', { email, type }); // Debug log
   
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    res.status(400).json({ error: '请输入有效的邮箱地址' });
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {    res.status(400).json({ error: '请输入有效的邮箱地址' });
     return;
   }
 
@@ -20,9 +20,17 @@ router.post('/send-code', async (req: Request, res: Response) => {
 
     // Check if email already exists
     const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      res.status(409).json({ error: '该邮箱已被注册' });
-      return;
+    
+    if (type === 'register') {
+      if (existingUser) {
+        res.status(409).json({ error: '该邮箱已被注册' });
+        return;
+      }
+    } else if (type === 'reset') {
+      if (!existingUser) {
+        res.status(404).json({ error: '该邮箱未注册' });
+        return;
+      }
     }
 
     // Check rate limit (1 minute)
@@ -65,7 +73,46 @@ router.post('/send-code', async (req: Request, res: Response) => {
   }
 });
 
-// Helper to get client IP
+router.post('/reset-password', async (req: Request, res: Response) => {
+  const { email, code, newPassword } = req.body;
+
+  if (!email || !code || !newPassword) {
+    res.status(400).json({ error: '缺少必要参数' });
+    return;
+  }
+
+  try {
+    await connectDB();
+
+    // Verify code
+    const validCode = await VerificationCode.findOne({ email, code });
+    if (!validCode) {
+      res.status(400).json({ error: '验证码错误或已过期' });
+      return;
+    }
+
+    // Find user
+    const user = await User.findOne({ email });
+    if (!user) {
+      res.status(404).json({ error: '用户不存在' });
+      return;
+    }
+
+    // Update password
+    user.password = newPassword;
+    await user.save();
+
+    // Delete used code
+    await VerificationCode.deleteOne({ _id: validCode._id });
+
+    res.json({ success: true, message: '密码重置成功' });
+  } catch (error: any) {
+    console.error('Reset password error:', error);
+    res.status(500).json({ error: '服务器错误' });
+  }
+});
+
+// Helper to get client IpIP
 const getClientIp = (req: Request): string => {
   return (req.headers['x-forwarded-for'] as string || '').split(',')[0].trim() || req.ip || '127.0.0.1';
 };
