@@ -47,22 +47,13 @@ export default function DigitalPetShop() {
 
   const hasPet = !!user?.petType;
 
-  // Preload pet images to improve user experience
+  // Preload ONLY the user's selected pet image if they have one
   useEffect(() => {
-    const images = [
-      '/images/pets/cat.png',
-      '/images/pets/dog.png',
-      '/images/pets/chicken.png',
-      '/images/pets/rabbit.png',
-      '/images/pets/hamster.png',
-      '/images/pets/fox.png'
-    ];
-    
-    images.forEach(src => {
+    if (user?.petType) {
       const img = new Image();
-      img.src = src;
-    });
-  }, []);
+      img.src = `/images/pets/${user.petType}.png`;
+    }
+  }, [user?.petType]);
 
   // Function to reset pet choice (for testing/user request)
   const handleResetPet = async () => {
