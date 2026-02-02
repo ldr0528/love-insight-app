@@ -71,23 +71,6 @@ export default function DigitalPetShop() {
 
   const hasPet = !!user?.petType;
 
-  // 确保进入该页面时立即加载图片
-  useEffect(() => {
-    const images = [
-      '/images/pets/cat.png',
-      '/images/pets/dog.png',
-      '/images/pets/chicken.png',
-      '/images/pets/rabbit.png',
-      '/images/pets/hamster.png',
-      '/images/pets/fox.png'
-    ];
-    
-    images.forEach(src => {
-      const img = new Image();
-      img.src = src;
-    });
-  }, []);
-
   // Function to reset pet choice (for testing/user request)
   const handleResetPet = async () => {
     if (!user || !token) return;
