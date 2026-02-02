@@ -10,6 +10,7 @@ export default function SimpleAuthModal() {
   const [isForgotPasswordMode, setIsForgotPasswordMode] = useState(false);
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [email, setEmail] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -110,14 +111,15 @@ export default function SimpleAuthModal() {
       return;
     }
     if (!isLoginMode) {
+      if (password !== confirmPassword) {
+        toast.error('两次输入的密码不一致');
+        return;
+      }
       if (!email) {
         toast.error('请输入邮箱');
         return;
       }
-      if (!verificationCode) {
-        toast.error('请输入验证码');
-        return;
-      }
+      // Registration no longer requires verification code
     }
 
     setIsLoading(true);
@@ -278,8 +280,8 @@ export default function SimpleAuthModal() {
                 </div>
               )}
 
-              {/* Verification Code Input (Register & Forgot Password) */}
-              {(!isLoginMode || isForgotPasswordMode) && (
+              {/* Verification Code Input (Forgot Password Only) */}
+              {isForgotPasswordMode && (
                 <div className="flex gap-2">
                   <div className="relative flex items-center flex-1">
                     <input
@@ -317,6 +319,25 @@ export default function SimpleAuthModal() {
                   className="w-full pl-24 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-bold text-lg placeholder:font-normal placeholder:text-gray-400"
                 />
               </div>
+
+              {/* Confirm Password Input (Register Only) */}
+              {!isLoginMode && !isForgotPasswordMode && (
+                <div className="relative flex items-center">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-500 z-10 w-24">
+                    <div className="w-10 flex justify-center">
+                      <Lock size={20} strokeWidth={2.5} />
+                    </div>
+                    <div className="h-6 w-px bg-gray-300 mx-3"></div>
+                  </div>
+                  <input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="请再次输入密码"
+                    className="w-full pl-24 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all font-bold text-lg placeholder:font-normal placeholder:text-gray-400"
+                  />
+                </div>
+              )}
 
               {/* Login Only: Forgot Password Link */}
               {isLoginMode && (

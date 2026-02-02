@@ -242,7 +242,11 @@ router.post('/register', async (req: Request, res: Response) => {
     return;
   }
 
-  // Verify email code if email is provided
+  // Verify email code if email is provided (ONLY if code is present, though for register now we don't send code)
+  // Actually, per requirement, registration no longer needs code. 
+  // We keep the block but only if `code` is passed, or just remove strict check.
+  // The user said: "现在注册可以不需要邮箱验证码". So we just skip this check for register.
+  /*
   if (email) {
     await connectDB();
     const validCode = await VerificationCode.findOne({ email, code });
@@ -253,6 +257,7 @@ router.post('/register', async (req: Request, res: Response) => {
     // Clean up used code
     await VerificationCode.deleteOne({ _id: validCode._id });
   }
+  */
 
   const username = phone;
   
