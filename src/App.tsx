@@ -17,7 +17,6 @@ import ContactUs from "@/pages/ContactUs";
 import RechargePage from "@/pages/RechargePage";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Toaster } from 'react-hot-toast';
-import ResourcePreloader from "@/components/ResourcePreloader";
 
 // Component to handle global auth effects
 function AuthEffect() {
@@ -63,7 +62,6 @@ function AuthEffect() {
 export default function App() {
   return (
     <Router>
-      <ResourcePreloader />
       <Toaster position="top-center" />
       <AuthEffect />
       <SimpleAuthModal />
