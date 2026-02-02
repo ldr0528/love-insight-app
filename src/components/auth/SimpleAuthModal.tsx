@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, User, ArrowRight, Loader2, Lock, UserPlus } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
+import request from '@/utils/request';
 import toast from 'react-hot-toast';
 
 export default function SimpleAuthModal() {
@@ -34,34 +35,29 @@ export default function SimpleAuthModal() {
     const loadingToast = toast.loading('正在发送验证码...');
     
     try {
-      const res = await fetch('/api/auth/send-code', {
+      const data = await request<{ success: boolean; error?: string }>('/api/auth/send-code', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        data: { 
           email,
           type: isForgotPasswordMode ? 'reset' : 'register',
           phone: isForgotPasswordMode ? phone : undefined
-        })
+        }
       });
-      const data = await res.json();
       
-      if (res.ok) {
-        toast.success('验证码已发送，请留意您的邮箱', { duration: 4000 });
-        setCountdown(60);
-        const timer = setInterval(() => {
-          setCountdown((prev) => {
-            if (prev <= 1) {
-              clearInterval(timer);
-              return 0;
-            }
-            return prev - 1;
-          });
-        }, 1000);
-      } else {
-        toast.error(data.error || '发送失败');
-      }
-    } catch (error) {
-      toast.error('网络错误');
+      toast.success('验证码已发送，请留意您的邮箱', { duration: 4000 });
+      setCountdown(60);
+      const timer = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } catch (error: any) {
+      // request utility might reject with an error object or message
+      toast.error(error.message || '发送失败，请稍后重试');
     } finally {
       toast.dismiss(loadingToast);
       setIsLoading(false);
@@ -79,25 +75,19 @@ export default function SimpleAuthModal() {
 
       setIsLoading(true);
       try {
-        const res = await fetch('/api/auth/reset-password', {
+        await request('/api/auth/reset-password', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, code: verificationCode, newPassword: password })
+          data: { email, code: verificationCode, newPassword: password }
         });
-        const data = await res.json();
         
-        if (res.ok) {
-          toast.success('密码重置成功，请登录');
-          setIsForgotPasswordMode(false);
-          setIsLoginMode(true);
-          setPassword('');
-          setVerificationCode('');
-          setEmail('');
-        } else {
-          toast.error(data.error || '重置失败');
-        }
-      } catch (error) {
-        toast.error('网络错误');
+        toast.success('密码重置成功，请登录');
+        setIsForgotPasswordMode(false);
+        setIsLoginMode(true);
+        setPassword('');
+        setVerificationCode('');
+        setEmail('');
+      } catch (error: any) {
+        toast.error(error.message || '重置失败');
       } finally {
         setIsLoading(false);
       }
@@ -131,14 +121,12 @@ export default function SimpleAuthModal() {
       : { phone, password, avatar: selectedAvatar, email, code: verificationCode };
 
     try {
-      const res = await fetch(endpoint, {
+      const data = await request<any>(endpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
+        data: body
       });
-      const data = await res.json();
       
-      if (res.ok) {
+      if (data.success || data.user) {
         login(data.user, data.token); // Pass token to login
         toast.success(isLoginMode ? '登录成功' : '注册成功');
         closeAuthModal();
@@ -149,8 +137,10 @@ export default function SimpleAuthModal() {
       } else {
         toast.error(data.error || (isLoginMode ? '登录失败' : '注册失败'));
       }
-    } catch (error) {
-       toast.error('网络错误，请稍后重试');
+    } catch (error: any) {
+       console.error(error);
+       // Check for timeout error specifically if needed, but generic message is okay
+       toast.error(error.message === 'The user aborted a request.' ? '请求超时，请检查网络' : (error.message || '网络错误，请稍后重试'));
     } finally {
       setIsLoading(false);
     }
