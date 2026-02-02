@@ -75,28 +75,28 @@ export default function Home() {
       {showInstallPromotion && (
         <div className="fixed bottom-4 left-4 right-4 z-[90] animate-in slide-in-from-bottom-10 duration-500">
           <div className="bg-white/90 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-indigo-100 flex items-center justify-between gap-4 max-w-md mx-auto">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-1 min-w-0">
               <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0">
                 <Download className="w-5 h-5 text-indigo-600" />
               </div>
-              <div>
-                <h4 className="font-bold text-gray-900 text-sm">安装灵犀App</h4>
-                <p className="text-xs text-gray-500">
+              <div className="flex-1 min-w-0">
+                <h4 className="font-bold text-gray-900 text-sm whitespace-nowrap">安装灵犀App</h4>
+                <p className="text-xs text-gray-500 truncate">
                   {isIOS ? '点击分享按钮，选择"添加到主屏幕"' : '添加到桌面，体验更流畅'}
                 </p>
               </div>
             </div>
             
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-shrink-0">
               {isIOS ? (
                  <div className="flex flex-col items-center animate-bounce">
                     <Share className="w-5 h-5 text-indigo-500 mb-1" />
-                    <span className="text-[10px] text-indigo-500 font-bold">点击下方</span>
+                    <span className="text-[10px] text-indigo-500 font-bold whitespace-nowrap">点击下方</span>
                  </div>
               ) : (
                 <button 
                   onClick={handleInstallClick}
-                  className="bg-indigo-600 text-white text-xs font-bold px-3 py-2 rounded-lg hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-500/20"
+                  className="bg-indigo-600 text-white text-xs font-bold px-3 py-2 rounded-lg hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-500/20 whitespace-nowrap"
                 >
                   立即安装
                 </button>
@@ -106,7 +106,7 @@ export default function Home() {
                   setShowInstallPromotion(false);
                   sessionStorage.setItem('hasClosedInstallTip', 'true');
                 }}
-                className="p-1.5 text-gray-400 hover:bg-gray-100 rounded-full transition-colors"
+                className="p-1.5 text-gray-400 hover:bg-gray-100 rounded-full transition-colors flex-shrink-0"
               >
                 <X size={16} />
               </button>
