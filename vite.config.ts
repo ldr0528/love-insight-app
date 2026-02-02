@@ -17,6 +17,10 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'robots.txt', 'apple-touch-icon.png'],
+      workbox: {
+        maximumFileSizeToCacheInBytes: 3000000, // Increase limit to 3MB
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+      },
       manifest: {
         name: '灵犀 - 你的AI情感伴侣',
         short_name: '灵犀',
