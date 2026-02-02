@@ -9,15 +9,24 @@ export default function Home() {
   const [showBrowserTip, setShowBrowserTip] = useState(false);
 
   useEffect(() => {
-    // Show tip after 0.5 second
-    const timer = setTimeout(() => {
-      setShowBrowserTip(true);
-    }, 500);
+    // Check if we've shown the tip in this session
+    const hasShownTip = sessionStorage.getItem('hasShownBrowserTip');
+    
+    let timer: NodeJS.Timeout;
+    let closeTimer: NodeJS.Timeout;
 
-    // Auto close after 6 seconds
-    const closeTimer = setTimeout(() => {
-      setShowBrowserTip(false);
-    }, 6500);
+    if (!hasShownTip) {
+      // Show tip after 0.5 second
+      timer = setTimeout(() => {
+        setShowBrowserTip(true);
+        sessionStorage.setItem('hasShownBrowserTip', 'true');
+      }, 500);
+
+      // Auto close after 6 seconds
+      closeTimer = setTimeout(() => {
+        setShowBrowserTip(false);
+      }, 6500);
+    }
 
     // 预加载图片
     const images = [
