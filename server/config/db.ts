@@ -22,6 +22,7 @@ const connectDB = async () => {
   if (!cached.promise) {
     const opts = {
       bufferCommands: false, // 禁用缓冲命令，提高 serverless 环境下的稳定性
+      serverSelectionTimeoutMS: 5000, // 超时设置
     };
 
     cached.promise = mongoose.connect(process.env.MONGODB_URI, opts).then((mongoose) => {

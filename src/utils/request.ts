@@ -20,10 +20,13 @@ const getToken = () => {
 };
 
 async function request<T = any>(url: string, options: RequestOptions = {}): Promise<T> {
-  const { data, headers, ...customConfig } = options;
+  const { data, headers, timeout = 30000, ...customConfig } = options;
   
   // Get token from localStorage
   const token = getToken();
+
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
 
   const config: RequestInit = {
     method: 'GET',
@@ -32,6 +35,7 @@ async function request<T = any>(url: string, options: RequestOptions = {}): Prom
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...headers,
     },
+    signal: controller.signal,
     ...customConfig,
   };
 
@@ -41,6 +45,7 @@ async function request<T = any>(url: string, options: RequestOptions = {}): Prom
 
   try {
     const response = await fetch(`${BASE_URL}${url}`, config);
+    clearTimeout(id);
     
     // Handle 401 Unauthorized globally
     if (response.status === 401) {
@@ -53,8 +58,15 @@ async function request<T = any>(url: string, options: RequestOptions = {}): Prom
 
     const responseData = await response.json();
     return responseData;
-  } catch (error) {
+  } catch (error: any) {
+    clearTimeout(id);
     console.error('Request Error:', error);
+    
+    // Handle specific errors
+    if (error.name === 'AbortError') {
+       return Promise.reject(new Error('请求超时或已取消，请检查网络连接'));
+    }
+    
     return Promise.reject(error);
   }
 }

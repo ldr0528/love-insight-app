@@ -41,28 +41,37 @@ app.set('trust proxy', true)
 /**
  * API Routes
  */
-app.use('/api/auth', authRoutes)
-app.use('/api/report', reportRoutes)
-app.use('/api/analyze', analyzeRoutes)
-app.use('/api/payment', paymentRoutes)
-app.use('/api/naming', namingRoutes)
-app.use('/api/compatibility', compatibilityRoutes)
-app.use('/api/admin', adminRoutes)
-app.use('/api/worry', worryRoutes)
-app.use('/api/dream', dreamRoutes)
+const apiRouter = express.Router();
+
+apiRouter.use('/auth', authRoutes)
+apiRouter.use('/report', reportRoutes)
+apiRouter.use('/analyze', analyzeRoutes)
+apiRouter.use('/payment', paymentRoutes)
+apiRouter.use('/naming', namingRoutes)
+apiRouter.use('/compatibility', compatibilityRoutes)
+apiRouter.use('/admin', adminRoutes)
+apiRouter.use('/worry', worryRoutes)
+apiRouter.use('/dream', dreamRoutes)
 
 /**
  * health
  */
-app.use(
-  '/api/health',
+apiRouter.get(
+  '/health',
   (req: Request, res: Response, next: NextFunction): void => {
     res.status(200).json({
       success: true,
       message: 'ok',
+      timestamp: new Date().toISOString(),
+      env: process.env.NODE_ENV
     })
   },
 )
+
+// Mount API routes
+// Handle both /api prefix (standard) and root (if rewritten by Vercel)
+app.use('/api', apiRouter);
+app.use('/', apiRouter);
 
 /**
  * error handler middleware

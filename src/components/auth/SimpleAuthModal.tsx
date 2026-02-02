@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, User, ArrowRight, Loader2, Lock, UserPlus } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
 import toast from 'react-hot-toast';
+import request from '@/utils/request';
 
 export default function SimpleAuthModal() {
   const { isAuthModalOpen, closeAuthModal, login } = useAuthStore();
@@ -34,18 +35,16 @@ export default function SimpleAuthModal() {
     const loadingToast = toast.loading('正在发送验证码...');
     
     try {
-      const response = await fetch('/api/auth/send-code', {
+      const data = await request<{ success: boolean; error?: string }>('/api/auth/send-code', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+        data: {
           email,
           type: isForgotPasswordMode ? 'reset' : 'register',
           phone: isForgotPasswordMode ? phone : undefined
-        })
+        }
       });
 
-      const data = await response.json();
-      if (!response.ok || !data.success) {
+      if (!data.success) {
         throw new Error(data.error || '发送失败');
       }
       
@@ -79,14 +78,12 @@ export default function SimpleAuthModal() {
 
       setIsLoading(true);
       try {
-        const response = await fetch('/api/auth/reset-password', {
+        const data = await request<{ success: boolean; message?: string; error?: string }>('/api/auth/reset-password', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, code: verificationCode, newPassword: password })
+          data: { email, code: verificationCode, newPassword: password }
         });
-        const data = await response.json();
         
-        if (!response.ok || !data.success) {
+        if (!data.success) {
            throw new Error(data.message || data.error || '重置失败');
         }
         
@@ -131,14 +128,12 @@ export default function SimpleAuthModal() {
       : { phone, password, avatar: selectedAvatar, email, code: verificationCode };
 
     try {
-      const response = await fetch(endpoint, {
+      const data = await request<{ success: boolean; user?: any; token?: any; error?: string }>(endpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
+        data: body
       });
-      const data = await response.json();
       
-      if (response.ok && (data.success || data.user)) {
+      if (data.success || data.user) {
         login(data.user, data.token); // Pass token to login
         toast.success(isLoginMode ? '登录成功' : '注册成功');
         closeAuthModal();
