@@ -47,13 +47,23 @@ export default function DigitalPetShop() {
 
   const hasPet = !!user?.petType;
 
-  // Preload ONLY the user's selected pet image if they have one
+  // 恢复全量预加载：用户反馈之前这种方式体验更好
   useEffect(() => {
-    if (user?.petType) {
+    const images = [
+      '/images/pets/cat.png',
+      '/images/pets/dog.png',
+      '/images/pets/chicken.png',
+      '/images/pets/rabbit.png',
+      '/images/pets/hamster.png',
+      '/images/pets/fox.png'
+    ];
+    
+    // 使用 Promise.all 并行加载，但非阻塞
+    images.forEach(src => {
       const img = new Image();
-      img.src = `/images/pets/${user.petType}.png`;
-    }
-  }, [user?.petType]);
+      img.src = src;
+    });
+  }, []);
 
   // Function to reset pet choice (for testing/user request)
   const handleResetPet = async () => {
