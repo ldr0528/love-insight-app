@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, ShieldCheck, Loader2 } from 'lucide-react';
+import request from '@/utils/request';
 
 export default function AdminLogin() {
   const navigate = useNavigate();
