@@ -90,8 +90,6 @@ export default function RechargePage() {
               网站制作不易，您的小小鼓励是我们最大的动力！❤️
             </p>
             <p className="text-gray-500 text-xs leading-relaxed">
-              为了保障权益，请务必使用 <span className="text-pink-600 font-medium">正规浏览器</span> (Chrome/Safari) 支付。
-              <br className="md:hidden" />
               <span className="opacity-80">⚠️ 避免在微信/抖音等APP内直接打开，可能导致支付失败。</span>
             </p>
           </div>
