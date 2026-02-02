@@ -4,7 +4,6 @@ import { Hand, Camera, ArrowLeft, Loader2, Sparkles, BookOpen, Heart, Brain, Zap
 import { Link, useNavigate } from 'react-router-dom';
 import PalmUploader from '@/components/PalmUploader';
 import { useAuthStore } from '@/store/useAuthStore';
-import request from '@/utils/request';
 
 // Story Component
 function PalmStory({ report, features, onReplay, onShowFull }: { report: any, features: any, onReplay: () => void, onShowFull: () => void }) {
@@ -117,9 +116,10 @@ export default function PalmPage() {
     setLoadingReport(true);
     try {
       // Use relative path for production compatibility
-      const data = await request<any>('/api/report', {
+      const response = await fetch('/api/report', {
         method: 'POST',
-        data: {
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           user_profile: {
             relationship_stage: 'single', // Default or could ask
             goal: 'improve_attraction',
@@ -132,8 +132,9 @@ export default function PalmPage() {
             pay_status: 'free', // Standalone palm is free for now or uses basic logic
           },
           ui_context: { app_name: 'LoveInsight', report_type: 'palm' },
-        },
+        }),
       });
+      const data = await response.json();
       setReport(data);
       setShowStory(true); // Start story mode when report is ready
     } catch (e) {

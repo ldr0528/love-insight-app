@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, ShieldCheck, Loader2 } from 'lucide-react';
-import request from '@/utils/request';
 
 export default function AdminLogin() {
   const navigate = useNavigate();
@@ -14,12 +13,14 @@ export default function AdminLogin() {
     setIsLoading(true);
 
     try {
-      const data = await request<any>('/api/admin/login', {
+      const response = await fetch('/api/admin/login', {
         method: 'POST',
-        data: { username, password }
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
       });
+      const data = await response.json();
 
-      if (data.success) {
+      if (response.ok && data.success) {
         localStorage.setItem('admin_token', data.token);
         navigate('/admin/dashboard');
       } else {

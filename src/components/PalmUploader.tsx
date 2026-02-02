@@ -1,7 +1,6 @@
 
 import { useState, useRef } from 'react';
 import { Camera, Upload, Loader2, CheckCircle2 } from 'lucide-react';
-import request from '@/utils/request';
 
 interface PalmFeatures {
   heart_line: string;
@@ -38,12 +37,14 @@ export default function PalmUploader({ onAnalysisComplete }: PalmUploaderProps) 
     setError('');
     try {
       // Use relative path for production compatibility
-      const data = await request<any>('/api/analyze/palm', {
+      const response = await fetch('/api/analyze/palm', {
         method: 'POST',
-        data: { image: base64Image },
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: base64Image }),
       });
+      const data = await response.json();
 
-      if (data.success && data.features) {
+      if (response.ok && data.success && data.features) {
         onAnalysisComplete(data.features);
       } else {
         throw new Error('Could not identify palm features');

@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { Loader2, Lock, Heart, ArrowRight, Share2, AlertCircle, RefreshCcw, X } from 'lucide-react';
 import MBTIQuiz from '@/components/MBTIQuiz';
 import { QRCodeSVG } from 'qrcode.react';
-import request from '@/utils/request';
 
 type RelationshipStage = 'single' | 'dating' | 'relationship' | 'breakup_recovery';
 type Goal = 'improve_attraction' | 'stabilize_relationship' | 'improve_communication' | 'move_on' | 'other';
@@ -94,9 +93,10 @@ export default function LoveReport() {
     setError('');
     try {
       // Use relative path for production compatibility
-      const data = await request<any>('/api/report', {
+      const response = await fetch('/api/report', {
         method: 'POST',
-        data: {
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           user_profile: {
             language: 'zh-CN',
             timezone: 'Asia/Shanghai',
@@ -119,8 +119,10 @@ export default function LoveReport() {
             payment_methods: ['wechat_pay', 'alipay'],
           },
           ui_context: { app_name: 'LoveInsight', share_card_style: 'minimal', max_length: 'medium' },
-        },
+        })
       });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'Something went wrong');
 
       setReport(data);
       setStep('result');
@@ -148,15 +150,17 @@ export default function LoveReport() {
       setLoading(true);
       setError('');
       
-      const data = await request<any>('/api/payment/create', {
+      const response = await fetch('/api/payment/create', {
         method: 'POST',
-        data: { 
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
           method,
           platform: isMobile ? 'mobile' : 'desktop'
-        }
+        })
       });
+      const data = await response.json();
       
-      if (!data.success) throw new Error(data.error || '创建订单失败');
+      if (!response.ok || !data.success) throw new Error(data.error || '创建订单失败');
       
       const { orderId, payUrl } = data;
       
@@ -181,9 +185,10 @@ export default function LoveReport() {
   const pollPaymentStatus = async (orderId: string) => {
     const poll = setInterval(async () => {
       try {
-        const data = await request<any>(`/api/payment/status/${orderId}`);
+        const response = await fetch(`/api/payment/status/${orderId}`);
+        const data = await response.json();
         
-        if (data.success && data.status === 'paid') {
+        if (response.ok && data.success && data.status === 'paid') {
           clearInterval(poll);
           setIsPollingPayment(false);
           setShowPaymentModal(false);

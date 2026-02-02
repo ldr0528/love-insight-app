@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Users, Crown, Trash2, LogOut, Search, User, Ban } from 'lucide-react';
-import request from '@/utils/request';
 
 interface UserData {
   _id: string;
@@ -36,12 +35,13 @@ export default function AdminDashboard() {
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem('admin_token');
-      const data = await request<any>('/api/admin/users', {
+      const response = await fetch('/api/admin/users', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-      if (data.success) {
+      const data = await response.json();
+      if (response.ok && data.success) {
         setUsers(data.users);
       }
     } catch (error) {
@@ -71,18 +71,20 @@ export default function AdminDashboard() {
     
     try {
       const token = localStorage.getItem('admin_token');
-      const data = await request<any>(`/api/admin/users/${selectedUser._id}/set-vip`, {
+      const response = await fetch(`/api/admin/users/${selectedUser._id}/set-vip`, {
         method: 'POST',
         headers: { 
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         },
-        data: { 
+        body: JSON.stringify({ 
           isVip: type !== 'remove',
           expiresAt 
-        }
+        })
       });
+      const data = await response.json();
       
-      if (data.success) {
+      if (response.ok && data.success) {
         setUsers(users.map(u => u._id === selectedUser._id ? { 
           ...u, 
           isVip: type !== 'remove',
@@ -101,13 +103,14 @@ export default function AdminDashboard() {
 
     try {
       const token = localStorage.getItem('admin_token');
-      const data = await request<any>(`/api/admin/users/${user._id}/toggle-blacklist`, {
+      const response = await fetch(`/api/admin/users/${user._id}/toggle-blacklist`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-      if (data.success) {
+      const data = await response.json();
+      if (response.ok && data.success) {
         setUsers(users.map(u => u._id === user._id ? { ...u, isBlacklisted: !u.isBlacklisted } : u));
       } else {
         alert(data.message || 'Operation failed');
@@ -121,13 +124,14 @@ export default function AdminDashboard() {
     if (!confirm('Are you sure you want to delete this user?')) return;
     try {
       const token = localStorage.getItem('admin_token');
-      const data = await request<any>(`/api/admin/users/${id}`, {
+      const response = await fetch(`/api/admin/users/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-      if (data.success) {
+      const data = await response.json();
+      if (response.ok && data.success) {
         setUsers(users.filter(u => u._id !== id));
       }
     } catch (error) {
