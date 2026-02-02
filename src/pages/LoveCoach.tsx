@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Heart, MessageCircle, Zap, ShieldAlert, Target, Sparkles, Loader2, Send, Copy, Check } from 'lucide-react';
+import request from '@/utils/request';
 
 interface CoachFormData {
   relation_stage: string;
@@ -84,10 +85,9 @@ export default function LoveCoach() {
     setStep('loading');
     try {
       // Use relative path for production compatibility
-      const response = await fetch('/api/report', {
+      const data = await request<any>('/api/report', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+        data: {
           user_profile: {
             report_type: 'love_coach',
           },
@@ -98,9 +98,8 @@ export default function LoveCoach() {
             pay_status: 'paid', // Simulate paid for now to get AI result
           },
           ui_context: { app_name: 'LoveInsight', report_type: 'love_coach' },
-        }),
+        },
       });
-      const data = await response.json();
       setResult(data);
       setStep('result');
     } catch (e) {

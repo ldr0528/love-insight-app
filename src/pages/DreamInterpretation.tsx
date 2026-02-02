@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, CloudMoon, Sparkles, ChevronRight, Moon } from 'lucide-react';
 import toast from 'react-hot-toast';
+import request from '@/utils/request';
 
 const Whale = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
@@ -334,20 +335,18 @@ export default function DreamInterpretation() {
   const submitAnswers = async (finalAnswers: Record<number, string>) => {
     setLoading(true);
     try {
-      const res = await fetch('/api/dream/analyze', {
+      const data = await request<any>('/api/dream/analyze', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ answers: finalAnswers }),
+        data: { answers: finalAnswers },
       });
-      const data = await res.json();
       if (data.success) {
         setResult(data.data);
       } else {
         toast.error('解析失败，请稍后再试');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      toast.error('网络错误');
+      toast.error(error.message || '网络错误');
     } finally {
       setLoading(false);
     }

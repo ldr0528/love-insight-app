@@ -13,12 +13,10 @@ export default function AdminLogin() {
     setIsLoading(true);
 
     try {
-      const res = await fetch('/api/admin/login', {
+      const data = await request<any>('/api/admin/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
+        data: { username, password }
       });
-      const data = await res.json();
 
       if (data.success) {
         localStorage.setItem('admin_token', data.token);

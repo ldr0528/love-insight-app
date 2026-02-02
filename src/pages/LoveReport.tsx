@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Loader2, Lock, Heart, ArrowRight, Share2, AlertCircle, RefreshCcw, X } from 'lucide-react';
 import MBTIQuiz from '@/components/MBTIQuiz';
 import { QRCodeSVG } from 'qrcode.react';
+import request from '@/utils/request';
 
 type RelationshipStage = 'single' | 'dating' | 'relationship' | 'breakup_recovery';
 type Goal = 'improve_attraction' | 'stabilize_relationship' | 'improve_communication' | 'move_on' | 'other';
@@ -93,10 +94,9 @@ export default function LoveReport() {
     setError('');
     try {
       // Use relative path for production compatibility
-          const response = await fetch('/api/report', {
+      const data = await request<any>('/api/report', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+        data: {
           user_profile: {
             language: 'zh-CN',
             timezone: 'Asia/Shanghai',
@@ -105,13 +105,13 @@ export default function LoveReport() {
           },
           signals: {
             mbti: { type: formData.mbti, confidence: 0.8 },
-                birthday: { 
-                  date: formData.birthday, 
-                  time: formData.uncertainTime ? null : (formData.birthTime || null),
-                  branch: formData.uncertainTime ? (formData.timeBranch || null) : null,
-                  tags: formData.uncertainTime ? ['uncertain_time'] : [], 
-                  confidence: 0.6 
-                },
+            birthday: { 
+              date: formData.birthday, 
+              time: formData.uncertainTime ? null : (formData.birthTime || null),
+              branch: formData.uncertainTime ? (formData.timeBranch || null) : null,
+              tags: formData.uncertainTime ? ['uncertain_time'] : [], 
+              confidence: 0.6 
+            },
           },
           entitlements: {
             pay_status: status,
@@ -119,12 +119,9 @@ export default function LoveReport() {
             payment_methods: ['wechat_pay', 'alipay'],
           },
           ui_context: { app_name: 'LoveInsight', share_card_style: 'minimal', max_length: 'medium' },
-        }),
+        },
       });
 
-      if (!response.ok) throw new Error('Failed to generate report');
-      
-      const data = await response.json();
       setReport(data);
       setStep('result');
       
@@ -151,15 +148,13 @@ export default function LoveReport() {
       setLoading(true);
       setError('');
       
-      const res = await fetch('/api/payment/create', {
+      const data = await request<any>('/api/payment/create', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        data: { 
           method,
           platform: isMobile ? 'mobile' : 'desktop'
-        })
+        }
       });
-      const data = await res.json();
       
       if (!data.success) throw new Error(data.error || '创建订单失败');
       
@@ -186,8 +181,7 @@ export default function LoveReport() {
   const pollPaymentStatus = async (orderId: string) => {
     const poll = setInterval(async () => {
       try {
-        const res = await fetch(`/api/payment/status/${orderId}`);
-        const data = await res.json();
+        const data = await request<any>(`/api/payment/status/${orderId}`);
         
         if (data.success && data.status === 'paid') {
           clearInterval(poll);

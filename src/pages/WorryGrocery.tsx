@@ -5,8 +5,9 @@ import { ArrowLeft, Send, Sparkles, Store, Mic, MicOff, Check, Loader2, ImageOff
 import ThreePet from '@/components/ThreePet';
 import { useAuthStore, PetType } from '@/store/useAuthStore';
 import toast from 'react-hot-toast';
+import request from '@/utils/request';
 
-  // Memoize Pet Buttons to prevent unnecessary re-renders and image flickering
+// Memoize Pet Buttons to prevent unnecessary re-renders and image flickering
 const PetOptionButton = memo(({ type, selectedType, onSelect, imgSrc, label, colorClass, borderColorClass, iconColorClass }: any) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -82,13 +83,9 @@ export default function DigitalPetShop() {
 
     // Also update backend to persist the reset
     try {
-      await fetch('/api/auth/pet', {
+      await request('/api/auth/pet', {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ petType: null, petName: null })
+        data: { petType: null, petName: null }
       });
     } catch (e) {
       console.error("Failed to reset pet on server", e);
@@ -143,15 +140,10 @@ export default function DigitalPetShop() {
 
     setIsSubmittingPet(true);
     try {
-      const res = await fetch('/api/auth/pet', {
+      const data = await request<any>('/api/auth/pet', {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ petType: selectedPetType, petName: petName })
+        data: { petType: selectedPetType, petName: petName }
       });
-      const data = await res.json();
       
       if (data.success) {
         login(data.user, token); // Update local user store
@@ -159,8 +151,8 @@ export default function DigitalPetShop() {
       } else {
         toast.error(data.error || '领养失败');
       }
-    } catch (e) {
-      toast.error('网络错误');
+    } catch (e: any) {
+      toast.error(e.message || '网络错误');
     } finally {
       setIsSubmittingPet(false);
     }
@@ -194,18 +186,17 @@ export default function DigitalPetShop() {
     setShowQuote(false);
 
     try {
-      const res = await fetch('/api/worry/consult', {
+      const data = await request<any>('/api/worry/consult', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: input, petType: user?.petType, petName: user?.petName }),
+        data: { content: input, petType: user?.petType, petName: user?.petName },
       });
       
-      const data = await res.json();
       if (data.success) {
         setResponse(data.data);
       }
     } catch (e) {
       console.error(e);
+      toast.error('网络请求失败，请稍后重试');
     } finally {
       setLoading(false);
     }

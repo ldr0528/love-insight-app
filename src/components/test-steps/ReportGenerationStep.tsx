@@ -4,6 +4,7 @@ import { useReportStore } from '@/store/useReportStore';
 import { Loader2, Lock, Heart, RefreshCw, X, CheckCircle2, ScanLine, ExternalLink, Star, Compass, Ban, Sparkles, Share2, Download } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
+import request from '@/utils/request';
 
 // Type definitions
 interface ReportData {
@@ -91,12 +92,10 @@ function PaymentModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
     async function createOrder() {
       setStatus('creating');
       try {
-        const res = await fetch('/api/payment/create', {
+        const data = await request<any>('/api/payment/create', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ method, amount: 9.90 })
+          data: { method, amount: 9.90 }
         });
-        const data = await res.json();
         
         if (data.success && active) {
           setOrder({ id: data.orderId, payUrl: data.payUrl });
@@ -118,8 +117,7 @@ function PaymentModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
 
     const checkStatus = async () => {
       try {
-        const res = await fetch(`/api/payment/status/${order.id}`);
-        const data = await res.json();
+        const data = await request<any>(`/api/payment/status/${order.id}`);
         if (data.success && data.status === 'paid') {
           setStatus('paid');
           setTimeout(onSuccess, 1500);
@@ -290,10 +288,9 @@ export default function ReportGenerationStep() {
     }
 
     try {
-      const response = await fetch('/api/report', {
+      const data = await request<any>('/api/report', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+        data: {
           user_profile: {
             language: 'zh-CN',
             timezone: 'Asia/Shanghai',
@@ -316,11 +313,9 @@ export default function ReportGenerationStep() {
             payment_methods: ['wechat_pay', 'alipay'],
           },
           ui_context: { app_name: 'LoveInsight', share_card_style: 'minimal', max_length: 'medium', report_type: reportType },
-        }),
+        },
       });
 
-      if (!response.ok) throw new Error('Failed to generate report');
-      const data = await response.json();
       console.log('Report Data:', data);
       setReport(data);
     } catch (err: any) {

@@ -1,6 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { ArrowLeft, Heart, Sparkles, Send, RefreshCw, Feather } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import request from '@/utils/request';
+import toast from 'react-hot-toast';
 
 export default function Compatibility() {
   const navigate = useNavigate();
@@ -19,15 +21,14 @@ export default function Compatibility() {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch('/api/compatibility', {
+      const data = await request<any>('/api/compatibility', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        data: formData
       });
-      const data = await res.json();
       setResult(data);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+      toast.error(error.message || '请求失败，请稍后重试');
     } finally {
       setLoading(false);
     }

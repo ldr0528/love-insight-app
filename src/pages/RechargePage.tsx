@@ -3,6 +3,7 @@ import { ArrowLeft, Crown, AlertCircle, Check, Copy } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuthStore } from '../store/useAuthStore';
+import request from '@/utils/request';
 
 export default function RechargePage() {
   const [selectedPlan, setSelectedPlan] = useState<'weekly' | 'monthly' | 'yearly'>('monthly');
@@ -33,20 +34,15 @@ export default function RechargePage() {
     }
 
     try {
-      const response = await fetch('/api/payment/create', {
+      const data = await request<any>('/api/payment/create', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+        data: {
           method: 'epay',
           type: 'vip',
           plan: selectedPlan,
           userId: user.phone || user.id // Pass user identifier
-        }),
+        },
       });
-
-      const data = await response.json();
 
       if (data.success && data.payUrl) {
         // Redirect to payment page
