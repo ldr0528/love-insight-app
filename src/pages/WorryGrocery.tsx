@@ -20,9 +20,7 @@ const PetOptionButton = memo(({ type, selectedType, onSelect, imgSrc, label, col
     <img 
       src={imgSrc} 
       alt={label} 
-      className="w-16 h-16 object-contain will-change-transform" 
-      decoding="async" 
-      loading="eager" 
+      className="w-16 h-16 object-contain" 
     />
     <span className="font-bold text-gray-800">{label}</span>
   </button>
