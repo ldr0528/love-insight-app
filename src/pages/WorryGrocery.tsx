@@ -7,24 +7,36 @@ import { useAuthStore, PetType } from '@/store/useAuthStore';
 import toast from 'react-hot-toast';
 
 // Memoize Pet Buttons to prevent unnecessary re-renders and image flickering
-const PetOptionButton = memo(({ type, selectedType, onSelect, imgSrc, label, colorClass, borderColorClass, iconColorClass }: any) => (
-  <button
-    onClick={() => onSelect(type)}
-    className={`relative p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
-      selectedType === type 
-        ? `${colorClass} ${borderColorClass} shadow-md transform scale-105` 
-        : `bg-white border-gray-200 hover:${borderColorClass.replace('border-', 'hover:border-')}`
-    }`}
-  >
-    {selectedType === type && <div className={`absolute top-2 right-2 ${iconColorClass} text-white p-1 rounded-full`}><Check size={12} /></div>}
-    <img 
-      src={imgSrc} 
-      alt={label} 
-      className="w-16 h-16 object-contain" 
-    />
-    <span className="font-bold text-gray-800">{label}</span>
-  </button>
-));
+const PetOptionButton = memo(({ type, selectedType, onSelect, imgSrc, label, colorClass, borderColorClass, iconColorClass }: any) => {
+  const [loaded, setLoaded] = useState(false);
+
+  return (
+    <button
+      onClick={() => onSelect(type)}
+      className={`relative p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
+        selectedType === type 
+          ? `${colorClass} ${borderColorClass} shadow-md transform scale-105` 
+          : `bg-white border-gray-200 hover:${borderColorClass.replace('border-', 'hover:border-')}`
+      }`}
+    >
+      {selectedType === type && <div className={`absolute top-2 right-2 ${iconColorClass} text-white p-1 rounded-full`}><Check size={12} /></div>}
+      
+      <div className="relative w-16 h-16">
+        {!loaded && (
+          <div className="absolute inset-0 bg-gray-100 rounded-full animate-pulse" />
+        )}
+        <img 
+          src={imgSrc} 
+          alt={label} 
+          onLoad={() => setLoaded(true)}
+          className={`w-full h-full object-contain transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+          loading="eager"
+        />
+      </div>
+      <span className="font-bold text-gray-800">{label}</span>
+    </button>
+  );
+});
 
 export default function DigitalPetShop() {
   const { user, token, login } = useAuthStore();
@@ -44,24 +56,6 @@ export default function DigitalPetShop() {
   const recognitionRef = useRef<any>(null);
 
   const hasPet = !!user?.petType;
-
-  // 恢复全量预加载：用户反馈之前这种方式体验更好
-  useEffect(() => {
-    const images = [
-      '/images/pets/cat.png',
-      '/images/pets/dog.png',
-      '/images/pets/chicken.png',
-      '/images/pets/rabbit.png',
-      '/images/pets/hamster.png',
-      '/images/pets/fox.png'
-    ];
-    
-    // 使用 Promise.all 并行加载，但非阻塞
-    images.forEach(src => {
-      const img = new Image();
-      img.src = src;
-    });
-  }, []);
 
   // Function to reset pet choice (for testing/user request)
   const handleResetPet = async () => {
