@@ -1,17 +1,44 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Compass, ArrowRight, Brain, Hand, Heart, Target, PenTool, Feather, User, Crown, Store, Cat, Sparkles, PawPrint, MessageCircle, CloudMoon, X, Globe } from 'lucide-react';
+import { Compass, ArrowRight, Brain, Hand, Heart, Target, PenTool, Feather, User, Crown, Store, Cat, Sparkles, PawPrint, MessageCircle, CloudMoon, X, Globe, Download, Share } from 'lucide-react';
 import FortuneTube from '@/components/FortuneTube';
 import { useAuthStore } from '@/store/useAuthStore';
 
 export default function Home() {
   const { user, openAuthModal, logout } = useAuthStore();
   const [showBrowserTip, setShowBrowserTip] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [showInstallPromotion, setShowInstallPromotion] = useState(false);
+  const [isIOS, setIsIOS] = useState(false);
 
   useEffect(() => {
     // Check if we've shown the tip in this session
     const hasShownTip = sessionStorage.getItem('hasShownBrowserTip');
     
+    // Detect iOS
+    const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+    setIsIOS(isIOSDevice);
+
+    // Detect Standalone mode (already installed)
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
+
+    // Handle PWA install prompt
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      // Only show if not installed and not shown recently
+      if (!isStandalone && !sessionStorage.getItem('hasClosedInstallTip')) {
+        setShowInstallPromotion(true);
+      }
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    // For iOS, show prompt if not standalone
+    if (isIOSDevice && !isStandalone && !sessionStorage.getItem('hasClosedInstallTip')) {
+      setShowInstallPromotion(true);
+    }
+
     let timer: NodeJS.Timeout;
     let closeTimer: NodeJS.Timeout;
 
@@ -44,11 +71,72 @@ export default function Home() {
     return () => {
       clearTimeout(timer);
       clearTimeout(closeTimer);
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     };
   }, []);
 
+  const handleInstallClick = () => {
+    if (isIOS) {
+      // iOS doesn't support programmatic install, just close the tip and let user read instructions
+      // Or we could show a specific iOS guide modal here
+    } else if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult: any) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted the install prompt');
+          setShowInstallPromotion(false);
+        }
+        setDeferredPrompt(null);
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex flex-col relative">
+      {/* Install Promotion Banner/Modal */}
+      {showInstallPromotion && (
+        <div className="fixed bottom-4 left-4 right-4 z-[90] animate-in slide-in-from-bottom-10 duration-500">
+          <div className="bg-white/90 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-indigo-100 flex items-center justify-between gap-4 max-w-md mx-auto">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Download className="w-5 h-5 text-indigo-600" />
+              </div>
+              <div>
+                <h4 className="font-bold text-gray-900 text-sm">安装灵犀App</h4>
+                <p className="text-xs text-gray-500">
+                  {isIOS ? '点击分享按钮，选择"添加到主屏幕"' : '添加到桌面，体验更流畅'}
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              {isIOS ? (
+                 <div className="flex flex-col items-center animate-bounce">
+                    <Share className="w-5 h-5 text-indigo-500 mb-1" />
+                    <span className="text-[10px] text-indigo-500 font-bold">点击下方</span>
+                 </div>
+              ) : (
+                <button 
+                  onClick={handleInstallClick}
+                  className="bg-indigo-600 text-white text-xs font-bold px-3 py-2 rounded-lg hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-500/20"
+                >
+                  立即安装
+                </button>
+              )}
+              <button 
+                onClick={() => {
+                  setShowInstallPromotion(false);
+                  sessionStorage.setItem('hasClosedInstallTip', 'true');
+                }}
+                className="p-1.5 text-gray-400 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <X size={16} />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Browser Tip Modal */}
       {showBrowserTip && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm animate-in fade-in duration-300">
