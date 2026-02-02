@@ -17,6 +17,25 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'robots.txt', 'apple-touch-icon.png'],
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
+        // Increase cache limit to 5MB to accommodate large pet APNGs (~1.2MB each)
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+        // Runtime caching for images
+        runtimeCaching: [
+          {
+            urlPattern: ({ request }) => request.destination === 'image',
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'images-cache',
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
+              },
+            },
+          },
+        ],
+      },
       manifest: {
         name: '灵犀 - 你的AI情感伴侣',
         short_name: '灵犀',

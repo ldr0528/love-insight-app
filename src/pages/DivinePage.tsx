@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/useAuthStore';
 import { Compass, Sparkles, Send, RefreshCw, Lock, ChevronLeft, Loader2, Star, Zap, Share2, Download, X } from 'lucide-react';
 import html2canvas from 'html2canvas';
+import request from '@/utils/request';
 
 interface DivineResult {
   sign: string; // e.g., "第十五签 · 上上签"
@@ -98,10 +99,9 @@ export default function DivinePage() {
     const animationPromise = new Promise(resolve => setTimeout(resolve, 3000));
     
     // API Call
-    const apiPromise = fetch('/api/report', {
+    const apiPromise = request<any>('/api/report', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+        data: {
             user_profile: {
                 report_type: 'divine_oracle',
                 question: question,
@@ -117,8 +117,8 @@ export default function DivinePage() {
             ui_context: {
                 report_type: 'divine_oracle'
             }
-        })
-    }).then(res => res.json());
+        }
+    });
 
     try {
         const [_, data] = await Promise.all([animationPromise, apiPromise]);

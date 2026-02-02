@@ -17,6 +17,7 @@ import ContactUs from "@/pages/ContactUs";
 import RechargePage from "@/pages/RechargePage";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Toaster } from 'react-hot-toast';
+import { usePetPreloader } from "@/hooks/usePetPreloader";
 
 // Component to handle global auth effects
 function AuthEffect() {
@@ -60,6 +61,8 @@ function AuthEffect() {
 }
 
 export default function App() {
+  usePetPreloader();
+  
   return (
     <Router>
       <Toaster position="top-center" />
