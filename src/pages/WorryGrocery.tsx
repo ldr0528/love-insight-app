@@ -140,7 +140,7 @@ export default function DigitalPetShop() {
 
     setIsSubmittingPet(true);
     try {
-      const data = await request<any>('/api/auth/pet', {
+      const data = await request<{ success: boolean; user?: any; error?: string }>('/api/auth/pet', {
         method: 'POST',
         data: { petType: selectedPetType, petName: petName }
       });
