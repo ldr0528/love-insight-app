@@ -6,7 +6,6 @@ import { useAuthStore } from '@/store/useAuthStore';
 
 export default function Home() {
   const { user, openAuthModal, logout } = useAuthStore();
-  const [showBrowserTip, setShowBrowserTip] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showInstallPromotion, setShowInstallPromotion] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
@@ -37,22 +36,6 @@ export default function Home() {
     // For iOS, show prompt if not standalone
     if (isIOSDevice && !isStandalone && !sessionStorage.getItem('hasClosedInstallTip')) {
       setShowInstallPromotion(true);
-    }
-
-    let timer: NodeJS.Timeout;
-    let closeTimer: NodeJS.Timeout;
-
-    if (!hasShownTip) {
-      // Show tip after 0.5 second
-      timer = setTimeout(() => {
-        setShowBrowserTip(true);
-        sessionStorage.setItem('hasShownBrowserTip', 'true');
-      }, 500);
-
-      // Auto close after 6 seconds
-      closeTimer = setTimeout(() => {
-        setShowBrowserTip(false);
-      }, 6500);
     }
 
     // 预加载图片
@@ -131,41 +114,6 @@ export default function Home() {
                 className="p-1.5 text-gray-400 hover:bg-gray-100 rounded-full transition-colors"
               >
                 <X size={16} />
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Browser Tip Modal */}
-      {showBrowserTip && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="bg-white rounded-2xl p-6 max-w-xs w-full shadow-2xl relative animate-in zoom-in-95 duration-300 border border-pink-100">
-            <button 
-              onClick={() => setShowBrowserTip(false)}
-              className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 p-2 rounded-full hover:bg-gray-100 transition-colors"
-            >
-              <X size={20} />
-            </button>
-            
-            <div className="flex flex-col items-center text-center space-y-4 pt-2">
-              <div className="w-14 h-14 bg-pink-50 rounded-full flex items-center justify-center mb-1 ring-4 ring-pink-50/50">
-                <Globe className="w-7 h-7 text-pink-500" />
-              </div>
-              
-              <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">温馨提示</h3>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  欢迎来到灵犀！为确保<span className="text-gray-900 font-semibold">支付与结果保存</span>功能正常，请务必点击右上角菜单，选择<br/>
-                  <span className="font-bold text-pink-600 text-base">“在浏览器中打开”</span>
-                </p>
-              </div>
-              
-              <button
-                onClick={() => setShowBrowserTip(false)}
-                className="w-full py-3 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-xl font-bold text-sm hover:shadow-lg hover:scale-[1.02] transition-all shadow-pink-500/25"
-              >
-                我知道了
               </button>
             </div>
           </div>
