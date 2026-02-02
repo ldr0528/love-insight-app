@@ -12,27 +12,29 @@ const PET_IMAGES = [
 
 export default function ResourcePreloader() {
   useEffect(() => {
-    // 使用 requestIdleCallback 在浏览器空闲时预加载，或者直接 setTimeout
-    const preloadImages = () => {
-      PET_IMAGES.forEach(src => {
-        const link = document.createElement('link');
-        link.rel = 'preload';
-        link.as = 'image';
-        link.href = src;
-        document.head.appendChild(link);
-        
-        // 同时使用 Image 对象触发加载，双重保险
-        const img = new Image();
-        img.src = src;
-      });
+    // 串行加载图片，避免瞬间占用所有网络连接
+    const preloadSequentially = async () => {
+      for (const src of PET_IMAGES) {
+        await new Promise<void>((resolve) => {
+          const img = new Image();
+          img.src = src;
+          // 无论成功失败，都继续下一个，且至少间隔一小段时间
+          img.onload = () => setTimeout(resolve, 200); 
+          img.onerror = () => resolve();
+        });
+      }
     };
 
-    // 延迟一点点执行，不阻塞首屏关键资源
-    if ('requestIdleCallback' in window) {
-      (window as any).requestIdleCallback(() => preloadImages());
-    } else {
-      setTimeout(preloadImages, 1000);
-    }
+    // 延迟执行，避开首屏关键请求和用户的初始操作（如登录）
+    const timer = setTimeout(() => {
+      if ('requestIdleCallback' in window) {
+        (window as any).requestIdleCallback(() => preloadSequentially());
+      } else {
+        preloadSequentially();
+      }
+    }, 5000); // 增加到5秒延迟
+
+    return () => clearTimeout(timer);
   }, []);
 
   return null;
