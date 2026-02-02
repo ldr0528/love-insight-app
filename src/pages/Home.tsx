@@ -11,9 +11,6 @@ export default function Home() {
   const [isIOS, setIsIOS] = useState(false);
 
   useEffect(() => {
-    // Check if we've shown the tip in this session
-    const hasShownTip = sessionStorage.getItem('hasShownBrowserTip');
-    
     // Detect iOS
     const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
     setIsIOS(isIOSDevice);
@@ -52,8 +49,6 @@ export default function Home() {
     console.log('Home component mounted - v1.0.1');
 
     return () => {
-      clearTimeout(timer);
-      clearTimeout(closeTimer);
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     };
   }, []);
