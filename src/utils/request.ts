@@ -39,7 +39,13 @@ async function request<T = any>(url: string, options: RequestOptions = {}): Prom
   }
 
   try {
+    // Add 15s timeout
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), 15000);
+    config.signal = controller.signal;
+
     const response = await fetch(`${BASE_URL}${url}`, config);
+    clearTimeout(id);
     
     // Handle 401 Unauthorized globally
     if (response.status === 401) {
