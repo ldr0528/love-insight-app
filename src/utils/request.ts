@@ -1,5 +1,6 @@
 interface RequestOptions extends RequestInit {
   data?: any;
+  timeout?: number;
 }
 
 const BASE_URL = ''; // Relative path since we proxy or serve from same origin
@@ -39,16 +40,19 @@ async function request<T = any>(url: string, options: RequestOptions = {}): Prom
   }
 
   try {
-    // Add 15s timeout
-    const controller = new AbortController();
-    const id = setTimeout(() => {
-      controller.abort();
-    }, 15000);
-    config.signal = controller.signal;
+    // 默认不设置超时，除非显式传入 timeout 参数
+    let id: NodeJS.Timeout | undefined;
+    if (customConfig.timeout) {
+      const controller = new AbortController();
+      id = setTimeout(() => {
+        controller.abort();
+      }, customConfig.timeout);
+      config.signal = controller.signal;
+    }
 
     try {
       const response = await fetch(`${BASE_URL}${url}`, config);
-      clearTimeout(id);
+      if (id) clearTimeout(id);
       
       // Handle 401 Unauthorized globally
       if (response.status === 401) {
@@ -62,7 +66,7 @@ async function request<T = any>(url: string, options: RequestOptions = {}): Prom
       const responseData = await response.json();
       return responseData;
     } catch (fetchError: any) {
-      clearTimeout(id);
+      if (id) clearTimeout(id);
       // Normalize timeout/abort error
       if (fetchError.name === 'AbortError' || fetchError.message?.includes('aborted')) {
         throw new Error('请求超时，请检查网络');
