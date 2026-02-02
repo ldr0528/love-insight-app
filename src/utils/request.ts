@@ -40,39 +40,19 @@ async function request<T = any>(url: string, options: RequestOptions = {}): Prom
   }
 
   try {
-    // 默认不设置超时，除非显式传入 timeout 参数
-    let id: NodeJS.Timeout | undefined;
-    if (customConfig.timeout) {
-      const controller = new AbortController();
-      id = setTimeout(() => {
-        controller.abort();
-      }, customConfig.timeout);
-      config.signal = controller.signal;
+    const response = await fetch(`${BASE_URL}${url}`, config);
+    
+    // Handle 401 Unauthorized globally
+    if (response.status === 401) {
+      // Dispatch a custom event for the store to listen to
+      if (token) {
+        window.dispatchEvent(new CustomEvent('auth:unauthorized'));
+      }
+      return Promise.reject(new Error('Unauthorized'));
     }
 
-    try {
-      const response = await fetch(`${BASE_URL}${url}`, config);
-      if (id) clearTimeout(id);
-      
-      // Handle 401 Unauthorized globally
-      if (response.status === 401) {
-        // Dispatch a custom event for the store to listen to
-        if (token) {
-          window.dispatchEvent(new CustomEvent('auth:unauthorized'));
-        }
-        return Promise.reject(new Error('Unauthorized'));
-      }
-
-      const responseData = await response.json();
-      return responseData;
-    } catch (fetchError: any) {
-      if (id) clearTimeout(id);
-      // Normalize timeout/abort error
-      if (fetchError.name === 'AbortError' || fetchError.message?.includes('aborted')) {
-        throw new Error('请求超时，请检查网络');
-      }
-      throw fetchError;
-    }
+    const responseData = await response.json();
+    return responseData;
   } catch (error) {
     console.error('Request Error:', error);
     return Promise.reject(error);
