@@ -8,8 +8,6 @@ import toast from 'react-hot-toast';
 
 // Memoize Pet Buttons to prevent unnecessary re-renders and image flickering
 const PetOptionButton = memo(({ type, selectedType, onSelect, imgSrc, label, colorClass, borderColorClass, iconColorClass }: any) => {
-  const [loaded, setLoaded] = useState(false);
-
   return (
     <button
       onClick={() => onSelect(type)}
@@ -21,17 +19,15 @@ const PetOptionButton = memo(({ type, selectedType, onSelect, imgSrc, label, col
     >
       {selectedType === type && <div className={`absolute top-2 right-2 ${iconColorClass} text-white p-1 rounded-full`}><Check size={12} /></div>}
       
-      <div className="relative w-16 h-16">
-        {!loaded && (
-          <div className="absolute inset-0 bg-gray-100 rounded-full animate-pulse" />
-        )}
+      <div className="relative w-16 h-16 flex items-center justify-center">
         <img 
           src={imgSrc} 
           alt={label} 
-          onLoad={() => setLoaded(true)}
-          className={`w-full h-full object-contain transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+          className="w-full h-full object-contain z-10"
           loading="eager"
         />
+        {/* Placeholder background while loading (visible if transparent or loading) */}
+        <div className="absolute inset-0 bg-gray-50 rounded-full scale-90" />
       </div>
       <span className="font-bold text-gray-800">{label}</span>
     </button>
@@ -56,6 +52,23 @@ export default function DigitalPetShop() {
   const recognitionRef = useRef<any>(null);
 
   const hasPet = !!user?.petType;
+
+  // 确保进入该页面时立即加载图片（不等待全局预加载），保证用户体验
+  useEffect(() => {
+    const images = [
+      '/images/pets/cat.png',
+      '/images/pets/dog.png',
+      '/images/pets/chicken.png',
+      '/images/pets/rabbit.png',
+      '/images/pets/hamster.png',
+      '/images/pets/fox.png'
+    ];
+    
+    images.forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
 
   // Function to reset pet choice (for testing/user request)
   const handleResetPet = async () => {
