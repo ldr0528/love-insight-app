@@ -1,13 +1,19 @@
 
 import { useState, useEffect, useRef, memo } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Send, Sparkles, Store, Mic, MicOff, Check } from 'lucide-react';
+import { ArrowLeft, Send, Sparkles, Store, Mic, MicOff, Check, Loader2, ImageOff } from 'lucide-react';
 import ThreePet from '@/components/ThreePet';
 import { useAuthStore, PetType } from '@/store/useAuthStore';
 import toast from 'react-hot-toast';
 
 // Memoize Pet Buttons to prevent unnecessary re-renders and image flickering
 const PetOptionButton = memo(({ type, selectedType, onSelect, imgSrc, label, colorClass, borderColorClass, iconColorClass }: any) => {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  // Add timestamp to force cache refresh if needed, though browsers usually handle this. 
+  // keeping the src clean for now to utilize caching, but handling loading state better.
+  
   return (
     <button
       onClick={() => onSelect(type)}
@@ -20,14 +26,29 @@ const PetOptionButton = memo(({ type, selectedType, onSelect, imgSrc, label, col
       {selectedType === type && <div className={`absolute top-2 right-2 ${iconColorClass} text-white p-1 rounded-full`}><Check size={12} /></div>}
       
       <div className="relative w-16 h-16 flex items-center justify-center">
-        <img 
-          src={imgSrc} 
-          alt={label} 
-          className="w-full h-full object-contain z-10"
-          loading="eager"
-        />
-        {/* Placeholder background while loading (visible if transparent or loading) */}
-        <div className="absolute inset-0 bg-gray-50 rounded-full scale-90" />
+        {loading && !error && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Loader2 className="w-6 h-6 animate-spin text-gray-300" />
+          </div>
+        )}
+        
+        {error ? (
+           <div className="absolute inset-0 flex items-center justify-center bg-gray-50 rounded-full text-gray-400">
+             <ImageOff size={24} />
+           </div>
+        ) : (
+          <img 
+            src={imgSrc} 
+            alt={label} 
+            onLoad={() => setLoading(false)}
+            onError={() => {
+              setLoading(false);
+              setError(true);
+            }}
+            className={`w-full h-full object-contain z-10 transition-opacity duration-300 ${loading ? 'opacity-0' : 'opacity-100'}`}
+            loading="eager"
+          />
+        )}
       </div>
       <span className="font-bold text-gray-800">{label}</span>
     </button>
@@ -55,13 +76,15 @@ export default function DigitalPetShop() {
 
   // 确保进入该页面时立即加载图片（不等待全局预加载），保证用户体验
   useEffect(() => {
+    // Force refresh images by appending timestamp to avoid stale cache
+    const timestamp = new Date().getTime();
     const images = [
-      '/images/pets/cat.png',
-      '/images/pets/dog.png',
-      '/images/pets/chicken.png',
-      '/images/pets/rabbit.png',
-      '/images/pets/hamster.png',
-      '/images/pets/fox.png'
+      `/images/pets/cat.png?t=${timestamp}`,
+      `/images/pets/dog.png?t=${timestamp}`,
+      `/images/pets/chicken.png?t=${timestamp}`,
+      `/images/pets/rabbit.png?t=${timestamp}`,
+      `/images/pets/hamster.png?t=${timestamp}`,
+      `/images/pets/fox.png?t=${timestamp}`
     ];
     
     images.forEach(src => {
@@ -272,32 +295,32 @@ export default function DigitalPetShop() {
           <div className="grid grid-cols-3 gap-4 w-full mb-8">
             <PetOptionButton 
               type="cat" selectedType={selectedPetType} onSelect={setSelectedPetType}
-              imgSrc="/images/pets/cat.png" label="小猫"
+              imgSrc={`/images/pets/cat.png?t=${new Date().getTime()}`} label="小猫"
               colorClass="bg-orange-100" borderColorClass="border-orange-500" iconColorClass="bg-orange-500"
             />
             <PetOptionButton 
               type="dog" selectedType={selectedPetType} onSelect={setSelectedPetType}
-              imgSrc="/images/pets/dog.png" label="小狗"
+              imgSrc={`/images/pets/dog.png?t=${new Date().getTime()}`} label="小狗"
               colorClass="bg-amber-100" borderColorClass="border-amber-500" iconColorClass="bg-amber-500"
             />
             <PetOptionButton 
               type="chicken" selectedType={selectedPetType} onSelect={setSelectedPetType}
-              imgSrc="/images/pets/chicken.png" label="小鸡"
+              imgSrc={`/images/pets/chicken.png?t=${new Date().getTime()}`} label="小鸡"
               colorClass="bg-yellow-100" borderColorClass="border-yellow-500" iconColorClass="bg-yellow-500"
             />
             <PetOptionButton 
               type="rabbit" selectedType={selectedPetType} onSelect={setSelectedPetType}
-              imgSrc="/images/pets/rabbit.png" label="小兔"
+              imgSrc={`/images/pets/rabbit.png?t=${new Date().getTime()}`} label="小兔"
               colorClass="bg-pink-100" borderColorClass="border-pink-500" iconColorClass="bg-pink-500"
             />
             <PetOptionButton 
               type="hamster" selectedType={selectedPetType} onSelect={setSelectedPetType}
-              imgSrc="/images/pets/hamster.png" label="仓鼠"
+              imgSrc={`/images/pets/hamster.png?t=${new Date().getTime()}`} label="仓鼠"
               colorClass="bg-blue-100" borderColorClass="border-blue-500" iconColorClass="bg-blue-500"
             />
             <PetOptionButton 
               type="fox" selectedType={selectedPetType} onSelect={setSelectedPetType}
-              imgSrc="/images/pets/fox.png" label="狐狸"
+              imgSrc={`/images/pets/fox.png?t=${new Date().getTime()}`} label="狐狸"
               colorClass="bg-orange-100" borderColorClass="border-orange-600" iconColorClass="bg-orange-600"
             />
           </div>
