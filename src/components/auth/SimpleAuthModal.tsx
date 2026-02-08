@@ -356,7 +356,16 @@ export default function SimpleAuthModal() {
 
             <button
               type="submit"
-              disabled={isLoading || (isForgotPasswordMode ? (!email || !verificationCode || !password) : (phone.length !== 11 || !password || (!isLoginMode && (!email || !verificationCode))))}
+              disabled={
+                isLoading || 
+                (isForgotPasswordMode 
+                  ? (!email || !verificationCode || !password) 
+                  : (isLoginMode 
+                      ? (phone.length !== 11 || !password) 
+                      : (phone.length !== 11 || !password || !confirmPassword || !email)
+                    )
+                )
+              }
               className={`w-full py-3 px-4 text-white rounded-xl font-bold shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 ${
                 isForgotPasswordMode
                   ? 'bg-gradient-to-r from-indigo-500 to-blue-500 shadow-indigo-500/30 hover:shadow-indigo-500/40'
