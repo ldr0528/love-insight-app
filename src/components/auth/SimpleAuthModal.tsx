@@ -119,6 +119,10 @@ export default function SimpleAuthModal() {
         toast.error('请输入邮箱');
         return;
       }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        toast.error('请输入有效的邮箱地址');
+        return;
+      }
       // Registration no longer requires verification code
     }
 
@@ -225,7 +229,7 @@ export default function SimpleAuthModal() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6" noValidate>
             <div className="space-y-4">
               
               {/* Login / Register Phone Input */}
